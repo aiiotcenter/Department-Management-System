@@ -1,33 +1,41 @@
 import React, { useState } from "react";
-import QRCode from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import "../styles/QRCodeManager.css";
 
 const QRCodeManager = () => {
-  // State to manage QR code data
-  const [qrData, setQrData] = useState({
-    studentName: "Nynthia Clara",
-    purpose: "Meet Professor",
-    timeSlot: "10:00 AM - 11:00 AM", // Approved time slot
-    comments: "Discuss project updates",
-  });
+  // State for user input
+  const [studentName, setStudentName] = useState("");
+  const [purpose, setPurpose] = useState("");
+  const [timeSlot, setTimeSlot] = useState("");
+  const [comments, setComments] = useState("");
+  const [qrData, setQrData] = useState(null); // store QR data after submission
+  const [scannedData, setScannedData] = useState(null); // store scanned QR data
 
-  // State for scanned data
-  const [scannedData, setScannedData] = useState(null);
+   // Generate QR Code when the user submits the form
+   const handleGenerateQR = () => {
+    if (studentName && purpose && timeSlot) {
+      setQrData({ studentName, purpose, timeSlot, comments });
+    } else {
+      alert("Please fill in all required fields.");
+    }
+   };
 
-  // Function to check if the current time is within the approved time slot
-  const isValidTimeSlot = (timeSlot) => {
+   //function to check if the current time is within the approved time slot
+   const isValidTimeSlot = (TimeSlot) => {
     const currentTime = new Date();
     const [startTime, endTime] = timeSlot.split(" - ").map((time) => {
-      const [hours, minutes, period] = time.split(/[:\s]/);
+      const[hours, minutes, period] = time.split(/[:\s]/);
       let adjustedHours = parseInt(hours);
       if (period === "PM" && adjustedHours < 12) adjustedHours += 12;
       return new Date(currentTime.setHours(adjustedHours, minutes, 0, 0));
     });
 
     return currentTime >= startTime && currentTime <= endTime;
-  };
 
+   };
+
+   // QR Code Scanner Function
   const handleScanStart = () => {
     const html5QrCodeScanner = new Html5QrcodeScanner("reader", {
       fps: 10,
@@ -36,7 +44,7 @@ const QRCodeManager = () => {
 
     html5QrCodeScanner.render(
       (decodedText) => {
-        const parsedData = JSON.parse(decodedText); // Parse the JSON string from QR code
+        const parsedData = JSON.parse(decodedText); // Parse scanned JSON
         setScannedData(parsedData);
         html5QrCodeScanner.clear();
       },
@@ -50,24 +58,31 @@ const QRCodeManager = () => {
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">QR Code Manager</h1>
       
-      {/* QR Code Generator */}
+      {/* Form for User Input */}
       <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-2">Generate QR Code</h2>
-        <QRCode value={JSON.stringify(qrData)} size={256} level="H" includeMargin={true} />
-        <p className="mt-2">
-          QR Data: <code>{JSON.stringify(qrData)}</code>
-        </p>
-      </div>
+        <h2 className="text-lg font-semibold mb-2">Enter Your Details</h2>
+        <input type="text" placeholder="Student Name" className="border p-2 w-full mb-2" onChange={(e) => setStudentName(e.target.value)} />
+        <input type="text" placeholder="Purpose of Visit" className="border p-2 w-full mb-2" onChange={(e) => setPurpose(e.target.value)} />
+        <input type="text" placeholder="Approved Time Slot (e.g. 10:00 AM - 11:00 AM)" className="border p-2 w-full mb-2" onChange={(e) => setTimeSlot(e.target.value)} />
+        <input type="text" placeholder="Additional Comments" className="border p-2 w-full mb-2" onChange={(e) => setComments(e.target.value)} />
+        <button onClick={handleGenerateQR} className="bg-green-500 text-white py-2 px-4 rounded">Generate QR Code</button>
+        </div>
+        
+        {/* QR Code Generator */}
+        {qrData && (
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-2">Generated QR Code</h2>
+            <QRCodeCanvas value={JSON.stringify(qrData)} size={256} level="H" includeMargin={true} />
+            <p className="mt-2"> QR Data: <code>{JSON.stringify(qrData)}</code></p>
+            </div>
+        )} 
       
       {/* QR Code Scanner */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-2">Scan QR Code</h2>
         <button
           className="bg-blue-500 text-white py-2 px-4 rounded mb-4"
-          onClick={handleScanStart}
-        >
-          Start Scanning
-        </button>
+          onClick={handleScanStart}>Start Scanning</button>
         <div id="reader" className="border p-4"></div>
       </div>
       
@@ -79,13 +94,12 @@ const QRCodeManager = () => {
           <p><strong>Purpose:</strong> {scannedData.purpose}</p>
           <p><strong>Time Slot:</strong> {scannedData.timeSlot}</p>
           <p><strong>Comments:</strong> {scannedData.comments}</p>
-
-          {/* Time Slot Validation */}
           <p>
+
             <strong>Status: </strong>
             {isValidTimeSlot(scannedData.timeSlot)
-              ? "Valid QR Code for this time slot"
-              : "Invalid QR Code (outside approved time slot)"}
+              ? " ✅ Valid QR Code for this time slot"
+              : " ❌ Invalid QR Code (outside approved time slot)"}
           </p>
         </div>
       )}
