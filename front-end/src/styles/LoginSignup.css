@@ -1,95 +1,112 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
-  margin: auto;
-  width: 600px;
-  margin-top: 200px;
-  background: rgb(207, 185, 185);
-  padding-bottom: 30px;
-  
+  margin: 50px auto;
+  width: 35%; 
+  height: 700px;;
+  padding: 40px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.378);
+  box-shadow: 1px 1px 8px rgba(0, 0, 0,0.1);
 }
 
-.header{
+.header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 9px;
-  width: 100px;
+  gap: 10px;
+  width: 100%;
   margin-top: 30px;
 }
 
-.text{
-  color: rgb(90, 90, 189);
-  font-size: 48px;
-  font-weight: 700;
+.text {
+  color: rgb(191, 60, 132);
+  font-size: 45px;
+  font-weight: 600;
+  text-align: center; 
 }
 
- .inputs{
-  margin-top: 55px;
+.Underline {
+  width: 60px;
+  height: 6px;
+  background: rgb(191, 60, 132);
+  border-radius: 9px;
+}
+
+.inputs {
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   gap: 25px;
- }
+}
 
- .input{
+.input {
   display: flex;
   align-items: center;
   margin: auto;
-  width: 480px;
-  height: 80px;
-  background: rgb(20, 21, 21);
+  width: 100%;
+  height: 70px;
+  max-width: 480px; 
+  background: rgb(210, 221, 221);
   border-radius: 6px;
- }
+  padding: 0 15px; 
+}
 
- .input img{
-  margin: 0px 30px;
- }
+.input img {
+  margin-right: 20px; 
+}
 
- .input input{
+.input input {
+  flex-grow: 1; 
   height: 50px;
-  width: 400px;
-  background: transparent;
   border: none;
   outline: none;
-  color:#797979;
-  font-size: 19px;
- }
-
- .forgot-password{
-  padding-left: 62px;
-  margin-top: 27px;
-  color: #797979;
+  background: transparent;
+  color: #313a43;
   font-size: 18px;
- }
+}
 
- .forgot-password span{
-  color:black ;
+.forgot-password,
+.Donthave-account,
+.Already-account {
+  margin-top: 25px;
+  font-size: 14px; 
+  color: #2a2727;
+  text-align: center;
+}
+
+.forgot-password span,
+.Donthave-account span,
+.Already-account span {
+  color: rgb(191, 60, 132);
   cursor: pointer;
- }
+}
 
- .submit-container{
+.submit-container {
   display: flex;
-  gap: 30px;
-  margin: 60px auto;
- }
+  gap: 20px;
+  margin: 50px auto;
+  justify-content: center; 
+  flex-wrap: wrap;
+}
 
- .submit{
+.submit {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 220px;
-  height: 59px;
+  height: 50px;
   color: #fff;
-  background:aquamarine, beige ;
+  background: rgb(191, 60, 132);
   border-radius: 50px;
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   cursor: pointer;
+  text-align: center;
+}
 
- }
-
- .gray{
-  background: #EAEAEA;
+.gray {
+  background: #eaeaea;
   color: #676767;
-  
- }
+}
+
