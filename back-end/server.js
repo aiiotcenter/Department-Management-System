@@ -1,254 +1,190 @@
-if (process.env.NODE_ENV !== 'production'){// prevents unnecessary loading in production
-  require('dotenv').config();
-};
+//===========================================================================================================
+//? 1- importing  libraries needed
+//===========================================================================================================
+require('dotenv').config();
+const express = require('express');
+const bcrypt = require('bcrypt'); //encryption module
+const jwt = require('jsonwebtoken'); // moduel to gernerate and verify jwts for authentication
+const mysql = require('mysql2');
+const cookieParser = require('cookie-parser'); //middleware for parsing cookies in Express requests
+const path = require('path'); //It helps in working with file and directory paths
 
-//===========================================================================
-//? 1- Importing libraries(modules) I will use throuth the code
-//===========================================================================
-
-const express = require('express'); 
 const app = express();
-const bcrypt = require('bcrypt');//encryption module
-const passport = require('passport');// middleware for node.js
-const session = require('express-session');
-const flash = require('express-flash');//display erros on interface
-const mysql = require('mysql2');// importing mysql module to connect with db
-const methodOverride = require('method-override'); // we will use it in log out (it allow us to override the method we are using (so we use .delete for log out))
-const LocalStrategy = require('passport-local').Strategy;
-
-// ===========================================================================
-
-app.use(express.urlencoded({extended: false})); // parse(analyse) incoming body requests 
 
 
-//===========================================================================================
-//? 2- preparing session managment and passport.js initializatin for user authentication
-//===========================================================================================
+app.use(express.json()); // parse(analyse) incoming requestes with json type
+app.use(express.urlencoded({ extended: true }));// parse(analyse) incoming body requests
+app.use(cookieParser());// allow reading cookies (like req.cookie down in code)
 
-// initialize passport( using funciton in passport-config file)
+//===========================================================================================================
+//? 2- Set EJS as the view engine
+//===========================================================================================================
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-app.use(flash());
+//===========================================================================================================
+//? 3- Connecting to the database in MySQL using ('mysql' module)
+//===========================================================================================================
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'dms',
+    password:  process.env.Database_Password
+});
 
-app.use(session({
-  secret : process.env.SESSION_SECRET ,
-  resave : false ,// so we don't resave the session variable if nothing is changed
-  saveUninitialized : false
-}));
+connection.connect((error) => {
+    if (error) {
+        console.error("Error connecting to database:", error);
+    } else {
+        console.log("Connected to MySQL successfully");
+    }
+});
+//===========================================================================================================
+//? 4- Middleware to authenticate JWT in order to restrict access to certain pages (like homepage) for non-logged-in users
+//==========================================================================================================
+// this function keep hompage secure(it's used in this route), if user did not login or his token expired, then he won't ba able to access homepage
+function authenticateToken(req, res, next) {
+    const token = req.cookies.token ;// retrieves the token from the cookie
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(methodOverride('_method'));
+    if (!token) return res.redirect('/login'); // Redirect if no token
 
-//===========================================================================
-//? 3- Login page logic : check if user exist in database
-//===========================================================================
-
-function initialize(passport, getUserByid) { 
-    const authenticateUser = async (id, password, done) => {
-        try {
-            connection.query('SELECT * FROM users WHERE User_ID = ?', [id], async (error, results) => {
-                if (error) { 
-                    return done(error);
-                }
-
-                if (results.length === 0) {
-                    return done(null, false, { message: 'No user found with this id' });
-                }
-
-                const user = results[0]; // Get the user
-
-                // Compare the provided password with the hashed password in the database
-                if (await bcrypt.compare(password, user.Hashed_password)) {
-                    return done(null, user); // Successful login
-                } else {
-                    return done(null, false, { message: 'Incorrect Password' });
-                }
-            });
-        } catch (error) {
-            return done(error);
-        }
-    };
-
-    // use passport's LocalStrategy to authorize the user (I choosed to check user authentication by his id)
-    passport.use(new LocalStrategy({ usernameField: 'id' }, authenticateUser));
-
-    passport.serializeUser((user, done) => {
-        done(null, user.User_ID); // Store user ID in the session
-    });
-
-    passport.deserializeUser((id, done) => { //retrive all user data using the Id
-        connection.query('SELECT * FROM users WHERE User_ID = ?', [id], (error, results) => {
-            if (error) {
-                return done(error);
-            }
-            done(null, results[0]);//this fetch user from the database
-        });
+    jwt.verify(token, process.env.JWT_SECRET, (error, user) => {
+        if (error) return res.redirect('/login'); // Redirect if token is invalid
+        req.user = user;
+        next();
     });
 }
 
-//________________________________________________________________
+//=======================================================================================================
+//? 5- Middleware to restrict access to some pages ( like login page for a user who alraedy logged in )
+//========================================================================================================
+function checkNotAuthenticated(req, res, next) {
+    const token = req.cookies.token; 
 
-
-initialize(passport, id => {
-    connection.query('SELECT * FROM users WHERE User_ID = ?', [id], (error, results) => {
-      if (error) throw error ;
-      return done(null, results[0]); //return the user
-    });
-  });
-
-
-//===========================================================================================
-//? 4- Connecting to the database in MySQL using ('mysql' module)
-//===========================================================================================
-
-// creating mysql connection
-const connection = mysql.createConnection({
-    host: 'localhost',     
-    user: 'root',          
-    database: 'dms',      
-    password: 'DMS123-qaz'       
-});
-
-// to check if datebase is connected
-connection.connect( (error) => {
-    if (error){
-        console.log("error occurred while connecting");
-    } else{
-        console.log("connection created with mysql successfully");
+    if (token) {
+        return res.redirect('/'); 
     }
-});
-
-//===========================================================================================
-//? 5- Login functin 
-//===========================================================================================
-
-app.post('/login', checkNotAuthenticated,  passport.authenticate('local', {
-  successRedirect : '/',
-  failureRedirect : '/login',
-  failureFlash : true // so user see all flash error occurs
-}))
+    next(); // Allow access if not logged in
+}
+//===========================================================================================================
+//? 6- Registering logic
+//===========================================================================================================
 
 
-//===========================================================================================
-//? 6- Register function
-//===========================================================================================
-//* Store user data in the database ------------------------------------
+app.post('/register', async (req, res) => {
+    const { name, role, email, password} = req.body;
 
-app.post('/register', checkNotAuthenticated, async (req, res) => {
-  try {
-    // Ensure all required fields are provided
-    if (!req.body.role || !req.body.name || !req.body.email || !req.body.password) {
-      req.flash('error', 'Please provide all required fields');
-      return res.redirect('/register');
-    }
-
-    // generating Users ID
-    const year = new Date().getFullYear();
-    const Id_suffix = String(Math.floor(Math.random() * 10000)).padStart(4, '0');//(four digit number, if less add leading zero to the beginning)
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    const user = {
-      User_ID: `${year}${Id_suffix}`,
-      User_Role: req.body.role,
-      User_name: req.body.name,
-      Email_address: req.body.email,
-      Hashed_password: hashedPassword,
-    };
-
-    
-    connection.query('SELECT * FROM users WHERE Email_address = ?', [req.body.email], (error, results) => {
-        if (error) {
-          console.error(error);
-          req.flash('error', 'Internal Server Error');
-          return res.redirect('/register');
+    try {
+        // Ensure all required fields are provided
+        if (!req.body.role || !req.body.name || !req.body.email || !req.body.password) {
+        return res.render('register', { messages: { error: 'Fill all information' } }); // .render is method to render(provide) view and display html code in .ejs files
         }
-        
+
+        // generating Users_ID
+        const generated_id = (Array.from({ length: 8 }, () => Math.floor(Math.random() * 10))).join("");//(8 digit number for the id)
+
+        const hashedPassword = await bcrypt.hash(req.body.password, 10); // 10 is the salt round, it represent how many time the hashing algorithms will be applied on the password, the higher the better
+
+        const user = {
+        User_ID: generated_id,
+        User_Role: req.body.role,
+        User_name: req.body.name,
+        Email_address: req.body.email,
+        Hashed_password: hashedPassword,
+        };
+
         // Check if email already exists
-        if (results.length > 0) {
-          req.flash('error', 'Email already exists');
-          return res.redirect('/register');
+        connection.query('SELECT * FROM users WHERE Email_address = ?', [req.body.email], (error, results) => {
+            if (error) {
+            console.error(error);
+            return res.render('register', { messages: { error: 'Internal server error' } });
+            }
+            
+            
+            if (results.length > 0) {
+            return res.render('register', { messages: { error: 'email already exists' } });
+            }
+
+            connection.query('INSERT INTO users (User_ID, User_Name, User_Role, Email_address, Hashed_password) VALUES (?, ?, ?, ?, ?)',
+                [generated_id, name, role, email, hashedPassword],
+                (error, results) => {
+                    if (error) {
+                        return res.render('register', { messages: { error: 'database error' } });
+                    }
+                    console.log(`"${req.body.name}" Was added in the database`) // testing the code 
+                    res.redirect('/login');
+            });
+    });
+    } catch(error) {
+        res.render('register', { messages: { error: 'Server error, please try again' } });
+    }
+});
+
+
+
+
+//===========================================================================================================
+//? 7- Login logic
+//===========================================================================================================
+
+app.post('/login', async (req, res) => {
+    const { email, password} = req.body;
+    connection.query('SELECT * FROM users WHERE Email_address = ?', [email], async (error, results) => {
+        if (error) return res.status(500).json({ message: 'Internal server error' });
+        if (results.length === 0) {
+            return res.render('login', { messages: { error: 'No user found with this email address' } });
         }
 
-        // Check if username already exists
-        connection.query(
-          'SELECT * FROM users WHERE User_name = ?', [req.body.name], (error, results) => {
-            if (error) {
-              console.error(error);
-              req.flash('error', 'Internal Server Error');
-              return res.redirect('/register');
-            }
+        const user = results[0];
+        if (await bcrypt.compare(password, user.Hashed_password)) {
+            const token = jwt.sign({ email: user.Email_address }, process.env.JWT_SECRET); // genrate jwt token
+            //generate cookie
+            res.cookie('token', token, {httpOnly: true, maxAge :7200000}); // 60,000 milisecond = 1 min (cookie name, jwt value,...  )  (7,200,00 is two hours)
+            //console.log(`the token is :\n${token}`); // to see the token(test)
+            
+            console.log(`User "${user.User_name}" logged in\n`);// to test and know who is logging in
+            return res.redirect('/');
+            
 
-            if (results.length > 0) {
-              req.flash('error', 'Username already exists');
-              return res.redirect('/register');
-            }
-
-            // Insert the new user into the database
-            connection.query('INSERT INTO users SET ?', user, (error, results) => {
-              if (error) {
-                console.error(error);
-                req.flash('error', 'Internal Server Error');
-                return res.redirect('/register');
-              }
-
-              req.flash('success', 'User registered successfully');
-              return res.redirect('/login');
-            });
-        });
+        } else {
+            return res.render('login', { messages: { error: 'Incorrect password' } });
+        }
     });
-  } catch (error) {
-    console.error(error);
-    req.flash('error', 'Something is wrong. Please try later');
-    return res.redirect('/register');
-  }
 });
 
-//===========================================================================================
-//? 7- Create Routes
-//===========================================================================================
+//===========================================================================================================
+//? 8- Logout logic
+//===========================================================================================================
 
-app.get('/', checkAuthenticated,  (req, res) => {
-  res.render('index.ejs'); // res.render is method to render(provide) view and display html code in .ejs files
+app.post('/logout', authenticateToken, (req, res) => {
+    res.clearCookie('token');
+    const email = req.user.email;
+    console.log(`User with this email address: "${email}" logged out\n`); // test i can delete it ( i added "autheticateToken" just for this test line, i can remove it)
+    res.redirect('/login');
 });
 
-app.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login.ejs');
+//===========================================================================================================
+//? 9- Creating Routes
+//===========================================================================================================
+
+app.get('/', authenticateToken, (req, res) => {
+    connection.query('SELECT * FROM users WHERE Email_address = ?', [req.user.email], (error, results) => {
+        if (error || results.length === 0) {
+            return res.status(500).send('Error fetching user');
+        }
+        res.render('index', { user: results[0] });
+    });
 });
 
-app.get('/register', checkNotAuthenticated, (req, res) => {
-  res.render('register.ejs');
+app.get('/login',checkNotAuthenticated, (req, res) => {
+    res.render('login', { messages: {} }); // make sure messages is always defined 
 });
 
-//===========================================================================================
-//? 8- Log out function
-//===========================================================================================
 
-app.delete('/logout', (req, res) => {
-  req.logOut(req.user, error =>{
-    if(error) return nex(error);
-    res.redirect('/');
-  }); 
+app.get('/register',checkNotAuthenticated, (req, res) => {
+    res.render('register', { messages: {} }); //to make sure that messages is always defined
 });
 
-//=======================================================================================================
-//? 9- Protects routes (pages)that require the user to be logged in (like homepage in uzebim or courses)
-//=======================================================================================================
-
-function checkAuthenticated(req, res, next){ // prevent access to routes except if user is logged in
-  if(req.isAuthenticated()){
-    return next();
-  }
-  res.redirect('/login');
-};
-
-function checkNotAuthenticated(req, res, next){ // here prevert access to routes(login/register) if user already logged in(like he can't acces login or register pages if he's in )
-  if(req.isAuthenticated()){
-    return res.redirect('/');
-  }
-  next() // send the user to login page if not authenticated
-};
-
-//===========================================================================
+//===========================================================================================================
 
 app.listen(3000);// method to start server and listen for incoming request(http request)
-

@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>homepage</title>
+    <title>Homepage</title>
 </head>
 <body>
-    <h1>I'm Homepage</h1>    
-
-    <form id="register" class="input-group" action="/logout?_method=DELETE" method="POST">
+<!-- ------------------------------------- -->
+    <h1>I'm Homepage</h1> 
+    <h1>Welcome, <%= user.User_name %></h1>
+<!-- ------------------------------------- -->
+    <form action="/logout" method="POST">
         <button type="submit">Log Out</button>
     </form>
+<!-- ------------------------------------- -->
 </body>
 </html>
-

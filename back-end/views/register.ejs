@@ -6,21 +6,16 @@
       <title>Register page</title>
   </head>
   <body>
-      <h1>I'm register</h1>
+<!-- ------------------------------------------------------- -->
+      <h1>I'm register </h1>
       <div>
           <p>you have account already?<a href ="login">Login</a></p>
       </div>
 <!-- ------------------------------------------------------- -->
-      <% if (messages.error) { %>
-        <div class="alert alert-danger">
-          <%= messages.error %>
-        </div>
+      <% if (messages && messages.error) { %>
+          <div class="alert alert-danger"><%= messages.error %></div>
       <% } %>
-      <% if (messages.success) { %>
-        <div class="alert alert-success">
-          <%= messages.success %>
-        </div>
-      <% } %>
+
 <!-- ------------------------------------------------------- -->
       <form id="register" class="input-group" action="/register" method="POST">
 
@@ -30,6 +25,7 @@
           <input type="text"  name = "password" class="input-filed" placeholder="Password" required />
           <button type="submit" class="submit-btn">Register</button>
       </form>
+<!-- ------------------------------------------------------- -->
   </body>
 </html>
 
