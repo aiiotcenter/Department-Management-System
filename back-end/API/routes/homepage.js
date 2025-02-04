@@ -1,15 +1,20 @@
 //===========================================================================================================
-//? Import Required Modules and Set Port:
+// set up for express router
 //===========================================================================================================
-const http = require('http')
-const port = 3000;
+const express = require('express');
+const router = express.Router();
+
 
 //===========================================================================================================
-//? Create HTTP Server and Initialize Express App:
+// Import libraries & function
 //===========================================================================================================
-const app = require('./app');
-const server = http.createServer(app); //method to creates an HTTP server and passes Express app to handle incoming requests.
+const {protect} = require('../../Authentication_Middleware');
+
+const homepage_logic = require('../../Controllers/Homepage_controller');
 
 //===========================================================================================================
-server.listen(port)
 
+
+router.get('/', protect, homepage_logic);
+//===========================================================================================================
+module.exports = router

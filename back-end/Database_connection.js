@@ -1,12 +1,23 @@
+//===========================================================================================================
+//? Import libraries 
+//===========================================================================================================
 const mysql = require('mysql2');
+require('dotenv').config();
 
-// Create a connection pool
-const pool = mysql.createPool({
-  host: 'localhost', 
-  user: 'root',      
-  password: 'DMS123-qaz', 
-  database: 'dms'
+//===========================================================================================================
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    database: 'dms',
+    password:  process.env.Database_Password
 });
 
-// Export the pool for use in other parts of the application
-module.exports = pool.promise();
+connection.connect((error) => {
+    if (error) {
+        console.error("Error connecting to database:", error);
+    } else {
+        console.log("Connected to MySQL successfully");
+    }
+});
+
+module.exports = connection;
