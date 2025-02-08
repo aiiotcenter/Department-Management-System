@@ -37,5 +37,26 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 
+//=======================================================================================================
+//? function to extract user data from the token(jwt)
+//========================================================================================================
+
+
+function RetrieveDataFromJWT(req, res, next){
+    const token = req.cookies.token ;// retrieves the token from the cookie
+    if (!token) return res.status(401).json({message : 'No token found, please log in again'});
+    console.log(`This is the token: ${token}`); // for testing
+    
+    jwt.verify(token, process.env.JWT_SECRET, (error, user) => { //verify and decode the jwt to get information from it
+        if (error) return res.status(401).json({message: 'Invalid or expired token. Please log in again.'});
+        req.user = user;
+    next(); // here I have to call next() to pass contorl to next function or route , otherwise the code will get stuck
+
+    });
+};
+
+
+//========================================================================================================
 module.exports.protect = authenticateToken;
 module.exports.prevent = checkNotAuthenticated;
+module.exports.ExtractJWTData = RetrieveDataFromJWT;

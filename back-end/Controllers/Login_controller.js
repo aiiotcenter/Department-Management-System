@@ -25,7 +25,7 @@ const login_logic = async (req, res) => {
         const user = results[0];
         if (await bcrypt.compare(password, user.Hashed_password)) {
             // genrate jwt token
-            const token = jwt.sign({ email: user.Email_address }, process.env.JWT_SECRET); 
+            const token = jwt.sign({id : user.User_ID, email: user.Email_address }, process.env.JWT_SECRET); 
             //generate cookie
             res.cookie('token', token, {httpOnly: true, maxAge :7200000}); // 60,000 milisecond = 1 min (cookie name, jwt value,...  )  (7,200,00 is two hours)
             //console.log(`the token is :\n${token}`); // to see the token(test)
