@@ -44,6 +44,7 @@ const LoginSignup = () => {
           role,
           email,
           password,
+          studentID,
         });
 
         alert(response.data.message);
@@ -108,6 +109,12 @@ const LoginSignup = () => {
         <div className="input">
           <img src={password_icon} alt="" />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </div>
+
+        
+        <div className="input">
+          <img src={password_icon} alt="" />
+          <input type="studentid" placeholder="Studentid" value={password} onChange={(e) => setStudentID(e.target.value)} required />
         </div>
       </div>
 
