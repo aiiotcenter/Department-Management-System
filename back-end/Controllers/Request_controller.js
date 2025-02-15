@@ -6,7 +6,7 @@ const database = require('../Database_connection');
 //=======================================================================================================
 //? POST,  function that create requests
 //=======================================================================================================
-const create_rquest = async (req, res) => {
+const create_request = async (req, res) => {
     const {entry_approver_id, entry_purpose, entry_date, entry_time} = req.body;
 
     try{
@@ -60,6 +60,9 @@ const view_requests = (req, res) => {
 //=============================================================================================================================
 //? PATCH, function to update request status 
 //=======================================================================================================
+const GenerateQrCode = require('./GenerateQrCode'); // Import from Controllers folder
+const path = require ('path');
+
 const update_request = async (req, res) => {
     const {EntryRequest_ID, status, QRcode_ID, User_ID, Visit_purpose, QRcode_Expiry_date, QRcode_path  } = req.body;// will be taken from the front-end
     
@@ -75,30 +78,35 @@ const update_request = async (req, res) => {
         await connection.beginTransaction();
         
         let response_message;
+        let QRcode_ID, QRcode_path;
 
-        // If the status is 'Approved', insert QR code data --------------------------------------------------------------------------------------------------
-        if (status == 'Approved'){
-            //TODO: function to Generate the qr code 
-            // check QR code data
-            if (!QRcode_ID || !User_ID || !Visit_purpose || !EntryRequest_ID || !QRcode_Expiry_date || !QRcode_path) {
-                console.log('Missing QR Code data')
-                return res.json({messagee: 'Error Occured, Missing QR Code data'})
+        // If the status is 'Approved', generate and insert QR code data --------------------------------------------------------------------------------------------------
+        if (status == 'Approved') {
+            if (!User_ID || !Visit_purpose || !QRcode_Expiry_date) {
+                console.log('Missing QR Code data');
+                return res.json({message: 'Error Occurred, Missing QR Code data'});
             }
 
-            // Inserting qrcode data into database
+            QRcode_ID = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
+            QRcode_path = path.join('QRcodes', `${QRcode_ID}.png`); // Save QR code in QRcodes folder
+
+            await GenerateQrCode(QRcode_ID, QRcode_path);
+
+
+            // Inserting QR code data into database
             await connection.query(
                 'INSERT INTO qr_codes (QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path) VALUES (?, ?, ?, ?, ?, ?)',
                 [QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path]
             );
 
             response_message = 'Entry Request was Approved & QR Code was generated';
-        // if the entry request was regjected --------------------------------------------------------------------------------------------------------------------
+        // if the entry request was rejected --------------------------------------------------------------------------------------------------------------------
         } else {
             response_message = 'Entry Request was Declined';
         }
         //______________________________________________________________________________________________________________________________
 
-        // Update appointment status 
+        // Update Request status 
         await connection.query(
             'UPDATE Entry_Requests SET Status = ? WHERE EntryRequest_ID = ?',
             [status, EntryRequest_ID]
@@ -110,10 +118,10 @@ const update_request = async (req, res) => {
         return res.json({ message: response_message });
 
     } catch (error) {
-        await connection.rollback();//'rollback' will be used to prevent incomplete commits (like either only the status is updated or the qr code data is stroed in db)
+        await connection.rollback();//'rollback' will be used to prevent incomplete commits (like either only the status is updated or the qr code data is stored in db)
 
-        console.error('Error occurred while updating entry requst status :', error );
-        return res.status(500).json({ message: 'Error occurred while updating entry requst status ', error });
+        console.error('Error occurred while updating entry request status :', error );
+        return res.status(500).json({ message: 'Error occurred while updating entry request status ', error });
 
     } finally {
         connection.release();// Release the connection back to the pool(so it can be reused)

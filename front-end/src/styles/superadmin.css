@@ -1,160 +1,139 @@
-/* General Dashboard Styling */
+/* General Styles */
 .dashboard-container {
-  width: 80%;
-  margin: 20px auto;
-  text-align: center;
   font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+  padding: 20px;
+  text-align: center;
 }
 
-/* Header Styling */
+/* Header */
 .dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background-color: #55989a;
+  background-color: #47627e;
   color: white;
+  padding: 20px;
   border-radius: 10px;
-}
-
-.dashboard-header h1 {
-  margin: 0;
-  font-size: 24px;
-}
-
-/* Profile Picture */
-.profile-container {
-  display: flex;
-  align-items: center;
-}
-
-.profile-pic {
-  width: 50px;
-  height: 50px;
-  background-color: #ecf1f1;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  flex-direction: column;
 }
 
-/* Add Employee Button */
-.add-btn {
-  background-color: #3498db;
-  color: white;
-  padding: 12px 18px;
-  margin-top: 20px;
-  border: none;
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
   cursor: pointer;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: background 0.3s ease;
+  border: 3px solid white;
 }
 
-.add-btn:hover {
-  background-color: #2980b9;
+/* Table */
+.table-container {
+  margin: 20px auto;
+  width: 80%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Employee Table */
 table {
   width: 100%;
-  margin-top: 20px;
   border-collapse: collapse;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 14px;
-  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
 }
 
 th {
-  background-color: #34495e;
+  background-color: #315881;
   color: white;
 }
 
-/* Delete Button */
-.delete-btn {
-  background-color: #e74c3c;
+/* Add Employee Button */
+.add-employee-btn {
+  background-color: #28a745;
   color: white;
-  padding: 8px 12px;
   border: none;
+  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 14px;
-  transition: background 0.3s ease;
+  margin-top: 20px;
 }
 
-.delete-btn:hover {
-  background-color: #c0392b;
+.add-employee-btn:hover {
+  background-color: #218838;
 }
 
-/* Modal Styling */
-.modal {
+/* Modal */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
   background: white;
-  padding: 25px;
+  padding: 20px;
+  width: 350px;
   border-radius: 10px;
-  width: 380px;
   text-align: center;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Modal Form */
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.modal-content h3 {
+  margin-bottom: 15px;
 }
 
-.modal-form input {
+.employee-form input {
   width: 100%;
-  padding: 12px;
-  margin: 10px 0;  /* Adds spacing between inputs */
+  padding: 10px;
+  margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 16px;
-}
-
-/* Submit & Close Button */
-.submit-btn, .close-btn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s ease;
 }
 
 .submit-btn {
-  background-color: #27ae60;
+  background-color: #007bff;
   color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .submit-btn:hover {
-  background-color: #219150;
+  background-color: #0056b3;
 }
 
 .close-btn {
-  background-color: #95a5a6;
+  background-color: #dc3545;
   color: white;
+  padding: 10px;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .close-btn:hover {
-  background-color: #7f8c8d;
+  background-color: #c82333;
 }

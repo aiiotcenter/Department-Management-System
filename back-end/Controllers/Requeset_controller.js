@@ -1,4 +1,5 @@
 const database = require('../Database_connection');
+const generateQRCode = require('./GenerateQrCode');
 
 //=======================================================================================================
 // POST function that receive requests1(it make requests)
@@ -58,51 +59,58 @@ const view_requests = (req, res) => {
 //=============================================================================================================================
 // PUT/PATCH function to update request status 
 //=======================================================================================================
+const GenerateQrCode = require('./GenerateQrCode'); // Import from Controllers folder
+
 const update_request = async (req, res) => {
     const {EntryRequest_id, status } = req.body;// will be taken from the front-end
     
     if ( !EntryRequest_id || !status ) {
             return res.status(400).json({ message: 'Fill all information please' });
-        };
+        }
 
     try{
-        database.query('UPDATE Entry_Requests SET Status = ? WHERE EntryRequest_ID = ?',[status, EntryRequest_id], (error, results) =>{
-            if (error) {
-                console.log(error);
-                return res.status(500).json({ message: 'Database error' });
-            }
+        // Update status in the database
+        await database.query('UPDATE Entry_Requests SET Status = ? WHERE EntryRequest_ID = ?',[status, EntryRequest_id]);
+            
             console.log('Request Status was changed');
-        });
-        //------------------------------------------------------------------------------------
-        if (status == 'Approved'){
 
-            //TODO: function to Generate the qr code 
-            const {QRcode_id, User_id, Visit_purpose, EntryRequest_id, QRcode_Expiry_date, QRcode_path} = req.body
+        if (status === 'Approved') {
+            try {
 
-            if (!QRcode_id || !User_id || !Visit_purpose || !EntryRequest_id || !QRcode_Expiry_date || !QRcode_path) {
-                console.log('Missing QR Code data')
-                return res.json({messagee: 'Error Occured, please try again later'})
+                const QRcode_id = Math.random().toString(36).substring(7); // Generate a random ID
+                const filename = `${QRcode_id}.png`; // Name of the QR file
+                const qrData = `Entry ID: ${EntryRequest_id}, User: ${req.user.id}, Purpose: Entry Access`;
+
+                // Generate and save the QR code
+                const QRcode_path = await GenerateQrCode(qrData, filename);
+                
+                // Insert QR code details into database
+                await database.query(
+                    'INSERT INTO qr_codes (QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path) VALUES (?, ?, ?, ?, ?, ?)',
+                    [QRcode_id, req.user.id, 'Entry Access', EntryRequest_id, new Date(), QRcode_path]
+
+                );
+
+                console.log('New QR code was generated!');
+                return res.json({ message: 'Request Approved & QR Code Generated', QRcode_path });
+            } catch (qrError) {
+                console.error('QR Code generation failed:', qrError);
+
+                //Rollback: Set status back to "waiting"
+                await database.query('UPDATE Entry_Requests SET Status = ? WHERE EntryRequest_ID = ?', ['waiting', EntryRequest_id]);
+                
+                return res.status(500),json({ message: 'QR code generation failed, status reverted to waiting'})
             }
-            // Inserting qrcode data into database
-            database.query('INSERT INTO qr_codes (QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path) VALUES (?, ?, ?, ?, ?, ?, ?',
-                [QRcode_id, User_id, Visit_purpose, QRcode_Expiry_date, QRcode_path], (error, results) => {
-                    if (error) {
-                            return res.status(500).json({ message: 'Database error' });
-                    }
-                    console.log('New QRcode was generated!');
-                }
-            )
-            return res.json({message: 'Request was Approved & QRcode was generated'});
-        //-----------------------------------------------------------------------------------------------------------
-        } else{
-            return res.json({message:'Request was Declined'})   
-        }
-    }catch(error){
-        console.log(error);
-        return res.status(500).json({ message: 'Server error, please try again--' });
-    }
-};
+        } else {
+            return res.json({ message: 'Request was Declined'});
 
+        } 
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server error, please try again'});
+    }
+
+    };
 
 //=============================================================================================================================
 module.exports.receive_rquest = receive_rquest;// POST
