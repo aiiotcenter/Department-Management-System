@@ -1,21 +1,19 @@
 //===========================================================================================================
-// set up for express router
+// Setting up Express router
 //===========================================================================================================
 const express = require('express');
 const router = express.Router();
 
 //===========================================================================================================
-// Importing the functions
+// Importing the functions and middlwares
 //===========================================================================================================
+const {protect, ExtractJWTData} = require('../../Authentication_Middleware');
+// protect  : restrict access to certain pages for non-logged-in users
+// ExtractJWTData : function to extract user data from the token(jwt)
 
-const {create_appointment}= require('../../Controllers/Appoinment_controller')
-const {view_appointment}= require('../../Controllers/Appoinment_controller');
-const {update_appointment}= require('../../Controllers/Appoinment_controller');
-
-const {protect} = require('../../Authentication_Middleware');
-const {ExtractJWTData} = require('../../Authentication_Middleware');
+const {create_appointment, view_appointment, update_appointment}= require('../../Controllers/Appointment_controller');
 //===========================================================================================================
-// Request logic 
+// Routes for viewing, creaeting and updating Appointments
 //===========================================================================================================
 router.get('/', ExtractJWTData, protect,  view_appointment);
 

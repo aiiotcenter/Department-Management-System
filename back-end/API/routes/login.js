@@ -1,16 +1,14 @@
 //===========================================================================================================
-// set up for express router
+// Setting up Express router
 //===========================================================================================================
 const express = require('express');
 const router = express.Router();
 
 //===========================================================================================================
-// Importing libraries
+// Importing functions, middlewares and libraries(modules)
 //===========================================================================================================
 const {prevent} = require('../../Authentication_Middleware');
-const database = require('../../Database_connection');
-const bcrypt = require('bcrypt'); //encryption module
-const jwt = require('jsonwebtoken'); // moduel to gernerate and verify jwts for authentication
+// protect  : restrict access to certain pages for non-logged-in users
 
 const login_logic = require('../../Controllers/Login_controller');
 

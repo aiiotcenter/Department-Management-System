@@ -1,21 +1,21 @@
 //===========================================================================================================
-// set up for express router
+// Setting up Express router
 //===========================================================================================================
 const express = require('express');
-const router = express.Router();// we use it to define routes separately and attach them to the main app using app.use() ,
-                                // in which keep the routes organized and manageable 
+const router = express.Router();
                                 
 //===========================================================================================================
-// Import libraries & function
+// Importing functoion and middleware
 //===========================================================================================================
 const {prevent} = require('../../Authentication_Middleware');
+// protect  : restrict access to certain pages for non-logged-in users
 
-const Register_logic = require('../../Controllers/Register_controller');
+const {local_register} = require('../../Controllers/Register_controller');
 
 //===========================================================================================================
-// Register logic
+// Route to add new user to the system
 //===========================================================================================================
-router.post('/', prevent, Register_logic);
+router.post('/', prevent, local_register);
 
 //===========================================================================================================
 module.exports = router;

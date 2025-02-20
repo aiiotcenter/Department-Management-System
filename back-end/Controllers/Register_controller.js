@@ -1,59 +1,66 @@
-//===========================================================================================================
-// Import library and database connection
-//===========================================================================================================
-const database = require('../Database_connection');
+//===============================================================================================================
+//?  Importing  Library and database connection
+//===============================================================================================================
 const bcrypt = require('bcrypt');
+const database = require('../Database_connection');
 
-//===========================================================================================================
+//===================================================================================================================
+//? POST , this function is the inner logic of register, it passes the main information needed for registering user. 
+//? (this function is for admin route)
+//===================================================================================================================
 
-const Register_logic = async (req, res) => {
-    const { name, role, email, password} = req.body;
-
+const innerRegisterLogic = async ({ name, role, email, photo_path, password }, res) => {
     try {
-        // Ensure all required fields are provided
-        if (!req.body.role || !req.body.name || !req.body.email || !req.body.password) {
-        return res.status(400).json({ message: 'Fill all information please' });
+        if (!role || !name || !email || !photo_path || !password) {
+            return res.status(400).json({ message: 'Please fill all fields' });
         }
 
-        // generating Users_ID
-        const generated_id = (Array.from({ length: 8 }, () => Math.floor(Math.random() * 10))).join("");//(8 digit number for the id)
+        // Generating Users_ID
+        const generated_id = Array.from({ length: 8 }, () => Math.floor(Math.random() * 10)).join("");
+        
+        // Hashing the password
+        const hashedPassword = await bcrypt.hash(password, 10);  
 
-        const hashedPassword = await bcrypt.hash(req.body.password, 10); // 10 is the salt round, it represent how many time the hashing algorithms will be applied on the password, the higher the better
+        // Check if the email already exists 
+        const [results] = await database.query('SELECT * FROM users WHERE Email_address = ?', [email]);
 
-        const user = {
-        User_ID: generated_id,
-        User_Role: req.body.role,
-        User_name: req.body.name,
-        Email_address: req.body.email,
-        Hashed_password: hashedPassword,
-        };
+        if (results.length !== 0) {
+            console.log('Email already exists:', email);
+            return res.status(409).json({ message: 'Email already exists' });
+        }
+        
+        const [new_user] = await database.query(
+            'INSERT INTO users (User_ID, User_Name, User_Role, Email_address, Photo_path, Hashed_password) VALUES (?, ?, ?, ?, ?, ?)',
+            [generated_id, name, role, email, photo_path, hashedPassword]
+        );
+        
+        if (new_user.affectedRows === 0) {
+            console.log('Databaes Error, User was not registered!')
+            return res.status(500).json({ message: 'Database error, User was not registered!' });
+        }
+        
+        // if no error occured and user was registered 
+        console.log(`"${name}" registered successfully, please log in`);  
+        return res.status(201).json({ message: 'User registered successfully, please log in' });
 
-        // Check if email already exists
-        database.query('SELECT * FROM users WHERE Email_address = ?', [req.body.email], (error, results) => {
-            if (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Internal server error' });
-            }
-            
-            
-            if (results.length > 0) {
-            return res.status(409).json({ message: 'email already exists' });
-            }
-
-            database.query('INSERT INTO users (User_ID, User_Name, User_Role, Email_address, Hashed_password) VALUES (?, ?, ?, ?, ?)',
-                [generated_id, name, role, email, hashedPassword],
-                (error, results) => {
-                    if (error) {
-                        return res.status(500).json({ message: 'Database error' });
-                    }
-                    console.log(`"${req.body.name}" Was added in the database`) // testing the code 
-                    res.status(201).json({message: 'user registrered successfully, please log in'})
-            });
-    });
-    } catch(error) {
-        return res.status(500).json({ message: 'Server error, please try again' });
+    } catch (error) {
+        console.error('Server error, please try again', error);
+        return res.status(500).json({ message: 'Server error, please try again', error });
     }
 };
 
-//===========================================================================================================
-module.exports = Register_logic;
+//===========================================================================================
+//? initialize the register function for normal users
+// ? (this function is for Register route)
+//===========================================================================================
+
+const Register_logic = async (req, res) => {
+    const { name, role, email, photo_path, password } = req.body;
+
+    // Call the inner function and pass the data from req.body 
+    innerRegisterLogic({ name, role, email, photo_path, password },res);
+};
+//===========================================================================================
+
+module.exports.local_register = Register_logic;
+module.exports.global_register = innerRegisterLogic;

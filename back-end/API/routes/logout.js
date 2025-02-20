@@ -1,18 +1,19 @@
 //===========================================================================================================
-// set up for express router
+// Setting up Express router
 //===========================================================================================================
 const express = require('express');
-const router = express.Router(); // this method creates a router instance used to define and organize route handlers for different HTTP methods (e.x: GET, POST)
+const router = express.Router(); 
 
 //===========================================================================================================
-// Import specific function from file "Authentication_Middleware.js"
+// Importing function and middleware
 //===========================================================================================================
 const {protect} = require('../../Authentication_Middleware');
+// protect  : restrict access to certain pages for non-logged-in users
 
 const Logout_logic = require('../../Controllers/Logout_controller');
 
 //===========================================================================================================
-// Logout logic
+// Router to logout the user of the system
 //===========================================================================================================
 
 router.post('/', protect, Logout_logic );

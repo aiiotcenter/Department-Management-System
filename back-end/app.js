@@ -16,6 +16,8 @@ const Logout_route = require('./API/routes/logout');
 const Homepage_route = require('./API/routes/homepage');
 const Request_route = require('./API/routes/Request');
 const Appointment_route = require('./API/routes/appointment');
+
+const Admin_route = require('./API/routes/admin');
 //===========================================================================================
 //? Import Libraries(modules) we will use
 //===========================================================================================
@@ -41,6 +43,6 @@ app.use('/api/homepage', Homepage_route);
 app.use('/api/request',Request_route);
 app.use('/api/appointment', Appointment_route);
 
-
-
+app.use('/api/admin', Admin_route);
+//===========================================================================================
 module.exports = app;

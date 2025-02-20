@@ -1,20 +1,21 @@
 //===========================================================================================================
-// set up for express router
+// Setting up Express router
 //===========================================================================================================
 const express = require('express');
 const router = express.Router();
 
-
 //===========================================================================================================
-// Import libraries & function
+// Importing the functions and middlewares 
 //===========================================================================================================
 const {protect} = require('../../Authentication_Middleware');
+// protect  : restrict access to certain pages for non-logged-in users
 
 const homepage_logic = require('../../Controllers/Homepage_controller');
 
 //===========================================================================================================
-
-
+// Router for viewing homepage 
+//===========================================================================================================
 router.get('/', protect, homepage_logic);
 //===========================================================================================================
+
 module.exports = router

@@ -1,10 +1,16 @@
 
-const Logout_logic = (req, res) => {
+const Logout_logic = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        const id = req.user.id;
 
-    res.clearCookie('token');
-    const email = req.user.email;
-    console.log(`User with this email address: "${email}" logged out\n`); // test i can delete it ( i added "protect" just for this test line, i can remove it)
-    res.json({message: `User logged out (${email})`})
+        console.log(`User with this id : "${id}" logged out\n`); // test, can delete later
+        return res.json({ message: `User logged out (${id})` });
+
+    } catch (error) {
+        console.error("Error during logout:", error);
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
 };
 
 //===========================================================================================================

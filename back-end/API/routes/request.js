@@ -1,23 +1,23 @@
 //===========================================================================================================
-// set up for express router
+// Setting up Express router
 //===========================================================================================================
 const express = require('express');
 const router = express.Router();
 
 //===========================================================================================================
-// Importing the functions
+// Importing the functions and middlewares
 //===========================================================================================================
-const {receive_rquest}= require('../../Controllers/Requeset_controller');
-const {view_requests}= require('../../Controllers/Requeset_controller');
-const {update_request}= require('../../Controllers/Requeset_controller');
-const {protect} = require('../../Authentication_Middleware');
 const {ExtractJWTData} = require('../../Authentication_Middleware');
+const {protect} = require('../../Authentication_Middleware');
+// protect  : restrict access to certain pages for non-logged-in users
+
+const {create_request, view_requests, update_request }= require('../../Controllers/Request_controller');
 //===========================================================================================================
-// Request logic 
+// Routes for viewing, adding and updating Requestes 
 //===========================================================================================================
 router.get('/', ExtractJWTData, protect,  view_requests);
 
-router.post('/', ExtractJWTData, protect, receive_rquest );
+router.post('/', ExtractJWTData, protect, create_request );
 
 router.patch('/', protect,  update_request);
 

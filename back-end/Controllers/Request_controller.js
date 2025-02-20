@@ -6,104 +6,139 @@ const database = require('../Database_connection');
 //=======================================================================================================
 //? POST,  function that create requests
 //=======================================================================================================
-const create_rquest = async (req, res) => {
-    const {entry_approver_id, entry_purpose, entry_date, entry_time} = req.body;
+const create_request = async (req, res) => {
+    const { entry_approver_id, entry_purpose, entry_date, entry_time } = req.body;
 
-    try{
-        if ( !entry_approver_id || !entry_purpose || !entry_date || !entry_time ) {
+    try {
+        if (!entry_approver_id || !entry_purpose || !entry_date || !entry_time) {
+            console.log('Some information for the Entry Request is missing');
             return res.status(400).json({ message: 'Fill all information please' });
-        };
-        
-        console.log(`This is the user email : ${req.user.email}  and user id : ${req.user.id}`)// test
+        }
 
-        // Generate the request id
+        // Generate the request ID
         const EntryRequest_id = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
 
-        database.query('INSERT INTO entry_requests (EntryRequest_id, Entry_Requester_id, Entry_Approver_id, Entry_purpose, Entry_date, Entry_time, Status) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [EntryRequest_id,
-            req.user.id, 
-            entry_approver_id, 
-            entry_purpose, 
-            entry_date, 
-            entry_time, 
-            "waiting"], (error, results) => {
-            if (error) {
-                console.log(error);
-                return res.status(500).json({ message: 'Database error' });
-            }
-            console.log(`New Request was created. Entry Requester: ${req.user.id} , Entry Approver: ${entry_approver_id}`);
-            return res.status(201).json({message: 'New Request was created'})
-        });
-    }catch(error){
+        await database.query(
+            'INSERT INTO entry_requests (EntryRequest_id, Entry_Requester_id, Entry_Approver_id, Entry_purpose, Entry_date, Entry_time, Status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [EntryRequest_id, req.user.id, entry_approver_id, entry_purpose, entry_date, entry_time, "waiting"]
+        );
+
+        console.log(`New Request was created. Entry Requester: ${req.user.id}, Entry Approver: ${entry_approver_id}`);
+        return res.status(201).json({ message: 'New Request was created' });
+
+    } catch (error) {
         console.log('Server error, please try again', error);
-        return res.status(500).json({ message: 'Server error, please try again', error});
+        return res.status(500).json({ message: 'Server error, please try again', error: error.message });
     }
-    
 };
+
 
 //=============================================================================================================================
 //? GET,  function to review Waiting requests
 //=======================================================================================================
-const view_requests = (req, res) => {
-    const waiting_requests =  database.query('SELECT * FROM entry_requests WHERE Status = ?  AND Entry_Approver_ID = ?',["waiting", req.user.id], (error, results) => {
-    if(error){
-        console.log('Database Error', error)
-        return res.status(500).json({ message: 'Database error', error });
-    }
-    if(results.length === 0 ){
-        return res.json({ message: 'No waiting Requests exists' })
-    }
-    return res.json(results);  
-    });
-}
+const view_requests = async (req, res) => {
+    try {
+        const [waiting_requests] = await database.query(
+            'SELECT * FROM entry_requests WHERE Status = ? AND Entry_Approver_ID = ?',
+            ["waiting", req.user.id]
+        );
 
+        if (waiting_requests.length === 0) {
+            return res.json({ message: 'No waiting Requests exist' });
+        }
+
+        return res.json(waiting_requests);
+    } catch (error) {
+        console.log('Database Error', error);
+        return res.status(500).json({ message: 'Database error', error: error.message });
+    }
+};
 //=============================================================================================================================
 //? PATCH, function to update request status 
 //=======================================================================================================
+const GenerateQrCode = require('./GenerateQrCode'); // Import from Controllers folder
+const path = require ('path');
+
 const update_request = async (req, res) => {
-    const {EntryRequest_ID, status, QRcode_ID, User_ID, Visit_purpose, QRcode_Expiry_date, QRcode_path  } = req.body;// will be taken from the front-end
+    const {EntryRequest_ID, status, User_ID, Visit_purpose, QRcode_Expiry_date  } = req.body;// will be taken from the front-end
     
     // check required fields
     if (!EntryRequest_ID || !status) {
             return res.status(400).json({ message: 'Required data is Missing, Fill all information please' });
     };
 
-    const connection = await database.promise().getConnection(); // Get a connection from the pool
+    const connection = await database.getConnection(); // Get a connection from the pool
 
     try{    
         // Start a transaction
         await connection.beginTransaction();
         
         let response_message;
+        let QRcode_ID, QRcode_path;
+        // _________________________________________________________________________________________________________________________________________________________________
+
 
         // If the status is 'Approved', insert QR code data --------------------------------------------------------------------------------------------------
         if (status == 'Approved'){
-            //TODO: function to Generate the qr code 
-            // check QR code data
-            if (!QRcode_ID || !User_ID || !Visit_purpose || !EntryRequest_ID || !QRcode_Expiry_date || !QRcode_path) {
+            
+            // check QR code data 
+            if ( !User_ID || !Visit_purpose || !QRcode_Expiry_date ) {
                 console.log('Missing QR Code data')
                 return res.json({messagee: 'Error Occured, Missing QR Code data'})
             }
 
-            // Inserting qrcode data into database
-            await connection.query(
+            // Check if EntryRequest_ID and User_ID exist in database and their is match between them
+            const [reques_check] = await connection.query(
+                'SELECT EntryRequest_ID FROM entry_requests WHERE EntryRequest_ID = ? AND Entry_Requester_ID = ?',
+                [EntryRequest_ID, User_ID]
+            );
+            //if no request found in database with these data or no matches between reques id and user id then stop the process 
+            if (reques_check.length === 0){
+                await connection.rollback();
+                console.log(`No Entry Requests found with the provided data, please check your data again!`);
+                return res.status(404).json({message : 'No Entry Requests found with the provided data, please check your data again!'})
+            };
+            
+            // generate qrcode ID and prepare the path
+            QRcode_ID = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
+            QRcode_path = path.join(__dirname,'../QRcodes', `${QRcode_ID}.png`); // Save QR code in QRcodes folder
+            
+            // generate QR Code
+            await GenerateQrCode({ User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date }, QRcode_ID);
+            
+            // Insert QR Code data into the database
+            const [results] = await connection.query(
                 'INSERT INTO qr_codes (QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path) VALUES (?, ?, ?, ?, ?, ?)',
-                [QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path]
+                [QRcode_ID, User_ID, Visit_purpose, EntryRequest_ID, QRcode_Expiry_date, QRcode_path, EntryRequest_ID, User_ID]
             );
 
+            if (results.affectedRows == 0){
+                console.log('Database Error occured while inserting QRcode data');
+                return res.json({message:'Database Error occured while inserting QRcode data' })
+            }
             response_message = 'Entry Request was Approved & QR Code was generated';
+        // ___________________________________________________________________________________________________________________________________________________________   
         // if the entry request was regjected --------------------------------------------------------------------------------------------------------------------
         } else {
             response_message = 'Entry Request was Declined';
         }
         //______________________________________________________________________________________________________________________________
+        
+        // after knowing what is the new status of the Entry Request and implementing some procedures we should do the following:
+        // Update Entry Request status 
+       const [results] = await connection.query(
+        'UPDATE entry_requests SET Status = ? WHERE EntryRequest_ID = ?', 
+        [status, EntryRequest_ID]
+       );
 
-        // Update appointment status 
-        await connection.query(
-            'UPDATE Entry_Requests SET Status = ? WHERE EntryRequest_ID = ?',
-            [status, EntryRequest_ID]
-        );
+       // check if the new status of Entry Request was updated , if not that means the provided data is wrong(probaly the EntryRequest_ID in declined case, because approved already have somethign to check the validation )
+        if (results.affectedRows === 0){
+            console.log(`Status was not updated! No Entry Requests found wiht this ID : ${EntryRequest_ID}`);
+            await connection.rollback();
+            return res.status(404).json({message : `Status was not updated! No Entry Requests was not found With this ID : ${EntryRequest_ID} `})
+        };
 
+        //______________________________________________________________________________________________________________________________
         // use 'commit' that will commit the transaction only if both operations succeed
         await connection.commit();
         console.log(response_message)
@@ -120,6 +155,6 @@ const update_request = async (req, res) => {
     }
 };
 //=============================================================================================================================
-module.exports.create_rquest = create_rquest;// POST
+module.exports.create_request = create_request;// POST
 module.exports.view_requests = view_requests;// GET
 module.exports.update_request = update_request; // PATCH
