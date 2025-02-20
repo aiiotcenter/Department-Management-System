@@ -1,15 +1,27 @@
-//===========================================================================================================
-//? Import Required Modules and Set Port:
-//===========================================================================================================
-const http = require('http')
-const port = 3000;
+const express = require("express");
+const mysql = require("mysql");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const multer = require("multer");
 
-//===========================================================================================================
-//? Create HTTP Server and Initialize Express App:
-//===========================================================================================================
-const app = require('./app');
-const server = http.createServer(app); //method to creates an HTTP server and passes Express app to handle incoming requests.
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-//===========================================================================================================
-server.listen(port)
+// File upload setup
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
+// Database Connection
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: "testdb",
+});
+
+db.connect((err) => {
+  if (err) console.error("Database connection failed:", err);
+  else console.log("Connected to MySQL");
+});

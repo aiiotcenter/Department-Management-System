@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: column;
   margin: 50px auto;
-  width: 35%; 
-  height: 700px;;
+  width: 35%;
+  height: 750px;
   padding: 40px;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.378);
-  box-shadow: 1px 1px 8px rgba(0, 0, 0,0.1);
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
 }
 
 .header {
@@ -23,7 +23,7 @@
   color: rgb(191, 60, 132);
   font-size: 45px;
   font-weight: 600;
-  text-align: center; 
+  text-align: center;
 }
 
 .Underline {
@@ -34,30 +34,60 @@
 }
 
 .inputs {
-  margin-top: 50px;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 25px;
+  align-items: center;
 }
 
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.image-label {
+  cursor: pointer;
+}
+
+.profile-pic {
+  width: 120px;  /* Increased size for better visibility */
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgb(191, 60, 132);
+}
+
+.file-input {
+  display: block; /* Ensure it's visible for debugging */
+  opacity: 0;  /* Hides the file input but keeps it functional */
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+}
+
+
+/* Input Styling */
 .input {
   display: flex;
   align-items: center;
-  margin: auto;
   width: 100%;
   height: 70px;
-  max-width: 480px; 
+  max-width: 480px;
   background: rgb(210, 221, 221);
   border-radius: 6px;
-  padding: 0 15px; 
+  padding: 0 15px;
 }
 
 .input img {
-  margin-right: 20px; 
+  margin-right: 20px;
 }
 
 .input input {
-  flex-grow: 1; 
+  flex-grow: 1;
   height: 50px;
   border: none;
   outline: none;
@@ -70,7 +100,7 @@
 .Donthave-account,
 .Already-account {
   margin-top: 25px;
-  font-size: 14px; 
+  font-size: 14px;
   color: #2a2727;
   text-align: center;
 }
@@ -86,7 +116,7 @@
   display: flex;
   gap: 20px;
   margin: 50px auto;
-  justify-content: center; 
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -109,4 +139,3 @@
   background: #eaeaea;
   color: #676767;
 }
-

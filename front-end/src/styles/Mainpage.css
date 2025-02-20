@@ -39,7 +39,8 @@
 .content p {
   font-size: 40px;
   color: white;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  margin-top: 20px;
   
 }
 
@@ -63,6 +64,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-top: 30px;
 }
 
 .option-button:hover {

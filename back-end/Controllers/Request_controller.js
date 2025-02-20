@@ -145,10 +145,10 @@ const update_request = async (req, res) => {
         return res.json({ message: response_message });
 
     } catch (error) {
-        await connection.rollback();//'rollback' will be used to prevent incomplete commits (like either only the status is updated or the qr code data is stroed in db)
+        await connection.rollback();//'rollback' will be used to prevent incomplete commits (like either only the status is updated or the qr code data is stored in db)
 
-        console.error('Error occurred while updating entry requst status :', error );
-        return res.status(500).json({ message: 'Error occurred while updating entry requst status ', error });
+        console.error('Error occurred while updating entry request status :', error );
+        return res.status(500).json({ message: 'Error occurred while updating entry request status ', error });
 
     } finally {
         connection.release();// Release the connection back to the pool(so it can be reused)
