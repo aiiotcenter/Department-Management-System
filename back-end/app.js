@@ -1,10 +1,12 @@
 //===========================================================================================
-//? Initializes  Express framework & creates an instance of the Express application "app" 
+//? Initializes  Express framework & creates an instance of the Express application "app" & Import CORS 
 //(which will be used to define routes, middleware, and handle HTTP requests)
 //===========================================================================================
 
 const express = require('express');
 const app = express();
+
+const cors = require('cors');
 
 //===========================================================================================
 //? Import the Routes 
@@ -23,6 +25,13 @@ const Admin_route = require('./API/routes/admin');
 //===========================================================================================
 
 const cookieParser = require('cookie-parser'); //middleware for parsing cookies in Express requests
+
+
+//===========================================================================================
+//? Enable CORS middleware
+//===========================================================================================
+
+app.use(cors());
 
 //===========================================================================================
 //? set up for the middleware( handle json reqestes & url & cookies)
