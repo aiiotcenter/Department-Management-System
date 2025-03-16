@@ -24,7 +24,7 @@ const create_request = async (req, res) => {
         );
 
         console.log(`New Request was created. Entry Requester: ${req.user.id}, Entry Approver: ${entry_approver_id}`);
-        return res.status(201).json({ message: 'New Request was created' });
+        return res.status(201).json({ message: `New Request was created with this id: ${EntryRequest_id}` });
 
     } catch (error) {
         console.log('Server error, please try again', error);
@@ -87,18 +87,36 @@ const update_request = async (req, res) => {
                 return res.json({messagee: 'Error Occured, Missing QR Code data'})
             }
 
-            // Check if EntryRequest_ID and User_ID exist in database and their is match between them
-            const [reques_check] = await connection.query(
+            //_______________________________________________________________________________________________________________________________________________________
+           // Check if EntryRequest_ID and User_ID exist in database and their is match between them
+            
+            const [request_check] = await connection.query(
                 'SELECT EntryRequest_ID FROM entry_requests WHERE EntryRequest_ID = ? AND Entry_Requester_ID = ?',
                 [EntryRequest_ID, User_ID]
             );
-            //if no request found in database with these data or no matches between reques id and user id then stop the process 
-            if (reques_check.length === 0){
+
+            //if no request found in database with these data or no matches between reques id and user id then stop the process
+            // (here we will generate qr code for failure case, so line 157 will stop the process of updating the status since no qr was generated)
+            if (request_check.length === 0){
                 await connection.rollback();
                 console.log(`No Entry Requests found with the provided data, please check your data again!`);
                 return res.status(404).json({message : 'No Entry Requests found with the provided data, please check your data again!'})
             };
-            
+
+            //_______________________________________________________________________________________________________________________________________________________
+            // check if the approver for that Entry request is the same admin updating the status (if not stop the process of updating the status operation)
+            const [admin_check] = await connection.query(
+                'SELECT Entry_Approver_ID FROM entry_requests WHERE EntryRequest_ID = ?',[EntryRequest_ID]
+            );
+            //if the Entry_Approver_ID in database was different that the id for the admine trying to update the status, then stop the operation 
+            if (String(admin_check[0].Entry_Approver_ID) !== String(req.user.id)){
+
+                await connection.rollback();
+                console.log('You are not authorized to update this Entry Request');
+                return res.status(404).json({message: 'You are not authorized to update this Entry Request'})
+            };
+
+            //_______________________________________________________________________________________________________________________________________________________
             // generate qrcode ID and prepare the path
             QRcode_ID = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
             QRcode_path = path.join(__dirname,'../QRcodes', `${QRcode_ID}.png`); // Save QR code in QRcodes folder
@@ -120,6 +138,32 @@ const update_request = async (req, res) => {
         // ___________________________________________________________________________________________________________________________________________________________   
         // if the entry request was regjected --------------------------------------------------------------------------------------------------------------------
         } else {
+            // Check if Entry_ID and User_ID exist in database and their is match between them
+            const [request_check] = await connection.query(
+                `SELECT EntryRequest_ID FROM entry_requests WHERE EntryRequest_ID = ? AND Entry_Requester_ID = ? `,
+                [EntryRequest_ID, User_ID]
+            );
+
+            //if no Entry Request found in database with these data or no matches between EntryRequest_ID and user id then stop the process 
+            // (here we will generate qr code for failure case, so line 157 will stop the process of updating the status since no qr was generated)
+            if (request_check.length === 0) {
+                await connection.rollback();
+                console.log(`No entry requests found with the provided data`);
+                return res.status(404).json({message : 'No entry requests found with the provided data'})
+            };
+            //__________________________________________________________________________________________________
+            // check if the approver for that appointment is the same admin updating the status (if not stop the process of updating the status operation)
+
+            const [admin_check] = await connection.query(
+                'SELECT Entry_Approver_ID FROM entry_requests WHERE EntryRequest_ID = ?',[EntryRequest_ID]
+            );
+            if (String(admin_check[0].Entry_Approver_ID) !== String(req.user.id)){
+                await connection.rollback();
+                
+                console.log('You are not authorized to update this entry request');
+                return res.status(404).json({message: 'You are not authorized to update this entry request'})
+            };
+
             response_message = 'Entry Request was Declined';
         }
         //______________________________________________________________________________________________________________________________
