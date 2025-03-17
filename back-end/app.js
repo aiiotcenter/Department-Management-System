@@ -20,6 +20,8 @@ const Request_route = require('./API/routes/request');
 const Appointment_route = require('./API/routes/appointment');
 
 const Admin_route = require('./API/routes/admin');
+
+const Internship_applicatin = require('./API/routes/internship_application');
 //===========================================================================================
 //? Import Libraries(modules) we will use
 //===========================================================================================
@@ -53,5 +55,8 @@ app.use('/api/request',Request_route);
 app.use('/api/appointment', Appointment_route);
 
 app.use('/api/admin', Admin_route);
+
+app.use('/api/apply_for_internship', Internship_applicatin);
+
 //===========================================================================================
 module.exports = app;

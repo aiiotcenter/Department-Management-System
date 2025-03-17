@@ -31,7 +31,7 @@ const login_logic = async (req, res) => {
 
         if (isPasswordValid) {
             // Generate JWT token
-            const token = jwt.sign({ id: user.User_ID, email: user.Email_address, role: user.User_Role }, process.env.JWT_SECRET);
+            const token = jwt.sign({ id: user.User_ID, name: user.User_name, email: user.Email_address, role: user.User_Role }, process.env.JWT_SECRET);
 
             // Generate cookie
             res.cookie('token', token, { httpOnly: true, maxAge: 7200000 }); // 2 hours in milliseconds
