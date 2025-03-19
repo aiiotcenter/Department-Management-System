@@ -4,6 +4,7 @@
 
 const database = require('../Database_connection');
 
+const fetch_admins_and_send_emails = require('./emails_sender');
 //================================================================================================================================================================
 //? GET, function to review waiting internship applications
 //================================================================================================================================================================
@@ -43,7 +44,8 @@ const create_internship_application = async (req, res) => {
 
         // logic to restrict the student from appling two internship at the same time
         // if student number exist in database then don't allow him to continue appling for second internship a the same time
-        const[check_previous_application] = await database.query('SELECT User_ID FROM internship_applications WHERE User_id = ? ', [req.user.id]);
+        const[check_previous_application] = await database.query(
+            'SELECT User_ID FROM internship_applications WHERE User_id = ? ', [req.user.id]);
 
         if(check_previous_application.length !== 0){
             console.log("Sorry, you can't apply for two internship at the same time!");
@@ -51,14 +53,28 @@ const create_internship_application = async (req, res) => {
         };
         
         // if he is not in database , then add him
-        await database.query('INSERT INTO internship_applications (User_name, User_ID, department, period_of_internship, status, additional_notes)  VALUES (?, ?, ?, ?, ?, ?)',
+        await database.query(
+            'INSERT INTO internship_applications (User_name, User_ID, department, period_of_internship, status, additional_notes)  VALUES (?, ?, ?, ?, ?, ?)',
             [req.user.name, req.user.id, department, period_of_internship, "waiting", notes]
         );
 
         console.log('Internship application was received from : ', req.user.name);
-        return res.status(201).json({message : `Internship application was received from : ${ req.user.name}`});
 
-        
+        //-------------------------------------------------------------------------------------------------------------
+        // send email to the admins notifiying then with the new submission
+        try{
+            fetch_admins_and_send_emails("Internship Application", req.user.name);
+
+            console.log('Internship submitted and admins was notified');
+            return res.json({message: 'Internship submitted and admins was notified'});
+
+
+        } catch(error){
+            console.log("Something went wrong while sending emails to the admins: ", error);
+            return res.json({message: `Something went wrong while sending emails to the admins: ${error}`});
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
     } catch(error){
             console.log('Database Error:', error);
             return res.json({ message: 'Database error', error: error.message });

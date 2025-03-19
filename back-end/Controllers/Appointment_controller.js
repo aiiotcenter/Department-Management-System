@@ -1,10 +1,12 @@
 //================================================================================================================================================================
-//?  Importing the database connection
+//?  Importing the database connection & function to send emails to the admins
 //================================================================================================================================================================
 const database = require('../Database_connection');
 
 const GenerateQrCode = require('./GenerateQrCode'); // Import from controllers folder
 const path = require ('path');
+
+const fetch_admins_and_send_emails = require('./emails_sender');
 
 //================================================================================================================================================================
 //? POST, function that create appointments
@@ -31,7 +33,31 @@ const create_appointment = async (req, res) => {
         );
 
         console.log(`New Appointment created. Requester: ${req.user.id}, Approver: ${appointment_approver_id}`);
-        return res.status(201).json({ message: `Appointment created successfully with ID: ${appointment_id}` });
+
+        //-------------------------------------------------------------------------------------------------------------
+        // send email to the admins notifiying then with the new submission
+
+
+        try{
+            // in our system appointemnt is desired with specific admin, so we only send email to him 
+            // to do so, we need the email address of the approver, get it from the database 
+            const [approver] = await database.query('SELECT Email_address FROM users WHERE User_ID = ?',[appointment_approver_id]);
+            const approver_email = approver[0].Email_address;
+            console.log("this is approver", approver,"\n this is approver email ", approver_email);
+
+            fetch_admins_and_send_emails("Appointment", req.user.name, approver_email);
+
+            console.log('Appointment submitted and admins was notified');
+            return res.json({message: 'Appointment submitted and admins was notified'});
+
+
+        } catch(error){
+            console.log("Something went wrong while sending emails to the admins: ", error);
+            return res.json({message: `Something went wrong while sending emails to the admins: ${error}`});
+        }
+
+        
+      //-------------------------------------------------------------------------------------------------------------
 
     } catch (error) {
         console.error('Database error occurred while adding appointment:', error);

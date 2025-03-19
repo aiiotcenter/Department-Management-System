@@ -1,7 +1,9 @@
 //===============================================================================================================
-//?  Importing  the database connection
+//?  Importing the database connection & function to send emails to the admins
 //===============================================================================================================
 const database = require('../Database_connection');
+
+const fetch_admins_and_send_emails = require('./emails_sender');
 
 //=======================================================================================================
 //? POST,  function that create requests
@@ -24,7 +26,23 @@ const create_request = async (req, res) => {
         );
 
         console.log(`New Request was created. Entry Requester: ${req.user.id}, Entry Approver: ${entry_approver_id}`);
-        return res.status(201).json({ message: `New Request was created with this id: ${EntryRequest_id}` });
+
+        //-------------------------------------------------------------------------------------------------------------
+        // send email to the admins notifiying then with the new submission
+        try{
+            fetch_admins_and_send_emails("Entry Request", req.user.name);
+
+            console.log('Entry Request submitted and admins was notified');
+            return res.json({message: 'Entry Request submitted and admins was notified'});
+
+
+        } catch(error){
+            console.log("Something went wrong while sending emails to the admins: ", error);
+            return res.json({message: `Something went wrong while sending emails to the admins: ${error}`});
+        }
+
+        
+      //-------------------------------------------------------------------------------------------------------------
 
     } catch (error) {
         console.log('Server error, please try again', error);
