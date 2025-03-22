@@ -14,12 +14,12 @@ const database = require('../Database_connection');
 // here I'm creating the email transporter by using nodemailer, it will be used to send emails via SMTP server(Simple Mail Transfer Protocol)
 
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    host: process.env.Email_Host,
+    port: process.env.Email_Port,
     secure: false, //we write false because we don't want to use SSL/TLS ,instead we want to use 587 port (STARTTLS)
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: process.env.Sender_Email,
+        pass: process.env.Email_App_Password
     },
     tls: { // tls stand for Transport Layer Secure with is 587 port 
         rejectUnauthorized: false // we use it to prevents some TLS-related issues
@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
 // this function get the details of sending the email and use the transporter
 async function send_emails(receiver, subject, message) {
     const email_details = {
-        from: process.env.EMAIL_USER,
+        from: process.env.Sender_Email,
         to: receiver, 
         subject: subject,
         text: message
