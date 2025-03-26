@@ -91,46 +91,59 @@ const view_appointment = async (req, res) => {
 //================================================================================================================================================================
 
 const update_appointment = async (req, res) => {
-    const { Appointment_ID, status, User_ID, Visit_purpose, QRcode_Expiry_date } = req.body;
+    const { Appointment_ID, status, QRcode_Expiry_date } = req.body;
 
     // check required fields
     if (!Appointment_ID || !status) {
         return res.status(400).json({ message: 'Required data is Missing, Fill all information please' });
     };
 
+    //check if the appointment already exists in the database or it does not exists ------------------------
+    const [check_existence] = await database.query(
+        'SELECT * FROM appointments WHERE Appointment_ID = ?',
+        [Appointment_ID]
+    );
+
+    if (check_existence[0] == undefined){
+        console.log(`Sorry! no appointments found with this id : ${Appointment_ID}`);
+        return res.status(404).json({message: `Sorry! no appointments found with this id : ${Appointment_ID}`})
+    };
+    console.log(check_existence[0]);
+    console.log("======================================================")
+    //----------------------------------------------------------------------------------------------------------
     const connection = await database.getConnection(); // Get a connection from the pool
 
     try {
         // Start a transaction
         await connection.beginTransaction();
 
-        let response_message;
-        let QRcode_ID, QRcode_path;
+        // get the user_id from the appointment_id ============================================================
+        const [get_user_id] = await database.query(
+            'SELECT Appointment_Requester_ID FROM appointments WHERE Appointment_ID = ?',[Appointment_ID]
+        );
+        let user_id = get_user_id[0].Appointment_Requester_ID;
+
+        //===========================================================================================================================
+
+        let response_message, QRcode_ID, QRcode_path;
+        
         //___________________________________________________________________________________________________________________________________________________________
         
         // If the status is 'Approved', insert QR code data --------------------------------------------------------------------------------------------------
         if (status === 'Approved') {
             // check QR code data
-            if (!User_ID || !Visit_purpose || !QRcode_Expiry_date ) {
+            if ( !QRcode_Expiry_date ) {
                 console.log('Missing QR code data')
                 return res.status(400).json({ message: 'Error Occured, Missing QR Code data' });
             };
-            //_______________________________________________________________________________________________________________________________________________________
-           // Check if Appointment_ID and User_ID exist in database and their is match between them
-            
-            const [appointment_check] = await connection.query(
-                `SELECT Appointment_ID FROM appointments WHERE Appointment_ID = ? AND Appointment_Requester_ID = ? `,
-                [Appointment_ID, User_ID]
-            );
 
-            //if no appointment found in database with these data or no matches between appointment id and user id then stop the process 
-            // (here we will generate qr code for failure case, so line 157 will stop the process of updating the status since no qr was generated)
-            if (appointment_check.length === 0) {
-                await connection.rollback();
-                console.log(`No appointments found with the provided data`);
-                return res.status(404).json({message : 'No appointments found with the provided data'})
-            };
-            //_______________________________________________________________________________________________________________________________________________________
+            // get the purpose of the entry from the EntryRequest_ID============================================================
+            const [get_purpose] = await database.query(
+                'SELECT Visit_purpose FROM appointments WHERE Appointment_ID = ?',[Appointment_ID]
+            );
+            let purpose_of_appointment = get_purpose[0].Visit_purpose;
+
+            //===================================================================================================================
             // check if the approver for that appointment is the same admin updating the status (if not stop the process of updating the status operation)
             const [admin_check] = await connection.query(
                 'SELECT Appointment_Approver_ID FROM appointments WHERE Appointment_ID = ?',[Appointment_ID]
@@ -138,8 +151,10 @@ const update_appointment = async (req, res) => {
             //if the Appointment_Approver_ID in database was different that the id for the admine trying to update the status, then stop the operation 
             if (String(admin_check[0].Appointment_Approver_ID) !== String(req.user.id)){
                 await connection.rollback();
-                console.log(admin_check, " this is admine check");
-                console.log(req.user.id , " this is tokent id ");
+
+                // console.log(admin_check, " this is admine check");// tests
+                // console.log(req.user.id , " this is tokent id ");
+
                 console.log('You are not authorized to update this appoiontment');
                 return res.status(404).json({message: 'You are not authorized to update this appointment'})
             };
@@ -151,12 +166,12 @@ const update_appointment = async (req, res) => {
             QRcode_path = path.join(__dirname,'../QRcodes', `${QRcode_ID}.png`); // Save QR code in QRcodes folder
 
             // generate QR Code
-            await GenerateQrCode({ User_ID, Visit_purpose, Appointment_ID, QRcode_Expiry_date }, QRcode_ID);
+            await GenerateQrCode({ user_id, purpose_of_appointment, Appointment_ID, QRcode_Expiry_date }, QRcode_ID);
 
             // Insert QR Code data into the database
             const [result] = await connection.query(
                 `INSERT INTO qr_codes (QRcode_ID, User_ID, Visit_purpose, Appointment_ID, QRcode_Expiry_date, QRcode_path) VALUES (?, ?, ?, ?, ?, ?)`,
-                [QRcode_ID, User_ID, Visit_purpose, Appointment_ID, QRcode_Expiry_date, QRcode_path]
+                [QRcode_ID, user_id, purpose_of_appointment, Appointment_ID, QRcode_Expiry_date, QRcode_path]
             );
 
             if(result.affectedRows == 0){
@@ -171,21 +186,6 @@ const update_appointment = async (req, res) => {
 
         // if the appointment was regjected --------------------------------------------------------------------------------------------------------------------
         } else {
-            // Check if Appointment_ID and User_ID exist in database and their is match between them
-            
-            const [appointment_check] = await connection.query(
-                `SELECT Appointment_ID FROM appointments WHERE Appointment_ID = ? AND Appointment_Requester_ID = ? `,
-                [Appointment_ID, User_ID]
-            );
-
-            //if no appointment found in database with these data or no matches between appointment id and user id then stop the process 
-            // (here we will generate qr code for failure case, so line 157 will stop the process of updating the status since no qr was generated)
-            if (appointment_check.length === 0) {
-                await connection.rollback();
-                console.log(`No appointments found with the provided data`);
-                return res.status(404).json({message : 'No appointments found with the provided data'})
-            };
-            //__________________________________________________________________________________________________
             // check if the approver for that appointment is the same admin updating the status (if not stop the process of updating the status operation)
 
             const [admin_check] = await connection.query(
@@ -200,7 +200,7 @@ const update_appointment = async (req, res) => {
 
             response_message = 'Appointment was Declined';
         }
-        //______________________________________________________________________________________________________________________________________________________
+        //===========================================================================================================================================
         // after knowing what is the new status of the appointment and implementing some procedures we should do the following:
         
         const [appointment]= await connection.query(

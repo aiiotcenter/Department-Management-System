@@ -7,7 +7,7 @@ const router = express.Router();
 //===========================================================================================================
 // Importing the functions and middlwares
 //===========================================================================================================
-const {protect, ExtractJWTData} = require('../../Authentication_Middleware');
+const {protect, authRole,  ExtractJWTData} = require('../../Authentication_Middleware');
 // protect  : restrict access to certain pages for non-logged-in users
 // ExtractJWTData : function to extract user data from the token(jwt)
 
@@ -19,7 +19,7 @@ router.get('/', ExtractJWTData, protect,  view_appointment);
 
 router.post('/', ExtractJWTData, protect, create_appointment );
 
-router.patch('/', protect,  update_appointment);
+router.patch('/', protect, authRole,  update_appointment);
 
 //===========================================================================================================
 module.exports = router;

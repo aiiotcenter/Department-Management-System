@@ -93,6 +93,18 @@ const update_internship_application = async (req, res) =>{
     if ( !student_id || !status){
         return res.status(400).json({message: 'Required data is Missing, Fill all information please'});
     };
+ 
+    //check if the internship application already exists in the database or it does not exists ------------------------
+    const [check_existence] = await database.query(
+        'SELECT * FROM internship_applications WHERE User_ID = ?',
+        [student_id]
+    );
+
+    if (check_existence[0] == undefined){
+        console.log(`Sorry! no internship applications found with this student id : ${student_id}`);
+        return res.status(404).json({message: `Sorry! no internship applications found with this student id : ${student_id}`})
+    };
+    //--------------------------------------------------------------------------------------------------------
 
     try{
         await database.query('UPDATE internship_applications SET status = ? WHERE User_ID = ?', [status, student_id]);
