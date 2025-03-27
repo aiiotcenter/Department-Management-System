@@ -58,8 +58,8 @@ const create_request = async (req, res) => {
 const view_requests = async (req, res) => {
     try {
         const [waiting_requests] = await database.query(
-            'SELECT * FROM entry_requests WHERE Status = ? AND Entry_Approver_ID = ?',
-            ["waiting", req.user.id]
+            'SELECT * FROM entry_requests WHERE Status = ? ',
+            ["waiting"]
         );
 
         if (waiting_requests.length === 0) {

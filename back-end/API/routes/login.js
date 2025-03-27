@@ -8,7 +8,7 @@ const router = express.Router();
 // Importing functions, middlewares and libraries(modules)
 //===========================================================================================================
 const {prevent} = require('../../Authentication_Middleware');
-// protect  : restrict access to certain pages for non-logged-in users
+// prevent : middleware to restrict access to some pages ( like login page for a user who alraedy logged in )
 
 const login_logic = require('../../Controllers/Login_controller');
 
