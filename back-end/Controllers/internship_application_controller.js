@@ -4,7 +4,8 @@
 
 const database = require('../Database_connection');
 
-const fetch_admins_and_send_emails = require('./emails_sender');
+const {notify_student} = require('./emails_sender');
+const {fetch_admins_and_send_emails} = require('./emails_sender');
 //================================================================================================================================================================
 //? GET, function to review waiting internship applications
 //================================================================================================================================================================
@@ -33,8 +34,12 @@ const view_internship_applications = async (req, res) =>{
 
 const create_internship_application = async (req, res) => {
     const {department , period_of_internship, additional_notes} = req.body;
+    const connection = await database.getConnection(); // Get a connection from the pool   
+        
+    try {
+        // Start a transaction
+        await connection.beginTransaction();
 
-    try{
         // check if any required data is missing 
         if ( !department || !period_of_internship ){
             return res.status(400).json({message: 'Required data is Missing, Fill all information please'});
@@ -53,7 +58,7 @@ const create_internship_application = async (req, res) => {
         };
         
         // if he is not in database , then add him
-        await database.query(
+        await connection.query(
             'INSERT INTO internship_applications (User_name, User_ID, department, period_of_internship, status, additional_notes)  VALUES (?, ?, ?, ?, ?, ?)',
             [req.user.name, req.user.id, department, period_of_internship, "waiting", notes]
         );
@@ -64,21 +69,27 @@ const create_internship_application = async (req, res) => {
         // send email to the admins notifiying then with the new submission
         try{
             fetch_admins_and_send_emails("Internship Application", req.user.name);
-
-            console.log('Internship submitted and admins was notified');
-            return res.json({message: 'Internship submitted and admins was notified'});
-
-
+            
         } catch(error){
+            await connection.rollback();
             console.log("Something went wrong while sending emails to the admins: ", error);
             return res.json({message: `Something went wrong while sending emails to the admins: ${error}`});
         }
 
+        // use 'commit' that will commit the transaction only if all operations succeed
+        await connection.commit();
+        console.log('Internship submitted and admins was notified');
+        return res.json({message: 'Internship submitted and admins was notified'});
+
         //-------------------------------------------------------------------------------------------------------------
     } catch(error){
-            console.log('Database Error:', error);
-            return res.json({ message: 'Database error', error: error.message });
-        };
+        await connection.rollback();
+        console.log('Database Error:', error);
+        return res.json({ message: 'Database error', error: error.message });
+        
+    } finally {
+        connection.release();// Release the connection back to the pool(so it can be reused)
+    };
 
 };
 
@@ -110,7 +121,25 @@ const update_internship_application = async (req, res) =>{
         await database.query('UPDATE internship_applications SET status = ? WHERE User_ID = ?', [status, student_id]);
 
         console.log("The Internship application status was updated" );
-        return res.status(202).json({message:"The Internship application status was updated "});
+        // -----------------------------------------------------------------
+        // notify the student about new status updated
+        try{
+            
+            const [student] = await database.query('SELECT Email_address FROM users WHERE User_ID = ?',[student_id]);
+            const studnet_email = student[0].Email_address;
+
+            notify_student("Internship Application", status, studnet_email);
+
+            console.log('studnet was notified');
+            return res.json({message: 'studnet was notified and status was updated'});
+
+
+        } catch(error){
+            console.log("Something went wrong while sending email to the student: ", error);
+            return res.json({message: `Something went wrong while sending email to the student: ${error}`});
+        }
+
+
 
     }catch(error) {
             console.log('Database Error:', error);

@@ -3,7 +3,8 @@
 //===============================================================================================================
 const database = require('../Database_connection');
 
-const fetch_admins_and_send_emails = require('./emails_sender');
+const {fetch_admins_and_send_emails} = require('./emails_sender');
+const {notify_student} = require('./emails_sender');
 
 //=======================================================================================================
 //? POST,  function that create requests
@@ -11,7 +12,13 @@ const fetch_admins_and_send_emails = require('./emails_sender');
 const create_request = async (req, res) => {
     const { entry_purpose, entry_date, entry_time } = req.body;
 
+    const connection = await database.getConnection(); // Get a connection from the pool   
+        
+
     try {
+        // Start a transaction
+        await connection.beginTransaction();
+
         if (!entry_purpose || !entry_date || !entry_time) {
             console.log('Some information for the Entry Request is missing');
             return res.status(400).json({ message: 'Fill all information please' });
@@ -20,7 +27,7 @@ const create_request = async (req, res) => {
         // Generate the request ID
         const EntryRequest_id = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
 
-        await database.query(
+        await connection.query(
             'INSERT INTO entry_requests (EntryRequest_id, Entry_Requester_id,  Entry_purpose, Entry_date, Entry_time, Status) VALUES (?, ?, ?, ?, ?, ?)',
             [EntryRequest_id, req.user.id, entry_purpose, entry_date, entry_time, "waiting"]
         );
@@ -32,22 +39,27 @@ const create_request = async (req, res) => {
         // email to the admins notifiying then with the new submission
         try{
             fetch_admins_and_send_emails("Entry Request", req.user.name);
-
             console.log('Entry Request was submitted and admins was notified');
-            return res.json({message: 'Entry Request was submitted and admins was notified'});
-
 
         } catch(error){
+            await connection.rollback();
             console.log("Something went wrong while sending emails to the admins: ", error);
             return res.json({message: `Something went wrong while sending emails to the admins: ${error}`});
         }
+
+        // use 'commit' that will commit the transaction only if all operations succeed
+        await connection.commit();
+        return res.json({message: 'Entry Request was submitted and admins was notified'});
 
         
       //-------------------------------------------------------------------------------------------------------------
 
     } catch (error) {
+        await connection.rollback();
         console.log('Server error, please try again', error);
         return res.status(500).json({ message: 'Server error, please try again', error: error.message });
+    } finally {
+        connection.release();// Release the connection back to the pool(so it can be reused)
     }
 };
 
@@ -131,15 +143,15 @@ const update_request = async (req, res) => {
                 return res.json({messagee: 'Error Occured, Missing QR Code data'})
             }
 
-            // get the purpose of the entry from the EntryRequest_ID============================================================
+            // get the purpose of the entry from the EntryRequest_ID
             const [get_purpose] = await database.query(
                 'SELECT Entry_purpose FROM entry_requests WHERE EntryRequest_ID = ?',[EntryRequest_ID]
             );
             let purpose_of_entry = get_purpose[0].Entry_purpose;
 
-            //===========================================================================
-
-            //_______________________________________________________________________________________________________________________________________________________
+            //___________________________________________________________________________________________________________________
+            //TODO/ Generate and Store QR code
+        
             // generate qrcode ID and prepare the path
             QRcode_ID = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
             QRcode_path = path.join(__dirname,'../QRcodes', `${QRcode_ID}.png`); // Save QR code in QRcodes folder
@@ -158,26 +170,26 @@ const update_request = async (req, res) => {
                 return res.json({message:'Database Error occured while inserting QRcode data' })
             }
             response_message = 'Entry Request was Approved & QR Code was generated';
-
             
         // ==========================================================================================================================================================   
-        // if the entry request was regjected --------------------------------------------------------------------------------------------------------------------
         
+        // if the entry request was regjected --------------------------------------------------------------------------------------------------------------------
         } else {
             response_message = 'Entry Request was Declined';
         }
+        
         //===============================================================================================================================
         //===============================================================================================================================
         // after knowing what is the new status of the Entry Request and implementing some procedures we should do the following:
 
 
         // Update Entry Request status 
-       const [results] = await connection.query(
-        'UPDATE entry_requests SET Status = ? WHERE EntryRequest_ID = ?', 
-        [status, EntryRequest_ID]
-       );
+        const [results] = await connection.query(
+            'UPDATE entry_requests SET Status = ? WHERE EntryRequest_ID = ?', 
+            [status, EntryRequest_ID]
+        );
 
-       // check if the new status of Entry Request was updated 
+        // check if the new status of Entry Request was updated 
         if (results.affectedRows === 0){
             console.log(`Status was not updated! No Entry Requests found wiht this ID : ${EntryRequest_ID}`);
             await connection.rollback();
@@ -185,18 +197,39 @@ const update_request = async (req, res) => {
         };
         //-----------------------------------------------------------------------------------------------
 
-        // store the id of the admin who updated the request(approver) in the appointment table
+        // store the id of the admin who updated the request(approver) in the entry request table
         const [store_approver] = await connection.query(
             'UPDATE entry_requests SET Entry_Approver_ID = ?  WHERE  EntryRequest_ID = ?',
             [req.user.id, EntryRequest_ID]
         );
 
-        if (store_approver.affectedRows ===0 ){
+        if (store_approver.affectedRows === 0 ){
             console.log('Could not store the approver id in entry_requests table, something wrong happend');
             await connection.rollback();
             return res.status(404).json({message: 'Could not store the approver id in entry_requests table, something wrong happend'});
         }
 
+        // ====================================================================================================================================
+        //TODO/ Notify student
+        
+        // notify the student about new status updated
+        try{
+        
+            const [student] = await connection.query('SELECT Email_address FROM users WHERE User_ID = ?',[user_id]);
+            const studnet_email = student[0].Email_address;
+
+            const [approver] = await connection.query('SELECT User_name FROM users WHERE User_ID = ?',[req.user.id]); //get the name of the teacher how approved the appointment (which is the teacher the student want to meet)
+            const approver_name = approver[0].User_name;
+
+            notify_student("Entry Request", status, studnet_email, approver_name, String(QRcode_path));
+
+            console.log('studnet was notified');
+
+        } catch(error){
+            console.log("Something went wrong while sending email to the student: ", error);
+            await connection.rollback();
+            return res.json({message: `Something went wrong while sending email to the student: ${error}`});
+        }
         //==================================================================================================================================
         // use 'commit' that will commit the transaction only if all operations succeed
         await connection.commit();

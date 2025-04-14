@@ -6,6 +6,8 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const database = require('../Database_connection');
+const fs = require("fs"); // to read the file
+const path = require("path");
 
 // ===================================================================================
 //?  create email transporter and the function that will send emails
@@ -21,20 +23,45 @@ const transporter = nodemailer.createTransport({
         user: process.env.Sender_Email,
         pass: process.env.Email_App_Password
     },
-    tls: { // tls stand for Transport Layer Secure with is 587 port 
+    tls: { // tls stand for Transport Layer Secure with 587 port 
         rejectUnauthorized: false // we use it to prevents some TLS-related issues
     }
 });
 
 
 // this function get the details of sending the email and use the transporter
-async function send_emails(receiver, subject, message) {
-    const email_details = {
-        from: process.env.Sender_Email,
-        to: receiver, 
-        subject: subject,
-        text: message
-    };
+async function send_emails(receiver, subject, message, qr_code_path) {
+    let email_details;
+
+    // if it was internhip application we have no qr code 
+    if (qr_code_path == undefined){            
+        email_details = {
+            from: process.env.Sender_Email,
+            to: receiver, 
+            subject: subject,
+            text: message,
+        }; 
+
+    }else{ // in case of appointment or request we have qr code that we need to attache 
+      // Read the QR code image file into a buffer
+        const qrCodeBuffer = fs.readFileSync(String(qr_code_path));
+            
+        email_details = {
+            from: process.env.Sender_Email,
+            to: receiver, 
+            subject: subject,
+            text: message,
+            attachments: [
+                    {
+                        filename: "QR_code.png",
+                        content: qrCodeBuffer
+                        
+                    }
+                ]
+        };  
+    }
+
+    
 
     try {
         await transporter.sendMail(email_details);
@@ -88,5 +115,55 @@ async function fetch_admins_and_send_emails(submission, student_name, appointmen
 }
 
 
+
+
+// ====================================================================================================================================
+//? Inform the student about the new status of the appointment/ request/ application
+// ====================================================================================================================================
+
+async function notify_student(submission, status, student_email, appointment_approver, qr_code) {
+
+    if ( submission === "Entry Request") {
+
+        if(status == "Approved"){
+            await send_emails(
+            student_email, 
+            `Your ${submission} was Approved`,
+            `The ${submission} you made earlier was Approved from the administrative staff and here's the QR code for your ${submission}:`,
+            qr_code);  
+        }else{
+            await send_emails(
+            student_email, 
+            `Your ${submission} was Declined`,
+            `The ${submission} you made earlier was Declined from the administrative staff`);  
+        }
+       
+        
+    }else if (submission === "Appointment"){
+
+        if(status == "Approved"){
+            await send_emails(
+            student_email, 
+            `Your ${submission} was Approved`,
+            `The ${submission} you made earlier was Approved by ${appointment_approver} and here's the QR code for your ${submission}:`,
+            qr_code);  
+        }else{
+            await send_emails(
+            student_email, 
+            `Your ${submission} was Declined`,
+            `The ${submission} you made earlier was Declined by ${appointment_approver}`);  
+        }
+       
+
+    }else{
+        await send_emails(
+            student_email, 
+            `Your ${submission} was ${status}`, 
+            `The ${submission} you made earlier was ${status} from the administrative staff`);
+    }
+
+}
+
 // ===================================================================================
-module.exports = fetch_admins_and_send_emails;
+module.exports.fetch_admins_and_send_emails = fetch_admins_and_send_emails;
+module.exports.notify_student = notify_student;
