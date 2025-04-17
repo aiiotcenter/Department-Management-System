@@ -35,7 +35,11 @@ This web application serve both students and administrative staff, with the foll
 
 ### Project set up:
 For the back-end section:
+
 1-	clone the repository 
+
 2-	Navigate to “back-end” folder
+
 3-	Open the terminal 
+
 4-	Write “node server.js” to start the server
