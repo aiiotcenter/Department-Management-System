@@ -10,26 +10,31 @@ Database: MySQL
 
 ### Features
 This web application serve both students and administrative staff, with the following features:
+
 **Student features:**
--	Students can schedule appointments with their teachers .
--	Students can submit entry request for restricted areas around the campus .
--	Student can apply for internship application.
-  
-**Admins features:**
--	Review all waiting entry requests and internship applications.
--	Each teacher can view only their own waiting appointment.
--	Update the status of waiting entry requests and internship applications.
--	Each teacher can only update the status of their own waiting appointment.
--	A QR code will be generated and stored if  an admin accept an application or an entry request.
-  
+- schedule appointments
+- submit entry request
+- apply for internship application
+
+**Employee features:**
+- Review all waiting entry requests and internship applications
+- Each employee can view only their own waiting appointment
+- Update the status of waiting entry requests and internship applications
+- Each employee can only update the status of their own waiting appointment
+- A QR code will be generated and stored if an admin accept an application or an entry request
+
+**Admin features:**
+- Add and Remove Employees
+- Manage employees details(such as photos, names and accounts
+
 **Notifications features:**
--	All admins will be notified when a student submit Entry request or Internship application.
--	Only the teacher that the student wants to meet is notified in appointment case.
--	Students will be notified when an admin update the status of their appointment and request, and if the status was Approved then the generated QR code will be sent in the email message.
--	students will be notified when an admin updated the status of their internship application.
-  
-**Authentication feature:**
--	Users can register, log in and log out of the system.
+- All employees will be notified when a student submit Entry request or Internship application
+- Only the employee that the student wants to meet is notified in appointment case
+- Students will be notified when an employee update the status of their appointment and request, and if the          
+    status was Approved then the generated QR code will be sent in the email message
+- Students will be notified when an employee updated the status of their internship application
+
+
 
 
 
