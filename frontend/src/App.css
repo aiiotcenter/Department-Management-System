@@ -1,26 +1,27 @@
 .app-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  box-sizing: border-box;
-  background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #ffffff;
 }
 
 #root {
-  width: 100%;
-  margin: 0 auto;
-  padding: 0;
-  text-align: center;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
 }
 
-html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
 }

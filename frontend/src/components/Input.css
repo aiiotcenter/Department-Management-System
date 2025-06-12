@@ -1,0 +1,17 @@
+.input-field {
+    background-color: white;
+    color: black;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #992e49;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+}
+
+.input-field::placeholder {
+    color: black;
+    opacity: 0.6;
+}

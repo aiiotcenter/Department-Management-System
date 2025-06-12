@@ -1,0 +1,49 @@
+.form-container {
+    margin: 80px auto 40px;
+    max-width: 500px;
+    padding: 50px;
+    background-color: #f9f5f6;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 3px solid #992e49;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.form-logo {
+    width: 400px;
+    margin-bottom: 20px;
+}
+
+.form-title {
+    margin-bottom: 25px;
+    color: #992e49;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.name-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.name-group .input-field {
+    flex: 1;
+    min-width: 0;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+    padding-bottom: 15px;
+}

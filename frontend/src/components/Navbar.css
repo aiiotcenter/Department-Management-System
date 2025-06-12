@@ -1,91 +1,91 @@
 .navbar {
-  display: flex;
-  align-items: center;
-  background-color: #ffffff;
-  border-bottom: 2px solid #992e49;
-  padding: 8px 16px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  user-select: none;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-bottom: 2px solid #992e49;
+    padding: 8px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    user-select: none;
+    width: 100%;
 }
 
 .navbar-logo {
-  height: 40px;
-  cursor: pointer;
+    height: 40px;
+    cursor: pointer;
 }
 
 .navbar-icons {
-  margin-left: auto;
-  display: flex;
-  gap: 20px;
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
 }
 
 .navbar-icon {
-  font-size: 28px;
-  color: #992e49;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+    font-size: 28px;
+    color: #992e49;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
 }
 
 .navbar-icon:hover {
-  background-color: #f4c0c7;
+    background-color: #f4c0c7;
 }
 
 .icon-image {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  user-select: none;
-  pointer-events: none;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
 }
 
 .menu-options {
-  position: absolute;
-  background: white;
-  border: 2px solid #992e49;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  min-width: 160px;
-  padding: 8px 0;
-  white-space: nowrap;
+    position: absolute;
+    background: white;
+    border: 2px solid #992e49;
+    border-radius: 8px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    padding: 8px 0;
+    white-space: nowrap;
 }
 
 .lang-menu,
 .user-menu,
 .hamburger-menu {
-  top: 100%;
-  right: 0;
-  left: auto;
-  transform: none;
+    top: 100%;
+    right: 0;
+    left: auto;
+    transform: none;
 }
 
 .menu-options a,
 .menu-options button {
-  padding: 10px 20px;
-  color: #992e49;
-  text-decoration: none;
-  border: none;
-  background: none;
-  text-align: left;
-  font-size: 16px;
-  cursor: pointer;
+    padding: 10px 20px;
+    color: #992e49;
+    text-decoration: none;
+    border: none;
+    background: none;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .menu-options a:hover,
 .menu-options button:hover {
-  background-color: #f4c0c7;
+    background-color: #f4c0c7;
 }
