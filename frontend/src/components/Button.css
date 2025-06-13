@@ -12,6 +12,14 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.form-button-contact {
+  width: fit-content !important;
+  display: block;
+  margin: 20px auto;
+  padding: 12px 50px;
+}
+
 .form-button:hover {
     background-color: #7b243a;
 }
+

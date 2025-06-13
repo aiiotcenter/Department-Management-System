@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-
 import LanguageIcon from '../assets/Language.png';
 import ListIcon from '../assets/List.png';
 import logoAI from '../assets/logoAI.png';

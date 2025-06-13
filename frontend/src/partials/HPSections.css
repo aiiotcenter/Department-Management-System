@@ -1,0 +1,48 @@
+.Box {
+  background-color: #d9cfd1;
+  border-radius: 12px;
+  padding: 20px;
+  width: 400px;
+  height: 150px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+
+.Box.internship {
+    background-color: #8b2b3a; 
+    color: white; 
+}
+
+.Box.appointments {
+    background-color: #d9cfd1;
+    transform: translateY(100px);  
+}
+
+.Box.requests {
+    background-color: #d9cfd1;
+    transform: translateY(100px);
+}
+
+.Box h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+.Box.internship h3 {
+  color: white;
+}
+
+.Box p {
+  margin: 0;
+  font-size: 14px;
+  color: #6a6464;
+}
+
+.Box.internship p {
+  color: white;
+}

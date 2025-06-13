@@ -1,0 +1,35 @@
+.Footer {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-top: 2px solid #992e49;
+  padding: 40px 20px;
+  margin-top: 50px;
+}
+
+.FooterColumn {
+  flex: 1;
+  max-width: 200px;
+  margin-left: 20px;
+}
+
+.FooterColumn h4 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.FooterColumn ul {
+  list-style: none;
+  padding: 0;
+  margin-left: 15px;
+}
+
+.FooterColumn li {
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.FooterColumn li:hover {
+  color: #7b243a; /* your main red color */
+}

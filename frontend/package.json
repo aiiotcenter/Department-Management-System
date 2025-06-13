@@ -18,7 +18,9 @@
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-hook-form": "^7.57.0",
-        "react-intersection-observer": "^9.16.0"
+        "react-intersection-observer": "^9.16.0",
+        "react-slick": "^0.30.3",
+        "slick-carousel": "^1.8.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.28.0",
