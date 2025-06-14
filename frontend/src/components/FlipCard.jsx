@@ -1,0 +1,34 @@
+import { motion as Motion } from 'framer-motion';
+import { useState } from 'react';
+import './FlipCard.css';
+
+export default function FlipCard({ title, content, variant, backContent = '' }) {
+    const [isFlipped, setIsFlipped] = useState(false);
+
+    return (
+        <div
+            className={`flip-card-container ${variant ? variant : ''}`}
+            onMouseEnter={() => setIsFlipped(true)}
+            onMouseLeave={() => setIsFlipped(false)}
+        >
+            <Motion.div
+                className="flip-card"
+                animate={{ rotateY: isFlipped ? 180 : 0 }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                style={{ transformStyle: 'preserve-3d' }}
+            >
+                {/* Front Face */}
+                <div className={`flip-card-face flip-card-front ${variant ? variant : ''}`}>
+                    {title && <h3>{title}</h3>}
+                    {content && <p>{content}</p>}
+                </div>
+
+                {/* Back Face */}
+                <div className={`flip-card-face flip-card-back ${variant ? variant : ''}`}>
+                    <h3>{title}</h3>
+                    <p>{backContent}</p>
+                </div>
+            </Motion.div>
+        </div>
+    );
+}

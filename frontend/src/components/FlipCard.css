@@ -1,0 +1,90 @@
+.flip-card-container {
+    perspective: 1000px;
+    width: 400px;
+    height: 150px;
+    cursor: pointer;
+}
+
+.flip-card-container.appointments {
+    transform: translateY(100px);
+}
+
+.flip-card-container.requests {
+    transform: translateY(100px);
+}
+
+.flip-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.flip-card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    background-color: #d9cfd1;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.flip-card-face.internship {
+    background-color: #8b2b3a;
+    color: white;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+    background-color: #7b243a;
+    color: white;
+}
+
+.flip-card-back.appointments,
+.flip-card-back.requests {
+    background-color: #992e49;
+    color: white;
+}
+
+.flip-card-back.internship {
+    background-color: #992e49;
+    color: white;
+}
+
+.flip-card-face h3 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+}
+
+.flip-card-face.internship h3 {
+    color: white;
+}
+
+.flip-card-back h3 {
+    color: white;
+}
+
+.flip-card-face p {
+    margin: 0;
+    font-size: 14px;
+    color: #6a6464;
+}
+
+.flip-card-face.internship p {
+    color: white;
+}
+
+.flip-card-back p {
+    color: white;
+}
