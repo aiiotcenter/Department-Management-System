@@ -1,3 +1,4 @@
+import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import LoginForm from '../partials/LoginForm';
 import './LoginPage.css';
@@ -9,6 +10,7 @@ export default function LoginPage() {
             <main className="login-main">
                 <LoginForm />
             </main>
+            <Footer />
         </div>
     );
 }

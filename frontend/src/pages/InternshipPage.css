@@ -1,0 +1,54 @@
+.internship-main {
+    min-height: calc(100vh - 140px); /* Adjust based on your navbar/footer height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.internship-content {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.left-content {
+    flex: 1;
+    padding: 0 40px;
+    text-align: left;
+}
+
+.left-content h2 {
+    color: #992e49;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.left-content p {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.left-content ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.left-content li {
+    margin-bottom: 8px;
+}
+
+.right-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Override form container styles for this page */
+.right-content .form-container {
+    margin: 0;
+    width: 100%;
+}

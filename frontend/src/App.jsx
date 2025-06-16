@@ -1,9 +1,9 @@
-import Homepage from './components/Homepage';
+import InternshipPage from './pages/InternshipPage';
 
 function App() {
     return (
         <div>
-            <Homepage />
+            <InternshipPage />
         </div>
     );
 }
