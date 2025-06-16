@@ -1,10 +1,9 @@
-import Homepage from './pages/HomePage';
-import AppointmentPage from './pages/AppointmentPage';
+import Homepage from './components/Homepage';
 
 function App() {
     return (
         <div>
-            <AppointmentPage />
+            <Homepage />
         </div>
     );
 }
