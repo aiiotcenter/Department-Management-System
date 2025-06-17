@@ -1,9 +1,9 @@
-import InternshipPage from './pages/InternshipPage';
+import StudentProfile from './pages/StudentProfile';
 
 function App() {
     return (
         <div>
-            <InternshipPage />
+            <StudentProfile />
         </div>
     );
 }
