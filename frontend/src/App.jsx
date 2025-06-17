@@ -1,9 +1,9 @@
-import StudentProfile from './pages/StudentProfile';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
     return (
         <div>
-            <StudentProfile />
+            <AdminDashboard />
         </div>
     );
 }
