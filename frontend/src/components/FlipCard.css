@@ -2,16 +2,10 @@
     perspective: 1000px;
     width: 400px;
     height: 150px;
+    transform: translateY(50px);
     cursor: pointer;
 }
 
-.flip-card-container.appointments {
-    transform: translateY(100px);
-}
-
-.flip-card-container.requests {
-    transform: translateY(100px);
-}
 
 .flip-card {
     position: relative;

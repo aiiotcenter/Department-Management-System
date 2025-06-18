@@ -1,9 +1,9 @@
-import AdminDashboard from './pages/AdminDashboard';
+import HomePage from './pages/HomePage';
 
 function App() {
     return (
         <div>
-            <AdminDashboard />
+            <HomePage />
         </div>
     );
 }
