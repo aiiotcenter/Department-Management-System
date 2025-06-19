@@ -1,9 +1,9 @@
-import HomePage from './pages/HomePage';
+import StudentProfile from './pages/StudentProfile';
 
 function App() {
     return (
         <div>
-            <HomePage />
+            <StudentProfile />
         </div>
     );
 }
