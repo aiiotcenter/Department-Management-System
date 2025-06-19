@@ -14,9 +14,11 @@ export default function InternshipPage() {
                         <p>Use this form to submit your internship application to our department.</p>
                         <p>Please provide the following information:</p>
                         <ul>
+                            <li>The name of your university</li>
                             <li>The department you wish to intern with</li>
                             <li>Your preferred internship duration</li>
                             <li>Any additional information to support your application</li>
+                            <li>A copy of your CV</li>
                         </ul>
                         <p>
                             Once submitted, your application will be reviewed by our team. You'll receive updates on the

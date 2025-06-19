@@ -1,3 +1,4 @@
+/* Layout Styles */
 .admin-dashboard-main {
   min-height: calc(100vh - 140px);
   padding: 20px;
@@ -5,7 +6,7 @@
 
 .admin-dashboard-content {
   display: flex;
-  max-width: 1200px;
+  max-width: 100%; /* Use full width instead of 1200px */
   margin: 0 auto;
   background-color: #fff;
   border-radius: 12px;
@@ -13,11 +14,13 @@
   overflow: hidden;
 }
 
+/* Sidebar Styles */
 .admin-sidebar {
   width: 250px;
   background-color: #f9f5f6;
   border-right: 3px solid #992e49;
   padding: 20px 0;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
 }
 
 .admin-sidebar h2 {
@@ -51,9 +54,12 @@
   font-weight: bold;
 }
 
+/* Content Area Styles */
 .admin-content {
   flex: 1;
   padding: 20px;
+  overflow: auto; /* Allow content to scroll if needed */
+  width: calc(100% - 250px); /* Full width minus sidebar */
 }
 
 .admin-panel {
@@ -67,6 +73,12 @@
   color: #992e49;
   margin-bottom: 15px;
   font-size: 20px;
+}
+
+/* Table Styles */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
 }
 
 .admin-table {
@@ -92,6 +104,116 @@
   background-color: #f5f5f5;
 }
 
+/* Filter Styles */
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  background-color: #f9f5f6;
+  padding: 15px;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-container label {
+  font-weight: 500;
+  margin-right: 5px;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  font-size: 14px;
+}
+
+/* Status and Type Styles */
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-waiting, .status-pending {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.status-approved {
+  background-color: #28a745;
+  color: white;
+}
+
+.status-rejected {
+  background-color: #dc3545;
+  color: white;
+}
+
+.request-type {
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.cv-link {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+/* Icon Button Styles */
+.icon-actions {
+  display: flex;
+  gap: 8px; /* Slightly increased gap for better visibility */
+  justify-content: center;
+  flex-wrap: nowrap; /* Prevent buttons from wrapping */
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; /* Slightly larger buttons */
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  font-size: 14px; /* Slightly larger icons */
+}
+
+.icon-button:hover {
+  transform: scale(1.1);
+}
+
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+.approve-icon {
+  background-color: #28a745;
+  color: white;
+}
+
+.reject-icon {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-icon {
+  background-color: #6c757d;
+  color: white;
+}
+
+.icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Traditional Button Styles (kept for compatibility) */
 .action-button {
   padding: 8px 12px;
   border: none;
@@ -111,6 +233,23 @@
   color: white;
 }
 
+.delete-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-group {
+  display: flex;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+/* Form Styles */
 .form-container {
   max-width: 500px;
   padding: 30px;
@@ -144,35 +283,7 @@
   resize: vertical;
 }
 
-.button-group {
-  display: flex;
-  margin-top: 15px;
-  gap: 10px;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.status-waiting {
-  background-color: #ffc107;
-  color: #212529;
-}
-
-.status-approved {
-  background-color: #28a745;
-  color: white;
-}
-
-.status-rejected {
-  background-color: #dc3545;
-  color: white;
-}
-
+/* Notification Styles */
 .notification {
   padding: 10px 15px;
   margin-bottom: 15px;
@@ -190,12 +301,38 @@
   color: #721c24;
   border: 1px solid #f5c6cb;
 }
-.expanded-row {
-  background-color: #f9f5f6;
-  padding: 0;
-}
 
-.expanded-content {
-  padding: 15px;
-  border-top: 1px solid #ddd;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .admin-dashboard-content {
+    flex-direction: column;
+  }
+  
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 3px solid #992e49;
+    padding-bottom: 10px;
+  }
+  
+  .admin-nav {
+    display: flex;
+    overflow-x: auto;
+  }
+  
+  .admin-nav li {
+    padding: 10px 15px;
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 4px solid transparent;
+  }
+  
+  .admin-nav li.active {
+    border-left: none;
+    border-bottom: 4px solid #992e49;
+  }
+  
+  .admin-content {
+    width: 100%;
+  }
 }

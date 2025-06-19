@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 .Hero{
  background-size: cover;
 background-position: center;
@@ -13,178 +14,224 @@ display: flex;
 flex-direction: column;
 justify-content: flex-end;
 align-items: center;
+=======
+.Hero {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 500px;
+  width: 100%;
+  max-width: 1500px;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  margin: 20px auto 0;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+>>>>>>> Stashed changes
 }
+
 .BoxesContainer {
-display: flex;
-justify-content: center;
-gap: 30px;
-margin-top: 20px;
-margin-right: 25px;
-margin-left: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 25px;
 }
-.Box.about {
-margin-top: 120px;
-margin-left: 2%;
-margin-right: 2%;
-width: auto;
-height: auto;
-margin-bottom: 5%;
-}
-/* Projects Box Styling */
+
+/* Box Styling */
+.Box.about, 
 .Box.projects {
-margin-top: 80px;
-margin-left: 2%;
-margin-right: 2%;
-width: auto;
-height: auto;
-margin-bottom: 5%;
+  width: auto;
+  height: auto;
+  margin: 0 2% 5%;
 }
-/* Projects Carousel Container */
+
+.Box.about {
+  margin-top: 120px;
+}
+
+.Box.projects {
+  margin-top: 80px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Carousel Containers */
 .ProjectsCarouselContainer {
-padding: 20px 0;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  margin-top: 15px;
 }
-.AboutContentCarousel {
-display: flex;
-overflow-x: scroll;
-scroll-snap-type: x mandatory;
--webkit-overflow-scrolling: touch;
-scroll-behavior: smooth;
-gap: 20px;
-padding-bottom: 10px;
-overflow-x: hidden;
-display: flex;
+
+/* Content Carousels */
+.AboutContentCarousel,
+.ProjectsContentCarousel {
+  display: flex;
+  overflow-x: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding-bottom: 10px;
 }
-.AboutContentSlide {
-flex: 0 0 100%;
-scroll-snap-align: start;
-box-sizing: border-box;
-padding: 10px;
-overflow: hidden;
+
+.ProjectsContentCarousel {
+  background-color: white;
 }
-.AboutContentSlide p {
-font-size: 16px;
-margin-bottom: 15px;
-color: #6a6464;
-white-space: pre-line;
-padding-bottom: 20px;
+
+/* Content Slides */
+.AboutContentSlide,
+.ProjectsContentSlide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  padding: 10px;
+  overflow: hidden;
 }
-.AboutImages {
-display: flex;
-justify-content: center;
-gap: 20px;
+
+.ProjectsContentSlide {
+  background-color: white;
 }
-.AboutImages img {
-width: 200px;
-height: 250px;
-object-fit: cover;
-border-radius: 8px;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-transition: transform 0.3s ease, box-shadow 0.3s ease;
-cursor: pointer;
+
+/* Slide Content */
+.AboutContentSlide p,
+.ProjectsContentSlide p {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #6a6464;
+  white-space: pre-line;
+  padding-bottom: 20px;
 }
-.AboutImages img:hover {
-transform: scale(1.05);
-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+/* Image Containers */
+.AboutImages,
+.ProjectsImages {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
+
+/* Image Styling */
+.AboutImages img,
+.ProjectsImages img {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.ProjectsImages img {
+  background-color: white;
+}
+
+.AboutImages img:hover,
+.ProjectsImages img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
 .AboutImages img.zoomed {
-transform: scale(1.1);
-transition: transform 0.3s ease;
-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-z-index: 10;
-position: relative;
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  position: relative;
 }
+
+/* Carousel Navigation */
 .CarouselDots {
-text-align: center;
-margin-top: 10px;
+  text-align: center;
+  margin-top: 10px;
 }
+
 .CarouselDots .dot {
-display: inline-block;
-width: 10px;
-height: 10px;
-margin: 0 5px;
-background-color: #ccc;
-border-radius: 50%;
-cursor: pointer;
-transition: background-color 0.3s ease;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 .CarouselDots .dot.active {
-background-color: #992e49;
+  background-color: #992e49;
 }
+
 .CarouselControls {
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 2rem;
-margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
 }
+
+/* Arrow Buttons */
 .ArrowButton {
--webkit-tap-highlight-color: rgba(153, 46, 73, 0.5);
--webkit-appearance: none;
-appearance: none;
-background-color: #992e49;
-touch-action: manipulation;
-display: inline-flex;
-text-decoration: none;
-cursor: pointer;
-border: 0;
-padding: 0;
-margin: 0;
-width: 3.5rem;
-height: 3.5rem;
-z-index: 1;
-border-radius: 50%;
-color: white;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: all 0.3s ease;
-box-shadow: 0 4px 15px rgba(153, 46, 73, 0.3);
-font-size: 1.5rem;
-}
-.ArrowButton:hover{
-background-color: #7b243a;
-color: white;
-transform: scale(1.1);
-box-shadow: 0 6px 20px rgba(153, 46, 73, 0.4);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #992e49;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(153, 46, 73, 0.3);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  height: 3.5rem;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+  width: 3.5rem;
 }
 
-.ArrowButton__svg {
-width: 45%;
-height: 45%;
-transition: transform 0.2s ease;
-}
-
-.ArrowButton:hover:not(:disabled) .ArrowButton__svg {
-transform: scale(1.1);
+.ArrowButton:hover {
+  background-color: #7b243a;
+  box-shadow: 0 6px 20px rgba(153, 46, 73, 0.4);
+  transform: scale(1.1);
 }
 
 .ArrowButton svg,
 .ArrowButton .arrow-icon {
-width: 45%;
-height: 45%;
-transition: transform 0.2s ease;
+  width: 45%;
+  height: 45%;
+  transition: transform 0.2s ease;
 }
 
 .ArrowButton:hover:not(:disabled) svg,
 .ArrowButton:hover:not(:disabled) .arrow-icon {
-transform: scale(1.1);
-}
-.ArrowButton:disabled {
-background-color: #ccc;
-color: #999;
-cursor: not-allowed;
-transform: none;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
 }
 
-/* Responsive adjustments for carousel controls */
+.ArrowButton:disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-.ArrowButton {
-width: 3rem;
-height: 3rem;
-}
-.CarouselControls {
-gap: 1rem;
-margin-top: 1.5rem;
-}
+  .ArrowButton {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .CarouselControls {
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
 }

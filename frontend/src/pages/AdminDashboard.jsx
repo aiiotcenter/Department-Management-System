@@ -1,24 +1,21 @@
 import { useState } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import AppointmentManagement from '../partials/AdminDashboard/AppointmentManagement';
 import EmployeeManagement from '../partials/AdminDashboard/EmployeeManagement';
-import InternshipManagement from '../partials/AdminDashboard/InternshipManagement';
+import RequestsManagement from '../partials/AdminDashboard/RequestsManagement';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
-    const [activeTab, setActiveTab] = useState('appointments');
+    const [activeTab, setActiveTab] = useState('requests');
 
     const renderTabContent = () => {
         switch (activeTab) {
-            case 'appointments':
-                return <AppointmentManagement />;
-            case 'internships':
-                return <InternshipManagement />;
+            case 'requests':
+                return <RequestsManagement />;
             case 'employees':
                 return <EmployeeManagement />;
             default:
-                return <AppointmentManagement />;
+                return <RequestsManagement />;
         }
     };
 
@@ -31,16 +28,10 @@ export default function AdminDashboard() {
                         <h2>Admin Dashboard</h2>
                         <ul className="admin-nav">
                             <li
-                                className={activeTab === 'appointments' ? 'active' : ''}
-                                onClick={() => setActiveTab('appointments')}
+                                className={activeTab === 'requests' ? 'active' : ''}
+                                onClick={() => setActiveTab('requests')}
                             >
-                                Appointment Requests
-                            </li>
-                            <li
-                                className={activeTab === 'internships' ? 'active' : ''}
-                                onClick={() => setActiveTab('internships')}
-                            >
-                                Internship Applications
+                                Requests Management
                             </li>
                             <li
                                 className={activeTab === 'employees' ? 'active' : ''}
