@@ -1,18 +1,20 @@
+import html2canvas from 'html2canvas';
 import { QRCodeCanvas } from 'qrcode.react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DownloadIcon from '../assets/download.png';
 import SettingIcon from '../assets/setting.png';
 import UserIcon from '../assets/user.png';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import StudentCard from '../components/StudentCard';
 import './StudentProfile.css';
 
 export default function StudentProfile() {
     const [student, setStudent] = useState({
-        id: '846483878463',
-        name: 'Mohamed mahmoud ahmed alfutahi',
-        email: 'jaldgjcjadsgjhad@hjdsvhdh',
-        department: 'Softeware Engineering',
+        id: '',
+        name: '',
+        email: '',
+        department: '',
         profileImage: null,
     });
     const [menuOpen, setMenuOpen] = useState(false);
@@ -20,6 +22,9 @@ export default function StudentProfile() {
     const [appointments, setAppointments] = useState([]);
     const [internships, setInternships] = useState([]);
     const [popupQR, setPopupQR] = useState(null);
+    const [cardType, setCardType] = useState(null);
+    const [cardData, setCardData] = useState(null);
+    const cardRef = useRef(null);
 
     const toggleMenu = () => {
         setMenuOpen((prev) => !prev);
@@ -69,17 +74,27 @@ export default function StudentProfile() {
         }
     };
 
-    const handleDownload = (QRCodeCanvas) => {
-        const canvas = document.querySelector(`canvas[data-qr='${QRCodeCanvas}']`);
-        if (!canvas) return;
+    const handleDownload = () => {
+        if (!cardRef.current) {
+            console.error('Card ref is not available!');
+            return;
+        }
 
-        const url = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'student_qrcode.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Wait for one render tick to ensure DOM is ready
+        setTimeout(() => {
+            html2canvas(cardRef.current, {
+                scale: 2,
+                useCORS: true,
+            }).then((canvas) => {
+                const url = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'student_card.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }, 0);
     };
 
     return (
@@ -158,7 +173,20 @@ export default function StudentProfile() {
                                                         src={DownloadIcon}
                                                         alt="Download"
                                                         className="download-icon"
-                                                        onClick={() => handleDownload(QRCodeCanvas)}
+                                                        onClick={() => {
+                                                            setCardType('appointment'); // or 'internship'
+                                                            setCardData({
+                                                                id: student.id,
+                                                                name: student.name,
+                                                                department: student.department,
+                                                                date: app.date,
+                                                                purpose: app.title,
+                                                                qrData: app.qrData,
+                                                                profileImage: student.profileImage,
+                                                            });
+
+                                                            setTimeout(() => handleDownload(), 100); // small delay to let card render
+                                                        }}
                                                     />
                                                     <span className="tooltip-text">Download student card</span>
                                                 </div>
@@ -193,7 +221,20 @@ export default function StudentProfile() {
                                                         src={DownloadIcon}
                                                         alt="Download"
                                                         className="download-icon"
-                                                        onClick={() => handleDownload(intern.qrData)}
+                                                        onClick={() => {
+                                                            setCardType('internship'); // or 'internship'
+                                                            setCardData({
+                                                                id: student.id,
+                                                                name: student.name,
+                                                                department: student.department,
+                                                                date: intern.date,
+                                                                purpose: intern.title,
+                                                                qrData: intern.qrData,
+                                                                profileImage: student.profileImage,
+                                                            });
+
+                                                            setTimeout(() => handleDownload(), 100); // small delay to let card render
+                                                        }}
                                                     />
                                                     <span className="tooltip-text">Download student card</span>
                                                 </div>
@@ -215,6 +256,12 @@ export default function StudentProfile() {
                     </div>
                 </div>
             )}
+
+            <div style={{ position: 'absolute', left: '-9999px', top: '0' }}>
+                <div ref={cardRef}>
+                    <StudentCard type={cardType} data={cardData} />
+                </div>
+            </div>
 
             <Footer />
         </div>
