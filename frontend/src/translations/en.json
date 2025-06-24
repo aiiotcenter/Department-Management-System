@@ -1,0 +1,259 @@
+{
+  "translation": {
+    "navbar": {
+      "login": "Login",
+      "signup": "Sign Up",
+      "profile": "Profile",
+      "signout": "Sign Out",
+      "help": "Help",
+      "studentDashboard": "Student Dashboard",
+      "adminDashboard": "Admin Dashboard"
+    },
+    "languages": {
+      "english": "English",
+      "turkish": "Turkish"
+    },
+    "profile": {
+      "title": "Student Profile",
+      "editProfile": "Edit Profile",
+      "changePassword": "Change Password",
+      "notificationSettings": "Notification Settings",
+      "logout": "Logout",
+      "studentId": "Student ID",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "department": "Department",
+      "program": "Program",
+      "joined": "Joined",
+      "changePhoto": "Change Photo",
+      "appointments": "Appointments",
+      "internships": "Internships",
+      "status": {
+        "approved": "approved",
+        "pending": "pending",
+        "rejected": "rejected"
+      },
+      "downloadPass": "Download pass",
+      "downloadCertificate": "Download certificate",
+      "scanMobile": "Scan with your mobile device",
+      "statusLabel": "Status",
+      "qrHelp": "Click to close",
+      "id": "ID",
+      "name": "Name",
+      "downloadCard": "Download student card"
+    },
+    "homepage": {
+      "hero": "Department Management System",
+      "appointments": "Appointments",
+      "internship": "Internship",
+      "requests": "Requests",
+      "about": "About",
+      "projects": "Projects",
+      "flipCardContent": {
+        "appointments": "Schedule appointments with professors and staff members.",
+        "internship": "Apply for and manage internship opportunities.",
+        "requests": "Submit and track requests for documents and services."
+      },
+      "aboutSections": {
+        "section1": {
+          "title": "Research Focus",
+          "content": "The International Research Center for Artificial Intelligence and Internet of Things at Near East University is a pioneering hub driving innovation across interconnected technologies. The Center explores a wide array of advanced computing domains—including machine learning, cognitive networks built for extreme environments, human-to-machine (H2M) interfaces, and next-generation wireless communication systems like 6G and beyond."
+        },
+        "section2": {
+          "title": "Global Collaboration",
+          "content": "Our research extends to intelligent multimedia platforms, immersive smart spaces, and the broader ecosystem of the Internet of Everything (IoE). By collaborating with global partners and academic institutions, we contribute to shaping the digital lifestyles of tomorrow—ensuring intelligence is embedded in every interaction and experience."
+        },
+        "section3": {
+          "title": "Our Mission",
+          "content": "This platform reflects that mission: built to connect students with real-time academic tools, internship opportunities, and research announcements."
+        }
+      },
+      "controls": {
+        "prev": "Previous",
+        "next": "Next"
+      }
+    },
+    "footer": {
+      "contactUs": "Contact Us",
+      "phoneNumbers": {
+        "primary": "+123 456 7890",
+        "secondary": "+987 654 3210"
+      },
+      "socials": "Socials",
+      "services": "Services",
+      "address": {
+        "title": "Address",
+        "line1": "Near East University",
+        "line2": "Near East Boulevard, ZIP: 99138",
+        "line3": "Nicosia / TRNC, Mersin 10 - Turkey"
+      }
+    },
+    "login": {
+      "title": "Login to your account",
+      "email": "Email",
+      "password": "Password",
+      "loginButton": "Login",
+      "registerButton": "New? Register"
+    },
+    "signup": {
+      "title": "Create a new account",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "signupButton": "Sign Up",
+      "loginButton": "Back to Login"
+    },
+    "studentDashboard": {
+      "title": "Student Dashboard",
+      "welcome": "Welcome Back!",
+      "applyInternship": "Apply for Internship",
+      "requestAppointment": "Request Appointment",
+      "viewProfile": "View Profile",
+      "announcements": "Announcements",
+      "internshipDeadline": "Internship deadline: June 30",
+      "advisorMeetings": "Advisor meetings now open",
+      "view": "View",
+      "profileId": "ID",
+      "profileName": "Name"
+    },
+    "adminDashboard": {
+      "title": "Admin Dashboard",
+      "welcome": "Welcome, Administrator",
+      "manageUsers": "Manage Users",
+      "manageAppointments": "Manage Appointments",
+      "manageInternships": "Manage Internships",
+      "manageRequests": "Manage Requests",
+      "statistics": "Statistics",
+      "settings": "Settings",
+      "notifications": {
+        "appointmentApproved": "Appointment request approved successfully",
+        "appointmentRejected": "Appointment request rejected successfully",
+        "appointmentDeleted": "Appointment request deleted successfully",
+        "internshipApproved": "Internship application approved successfully",
+        "internshipRejected": "Internship application rejected successfully",
+        "internshipDeleted": "Internship application deleted successfully",
+        "employeeAdded": "Employee added successfully",
+        "employeeDeleted": "Employee deleted successfully"
+      },
+      "newUsers": "New Users",
+      "pendingRequests": "Pending Requests",
+      "upcomingAppointments": "Upcoming Appointments",
+      "actions": {
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete",
+        "approve": "Approve",
+        "reject": "Reject",
+        "export": "Export Data"
+      },
+      "userManagement": {
+        "addUser": "Add User",
+        "editUser": "Edit User",
+        "deleteUser": "Delete User",
+        "userId": "User ID",
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastLogin": "Last Login",
+        "searchUsers": "Search users...",
+        "addNewEmployee": "Add New Employee",
+        "cancel": "Cancel",
+        "fullName": "Full Name",
+        "password": "Password",
+        "professor": "Professor",
+        "assistant": "Assistant",
+        "secretary": "Secretary",
+        "admin": "Admin",
+        "addEmployee": "Add Employee",
+        "employeeManagement": "Employee Management",
+        "employees": "Employees",
+        "delete": "Delete",
+        "actions": "Actions"
+      },
+      "appointmentManagement": {
+        "upcoming": "Upcoming",
+        "past": "Past",
+        "cancelled": "Cancelled",
+        "id": "ID",
+        "student": "Student",
+        "purpose": "Purpose",
+        "date": "Date",
+        "time": "Time",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "internshipManagement": {
+        "pending": "Pending",
+        "active": "Active",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "id": "ID",
+        "student": "Student",
+        "university": "University",
+        "department": "Department",
+        "duration": "Duration",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "requestsManagement": {
+        "title": "Requests Management",
+        "type": "Type",
+        "allTypes": "All Types",
+        "appointments": "Appointments",
+        "internships": "Internships",
+        "status": "Status",
+        "allStatuses": "All Statuses",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "requests": "Requests",
+        "name": "Name",
+        "purposeUniversity": "Purpose/University",
+        "dateDepartment": "Date/Department",
+        "timeDuration": "Time/Duration",
+        "cv": "CV",
+        "actions": "Actions",
+        "appointment": "Appointment",
+        "internship": "Internship"
+      }
+    },
+    "appointment": {
+      "pageTitle": "Apply for an Appointment",
+      "pageDesc1": "Use this form to submit your appointment request to our department. Please provide the following information:",
+      "purpose": "Purpose of your visit – What is the meeting about?",
+      "dateTime": "Preferred date and time – When would you like to schedule it?",
+      "notes": "Additional notes (optional) – Any other information you'd like to share?",
+      "pageDesc2": "Once submitted, your appointment request will be reviewed by our team. You'll receive updates on the status of your request.",
+      "formTitle": "Apply for an appointment",
+      "purposePlaceholder": "Purpose",
+      "datePlaceholder": "Preferred Date",
+      "timePlaceholder": "Preferred Time",
+      "descPlaceholder": "Description (optional)",
+      "submitButton": "Submit Appointment"
+    },
+    "internship": {
+      "pageTitle": "Apply for an Internship",
+      "pageDesc1": "Use this form to submit your internship application to our department.",
+      "pageDesc2": "Please provide the following information:",
+      "university": "The name of your university",
+      "department": "The department you wish to intern with",
+      "duration": "Your preferred internship duration",
+      "additional": "Any additional information to support your application",
+      "cv": "A copy of your CV",
+      "pageDesc3": "Once submitted, your application will be reviewed by our team. You'll receive updates on the status of your application.",
+      "formTitle": "Apply for an Internship",
+      "universityPlaceholder": "University *",
+      "departmentPlaceholder": "Department *",
+      "durationPlaceholder": "Duration *",
+      "notesPlaceholder": "Any additional notes (optional)",
+      "uploadCV": "Upload your CV *",
+      "selectedFile": "Selected file:",
+      "submitButton": "Submit your application"
+    }
+  }
+}

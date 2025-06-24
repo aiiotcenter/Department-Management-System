@@ -1,6 +1,7 @@
 import html2canvas from 'html2canvas';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DownloadIcon from '../assets/download.png';
 import SettingIcon from '../assets/setting.png';
 import UserIcon from '../assets/user.png';
@@ -10,6 +11,7 @@ import StudentCard from '../components/StudentCard';
 import './StudentProfile.css';
 
 export default function StudentProfile() {
+    const { t } = useTranslation();
     const [student, setStudent] = useState({
         id: '',
         name: '',
@@ -102,16 +104,16 @@ export default function StudentProfile() {
             <Navbar />
 
             <div className="profile-container">
-                <h2 className="profile-title">Student Profile</h2>
+                <h2 className="profile-title">{t('profile.title')}</h2>
                 <div className="settings-wrapper">
                     <img src={SettingIcon} alt="Settings" className="settings-icon" onClick={toggleMenu} />
 
                     {menuOpen && (
                         <div className="settings-menu" onMouseLeave={() => setMenuOpen(false)}>
                             <ul>
-                                <li>Edit Profile</li>
-                                <li>Change Password</li>
-                                <li>Logout</li>
+                                <li>{t('profile.editProfile')}</li>
+                                <li>{t('profile.changePassword')}</li>
+                                <li>{t('profile.logout')}</li>
                             </ul>
                         </div>
                     )}
@@ -133,29 +135,31 @@ export default function StudentProfile() {
                         </div>
                         <div className="profile-attributes">
                             <p>
-                                <strong>ID:</strong> {student.id}
+                                <strong>{t('profile.id')}:</strong> {student.id}
                             </p>
                             <p>
-                                <strong>Name:</strong> {student.name}
+                                <strong>{t('profile.name')}:</strong> {student.name}
                             </p>
                             <p>
-                                <strong>Email:</strong> {student.email}
+                                <strong>{t('profile.email')}:</strong> {student.email}
                             </p>
                             <p>
-                                <strong>Department:</strong> {student.department}
+                                <strong>{t('profile.department')}:</strong> {student.department}
                             </p>
                         </div>
                     </div>
                     <div className="profile-right">
                         <div className="appointments">
-                            <h3>Appointments</h3>
+                            <h3>{t('profile.appointments')}</h3>
                             <div className="card-list">
                                 {appointments.map((app, i) => (
                                     <div key={i} className="info-card">
                                         <h4 className="info-title">{app.title}</h4>
                                         <p className="info-date">{app.date}</p>
                                         <p className={`info-status ${app.status}`}>
-                                            Status: <strong>{app.status}</strong>
+                                            {t('profile.statusLabel')}
+                                            {': '}
+                                            <strong>{t(`profile.status.${app.status}`)}</strong>
                                         </p>
 
                                         {app.status === 'approved' && app.qrData && (
@@ -188,7 +192,7 @@ export default function StudentProfile() {
                                                             setTimeout(() => handleDownload(), 100); // small delay to let card render
                                                         }}
                                                     />
-                                                    <span className="tooltip-text">Download student card</span>
+                                                    <span className="tooltip-text">{t('profile.downloadCard')}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -197,14 +201,16 @@ export default function StudentProfile() {
                             </div>
                         </div>
                         <div className="internships">
-                            <h3>Internships</h3>
+                            <h3>{t('profile.internships')}</h3>
                             <div className="card-list">
                                 {internships.map((intern, i) => (
                                     <div key={i} className="info-card">
                                         <h4 className="info-title">{intern.title}</h4>
                                         <p className="info-date">{intern.date}</p>
                                         <p className={`info-status ${intern.status}`}>
-                                            Status: <strong>{intern.status}</strong>
+                                            {t('profile.statusLabel')}
+                                            {': '}
+                                            <strong>{t(`profile.status.${intern.status}`)}</strong>
                                         </p>
 
                                         {intern.status === 'approved' && intern.qrData && (
@@ -236,7 +242,7 @@ export default function StudentProfile() {
                                                             setTimeout(() => handleDownload(), 100); // small delay to let card render
                                                         }}
                                                     />
-                                                    <span className="tooltip-text">Download student card</span>
+                                                    <span className="tooltip-text">{t('profile.downloadCard')}</span>
                                                 </div>
                                             </div>
                                         )}
@@ -252,7 +258,7 @@ export default function StudentProfile() {
                 <div className="qr-popup-overlay" onClick={() => setPopupQR(null)}>
                     <div className="qr-popup">
                         <QRCodeCanvas value={popupQR} size={256} />
-                        <p>Click to close</p>
+                        <p>{t('profile.qrHelp')}</p>
                     </div>
                 </div>
             )}

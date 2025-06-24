@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaCheck, FaTimes, FaTrash } from 'react-icons/fa';
 
 export default function RequestsManagement() {
@@ -6,6 +7,7 @@ export default function RequestsManagement() {
     const [filterType, setFilterType] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
     const [allRequests, setAllRequests] = useState([]);
+    const { t } = useTranslation();
 
     // Mock appointment data
     const [appointments, setAppointments] = useState([
@@ -119,7 +121,7 @@ export default function RequestsManagement() {
             setNotification({
                 show: true,
                 type: 'success',
-                message: 'Appointment request approved successfully',
+                message: t('adminDashboard.notifications.appointmentApproved'),
             });
         } else if (type === 'internship') {
             setInternships(
@@ -130,7 +132,7 @@ export default function RequestsManagement() {
             setNotification({
                 show: true,
                 type: 'success',
-                message: 'Internship application approved successfully',
+                message: t('adminDashboard.notifications.internshipApproved'),
             });
         }
 
@@ -151,7 +153,7 @@ export default function RequestsManagement() {
             setNotification({
                 show: true,
                 type: 'success',
-                message: 'Appointment request rejected successfully',
+                message: t('adminDashboard.notifications.appointmentRejected'),
             });
         } else if (type === 'internship') {
             setInternships(
@@ -162,7 +164,7 @@ export default function RequestsManagement() {
             setNotification({
                 show: true,
                 type: 'success',
-                message: 'Internship application rejected successfully',
+                message: t('adminDashboard.notifications.internshipRejected'),
             });
         }
 
@@ -179,14 +181,14 @@ export default function RequestsManagement() {
             setNotification({
                 show: true,
                 type: 'success',
-                message: 'Appointment request deleted successfully',
+                message: t('adminDashboard.notifications.appointmentDeleted'),
             });
         } else if (type === 'internship') {
             setInternships(internships.filter((internship) => internship._id !== id));
             setNotification({
                 show: true,
                 type: 'success',
-                message: 'Internship application deleted successfully',
+                message: t('adminDashboard.notifications.internshipDeleted'),
             });
         }
 
@@ -215,58 +217,62 @@ export default function RequestsManagement() {
 
     return (
         <div>
-            <h2 className="form-title">Requests Management</h2>
+            <h2 className="form-title">{t('adminDashboard.requestsManagement.title')}</h2>
 
             {notification.show && <div className={`notification ${notification.type}`}>{notification.message}</div>}
 
             <div className="filter-container">
-                <label htmlFor="requestTypeFilter">Type:</label>
+                <label htmlFor="requestTypeFilter">{t('adminDashboard.requestsManagement.type')}:</label>
                 <select
                     id="requestTypeFilter"
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
                     className="filter-select"
                 >
-                    <option value="all">All Types</option>
-                    <option value="appointment">Appointments</option>
-                    <option value="internship">Internships</option>
+                    <option value="all">{t('adminDashboard.requestsManagement.allTypes')}</option>
+                    <option value="appointment">{t('adminDashboard.requestsManagement.appointments')}</option>
+                    <option value="internship">{t('adminDashboard.requestsManagement.internships')}</option>
                 </select>
 
-                <label htmlFor="statusFilter">Status:</label>
+                <label htmlFor="statusFilter">{t('adminDashboard.requestsManagement.status')}:</label>
                 <select
                     id="statusFilter"
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
                     className="filter-select"
                 >
-                    <option value="all">All Statuses</option>
-                    <option value="pending">Pending</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
+                    <option value="all">{t('adminDashboard.requestsManagement.allStatuses')}</option>
+                    <option value="pending">{t('adminDashboard.requestsManagement.pending')}</option>
+                    <option value="approved">{t('adminDashboard.requestsManagement.approved')}</option>
+                    <option value="rejected">{t('adminDashboard.requestsManagement.rejected')}</option>
                 </select>
             </div>
 
             <div className="admin-panel">
-                <h3>Requests</h3>
+                <h3>{t('adminDashboard.requestsManagement.requests')}</h3>
                 <div className="table-responsive">
                     <table className="admin-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Purpose/University</th>
-                                <th>Date/Department</th>
-                                <th>Time/Duration</th>
-                                <th>CV</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>{t('adminDashboard.requestsManagement.name')}</th>
+                                <th>{t('adminDashboard.requestsManagement.type')}</th>
+                                <th>{t('adminDashboard.requestsManagement.purposeUniversity')}</th>
+                                <th>{t('adminDashboard.requestsManagement.dateDepartment')}</th>
+                                <th>{t('adminDashboard.requestsManagement.timeDuration')}</th>
+                                <th>{t('adminDashboard.requestsManagement.cv')}</th>
+                                <th>{t('adminDashboard.requestsManagement.status')}</th>
+                                <th>{t('adminDashboard.requestsManagement.actions')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredRequests().map((request) => (
                                 <tr key={`${request.type}-${request._id}`}>
                                     <td>{request.username}</td>
-                                    <td className="request-type">{request.type}</td>
+                                    <td className="request-type">
+                                        {request.type === 'appointment'
+                                            ? t('adminDashboard.requestsManagement.appointment')
+                                            : t('adminDashboard.requestsManagement.internship')}
+                                    </td>
 
                                     {/* Dynamic content based on request type */}
                                     <td>
@@ -289,7 +295,7 @@ export default function RequestsManagement() {
                                     </td>
                                     <td>
                                         <span className={`status-badge status-${request.status}`}>
-                                            {request.status}
+                                            {t(`adminDashboard.requestsManagement.${request.status}`)}
                                         </span>
                                     </td>
                                     <td>
@@ -298,7 +304,7 @@ export default function RequestsManagement() {
                                                 className="icon-button approve-icon"
                                                 onClick={() => handleApprove(request._id, request.type)}
                                                 disabled={request.status === 'approved'}
-                                                title="Approve"
+                                                title={t('adminDashboard.actions.approve')}
                                             >
                                                 <FaCheck />
                                             </button>
@@ -306,14 +312,14 @@ export default function RequestsManagement() {
                                                 className="icon-button reject-icon"
                                                 onClick={() => handleReject(request._id, request.type)}
                                                 disabled={request.status === 'rejected'}
-                                                title="Reject"
+                                                title={t('adminDashboard.actions.reject')}
                                             >
                                                 <FaTimes />
                                             </button>
                                             <button
                                                 className="icon-button delete-icon"
                                                 onClick={() => handleDelete(request._id, request.type)}
-                                                title="Delete"
+                                                title={t('adminDashboard.actions.delete')}
                                             >
                                                 <FaTrash />
                                             </button>

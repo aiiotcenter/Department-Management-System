@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import AppointmentForm from '../partials/AppointmentForm';
@@ -5,26 +6,21 @@ import AppointmentForm from '../partials/AppointmentForm';
 import './AppointmentPage.css';
 
 function AppointmentPage() {
+    const { t } = useTranslation();
     return (
         <div className="appointment-page-container">
             <Navbar />
             <main className="appointment-main">
                 <div className="appointment-content">
                     <div className="left-content">
-                        <h2>Apply for an Appointment</h2>
-                        <p>
-                            Use this form to submit your appointment request to our department. Please provide the
-                            following information:
-                        </p>
+                        <h2>{t('appointment.pageTitle')}</h2>
+                        <p>{t('appointment.pageDesc1')}</p>
                         <ul>
-                            <li>Purpose of your visit – What is the meeting about?</li>
-                            <li> Preferred date and time – When would you like to schedule it?</li>
-                            <li> Additional notes (optional) – Any other information you'd like to share?</li>
+                            <li>{t('appointment.purpose')}</li>
+                            <li>{t('appointment.dateTime')}</li>
+                            <li>{t('appointment.notes')}</li>
                         </ul>
-                        <p>
-                            Once submitted, your appointment request will be reviewed by our team. You'll receive
-                            updates on the status of your request.
-                        </p>
+                        <p>{t('appointment.pageDesc2')}</p>
                     </div>
                     <div className="right-content">
                         <AppointmentForm />

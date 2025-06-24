@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import LanguageIcon from '../assets/Language.png';
 import ListIcon from '../assets/List.png';
 import logoAI from '../assets/logoAI.png';
@@ -8,6 +10,13 @@ import './Navbar.css';
 export default function Navbar() {
     const [openMenu, setOpenMenu] = useState(null);
     const navRef = useRef(null);
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+        setOpenMenu(null);
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (navRef.current && !navRef.current.contains(event.target)) {
@@ -24,7 +33,9 @@ export default function Navbar() {
 
     return (
         <nav className="navbar" ref={navRef}>
-            <img src={logoAI} alt="Department Logo" className="navbar-logo" />
+            <Link to="/">
+                <img src={logoAI} alt="Department Logo" className="navbar-logo" />
+            </Link>
 
             <div className="navbar-icons">
                 {/* Language icon */}
@@ -41,8 +52,8 @@ export default function Navbar() {
                     <img src={LanguageIcon} alt="Language" className="icon-image" />
                     {openMenu === 'lang' && (
                         <div className="menu-options lang-menu">
-                            <button onClick={() => setOpenMenu(null)}>English</button>
-                            <button onClick={() => setOpenMenu(null)}>Turkish</button>
+                            <button onClick={() => changeLanguage('en')}>{t('languages.english')}</button>
+                            <button onClick={() => changeLanguage('tr')}>{t('languages.turkish')}</button>
                         </div>
                     )}
                 </div>
@@ -61,16 +72,16 @@ export default function Navbar() {
                     <img src={UserIcon} alt="User" className="icon-image" />
                     {openMenu === 'user' && (
                         <div className="menu-options user-menu">
-                            <a href="/login" onClick={() => setOpenMenu(null)}>
-                                Login
-                            </a>
-                            <a href="/signup" onClick={() => setOpenMenu(null)}>
-                                Sign Up
-                            </a>
-                            <a href="/profile" onClick={() => setOpenMenu(null)}>
-                                Profile
-                            </a>
-                            <button onClick={() => setOpenMenu(null)}>Sign Out</button>
+                            <Link to="/login" onClick={() => setOpenMenu(null)}>
+                                {t('navbar.login')}
+                            </Link>
+                            <Link to="/signup" onClick={() => setOpenMenu(null)}>
+                                {t('navbar.signup')}
+                            </Link>
+                            <Link to="/profile" onClick={() => setOpenMenu(null)}>
+                                {t('navbar.profile')}
+                            </Link>
+                            <button onClick={() => setOpenMenu(null)}>{t('navbar.signout')}</button>
                         </div>
                     )}
                 </div>
@@ -89,15 +100,13 @@ export default function Navbar() {
                     <img src={ListIcon} alt="Menu" className="icon-image" />
                     {openMenu === 'hamburger' && (
                         <div className="menu-options hamburger-menu">
-                            <a href="/dashboard" onClick={() => setOpenMenu(null)}>
-                                Dashboard
-                            </a>
-                            <a href="/settings" onClick={() => setOpenMenu(null)}>
-                                Settings
-                            </a>
-                            <a href="/help" onClick={() => setOpenMenu(null)}>
-                                Help
-                            </a>
+                            <Link to="/student-dashboard" onClick={() => setOpenMenu(null)}>
+                                {t('navbar.studentDashboard')}
+                            </Link>
+                            <Link to="/admin-dashboard" onClick={() => setOpenMenu(null)}>
+                                {t('navbar.adminDashboard')}
+                            </Link>
+                            <button onClick={() => setOpenMenu(null)}>{t('navbar.help')}</button>
                         </div>
                     )}
                 </div>

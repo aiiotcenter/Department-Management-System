@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 export default function EmployeeManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
     const { register, handleSubmit, reset } = useForm();
+    const { t } = useTranslation();
 
     // Mock data with state that can be modified
     const [employees, setEmployees] = useState([
@@ -57,7 +59,7 @@ export default function EmployeeManagement() {
         setNotification({
             show: true,
             type: 'success',
-            message: 'Employee added successfully (Mock)',
+            message: t('adminDashboard.notifications.employeeAdded'),
         });
 
         // Close the form and reset fields
@@ -67,7 +69,7 @@ export default function EmployeeManagement() {
 
     // Function to delete an employee
     const handleDelete = (id) => {
-        if (!window.confirm('Are you sure you want to delete this employee?')) return;
+        if (!window.confirm(t('adminDashboard.userManagement.deleteUser') + '?')) return;
 
         // Remove the employee from the state
         setEmployees(employees.filter((employee) => employee._id !== id));
@@ -76,7 +78,7 @@ export default function EmployeeManagement() {
         setNotification({
             show: true,
             type: 'success',
-            message: 'Employee deleted successfully (Mock)',
+            message: t('adminDashboard.notifications.employeeDeleted'),
         });
     };
 
@@ -84,54 +86,54 @@ export default function EmployeeManagement() {
     const renderAddForm = () => {
         return (
             <div className="form-container" style={{ marginBottom: '20px' }}>
-                <h3>Add New Employee</h3>
+                <h3>{t('adminDashboard.userManagement.addNewEmployee')}</h3>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-content">
                     <div className="input-group">
-                        <label>Full Name *</label>
+                        <label>{t('adminDashboard.userManagement.fullName')} *</label>
                         <input
                             type="text"
                             className="form-textarea"
-                            placeholder="Full Name"
+                            placeholder={t('adminDashboard.userManagement.fullName')}
                             {...register('name', { required: true })}
                         />
                     </div>
 
                     <div className="input-group">
-                        <label>Email *</label>
+                        <label>{t('adminDashboard.userManagement.email')} *</label>
                         <input
                             type="email"
                             className="form-textarea"
-                            placeholder="Email"
+                            placeholder={t('adminDashboard.userManagement.email')}
                             {...register('email', { required: true })}
                         />
                     </div>
 
                     <div className="input-group">
-                        <label>Password *</label>
+                        <label>{t('adminDashboard.userManagement.password')} *</label>
                         <input
                             type="password"
                             className="form-textarea"
-                            placeholder="Password"
+                            placeholder={t('adminDashboard.userManagement.password')}
                             {...register('password', { required: true })}
                         />
                     </div>
 
                     <div className="input-group">
-                        <label>Role:</label>
+                        <label>{t('adminDashboard.userManagement.role')}:</label>
                         <select {...register('role', { required: true })} className="form-textarea">
-                            <option value="professor">Professor</option>
-                            <option value="assistant">Assistant</option>
-                            <option value="secretary">Secretary</option>
-                            <option value="admin">Admin</option>
+                            <option value="professor">{t('adminDashboard.userManagement.professor')}</option>
+                            <option value="assistant">{t('adminDashboard.userManagement.assistant')}</option>
+                            <option value="secretary">{t('adminDashboard.userManagement.secretary')}</option>
+                            <option value="admin">{t('adminDashboard.userManagement.admin')}</option>
                         </select>
                     </div>
 
                     <div className="button-group">
                         <button type="submit" className="action-button approve-button">
-                            Add Employee
+                            {t('adminDashboard.userManagement.addEmployee')}
                         </button>
                         <button type="button" className="action-button" onClick={() => setShowAddForm(false)}>
-                            Cancel
+                            {t('adminDashboard.userManagement.cancel')}
                         </button>
                     </div>
                 </form>
@@ -141,7 +143,7 @@ export default function EmployeeManagement() {
 
     return (
         <div>
-            <h2 className="form-title">Employee Management</h2>
+            <h2 className="form-title">{t('adminDashboard.userManagement.employeeManagement')}</h2>
 
             {notification.show && <div className={`notification ${notification.type}`}>{notification.message}</div>}
 
@@ -154,9 +156,11 @@ export default function EmployeeManagement() {
                         marginBottom: '20px',
                     }}
                 >
-                    <h3>Employees</h3>
+                    <h3>{t('adminDashboard.userManagement.employees')}</h3>
                     <button className="action-button approve-button" onClick={() => setShowAddForm(!showAddForm)}>
-                        {showAddForm ? 'Cancel' : 'Add New Employee'}
+                        {showAddForm
+                            ? t('adminDashboard.userManagement.cancel')
+                            : t('adminDashboard.userManagement.addNewEmployee')}
                     </button>
                 </div>
 
@@ -165,10 +169,10 @@ export default function EmployeeManagement() {
                 <table className="admin-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Actions</th>
+                            <th>{t('adminDashboard.userManagement.name')}</th>
+                            <th>{t('adminDashboard.userManagement.email')}</th>
+                            <th>{t('adminDashboard.userManagement.role')}</th>
+                            <th>{t('adminDashboard.userManagement.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -176,13 +180,13 @@ export default function EmployeeManagement() {
                             <tr key={employee._id}>
                                 <td>{employee.name}</td>
                                 <td>{employee.email}</td>
-                                <td>{employee.role}</td>
+                                <td>{t(`adminDashboard.userManagement.${employee.role}`)}</td>
                                 <td>
                                     <button
                                         className="action-button reject-button"
                                         onClick={() => handleDelete(employee._id)}
                                     >
-                                        Delete
+                                        {t('adminDashboard.userManagement.delete')}
                                     </button>
                                 </td>
                             </tr>

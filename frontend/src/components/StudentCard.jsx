@@ -1,8 +1,10 @@
 import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import './StudentCard.css';
 
 export default function StudentCard({ type, data, onReady }) {
+    const { t } = useTranslation();
     const cardRef = useRef();
 
     useEffect(() => {
@@ -16,37 +18,37 @@ export default function StudentCard({ type, data, onReady }) {
 
     return (
         <div className="student-card-export">
-            <h2 className="student-card-title">Student Card</h2>
+            <h2 className="student-card-title">{t('profile.title')}</h2>
             <div className="student-card-body">
                 <div className="student-card-left">
                     <img src={profileImage || '/default-profile.png'} alt="Student" className="student-photo" />
                     <div className="student-info">
                         <p>
-                            <strong>ID:</strong> {id}
+                            <strong>{t('profile.studentId')}:</strong> {id}
                         </p>
                         <p>
-                            <strong>Name:</strong> {name}
+                            <strong>{t('profile.fullName')}:</strong> {name}
                         </p>
                         {type === 'appointment' && (
                             <>
                                 <p>
-                                    <strong>Purpose:</strong> {purpose}
+                                    <strong>{t('appointment.purpose')}:</strong> {purpose}
                                 </p>
                                 <p>
-                                    <strong>Date:</strong> {date}
+                                    <strong>{t('adminDashboard.appointmentManagement.date')}:</strong> {date}
                                 </p>
                                 <p>
-                                    <strong>Department:</strong> {department}
+                                    <strong>{t('profile.department')}:</strong> {department}
                                 </p>
                             </>
                         )}
                         {type === 'internship' && (
                             <>
                                 <p>
-                                    <strong>Department:</strong> {department}
+                                    <strong>{t('profile.department')}:</strong> {department}
                                 </p>
                                 <p>
-                                    <strong>Period:</strong> {period}
+                                    <strong>{t('internship.duration')}:</strong> {period}
                                 </p>
                             </>
                         )}

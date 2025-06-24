@@ -1,0 +1,259 @@
+{
+  "translation": {
+    "navbar": {
+      "login": "Giriş",
+      "signup": "Kayıt Ol",
+      "profile": "Profil",
+      "signout": "Çıkış Yap",
+      "help": "Yardım",
+      "studentDashboard": "Öğrenci Paneli",
+      "adminDashboard": "Yönetici Paneli"
+    },
+    "languages": {
+      "english": "İngilizce",
+      "turkish": "Türkçe"
+    },
+    "profile": {
+      "title": "Öğrenci Profili",
+      "editProfile": "Profili Düzenle",
+      "changePassword": "Şifre Değiştir",
+      "notificationSettings": "Bildirim Ayarları",
+      "logout": "Çıkış Yap",
+      "studentId": "Öğrenci Numarası",
+      "fullName": "Ad Soyad",
+      "email": "E-posta Adresi",
+      "department": "Bölüm",
+      "program": "Program",
+      "joined": "Katılma Tarihi",
+      "changePhoto": "Fotoğraf Değiştir",
+      "appointments": "Randevular",
+      "internships": "Stajlar",
+      "status": {
+        "approved": "onaylandı",
+        "pending": "beklemede",
+        "rejected": "reddedildi"
+      },
+      "downloadPass": "Geçiş kartını indir",
+      "downloadCertificate": "Sertifika indir",
+      "scanMobile": "Mobil cihazınızla tarayın",
+      "statusLabel": "Durum",
+      "qrHelp": "Kapatmak için tıklayın",
+      "id": "Numara",
+      "name": "Ad",
+      "downloadCard": "Öğrenci kartını indir"
+    },
+    "homepage": {
+      "hero": "Bölüm Yönetim Sistemi",
+      "appointments": "Randevular",
+      "internship": "Staj",
+      "requests": "İstekler",
+      "about": "Hakkında",
+      "projects": "Projeler",
+      "flipCardContent": {
+        "appointments": "Profesörler ve personel üyeleriyle randevu planlayın.",
+        "internship": "Staj fırsatlarına başvurun ve yönetin.",
+        "requests": "Belgeler ve hizmetler için istekleri gönderin ve takip edin."
+      },
+      "aboutSections": {
+        "section1": {
+          "title": "Araştırma Odağı",
+          "content": "Yakın Doğu Üniversitesi'ndeki Uluslararası Yapay Zeka ve Nesnelerin İnterneti Araştırma Merkezi, birbirine bağlı teknolojiler alanında yeniliklere öncülük eden bir merkezdir. Merkez, makine öğrenimi, zorlu ortamlar için tasarlanmış bilişsel ağlar, insan-makine (H2M) arayüzleri ve 6G ve ötesi gibi yeni nesil kablosuz iletişim sistemleri dahil olmak üzere geniş bir ileri bilgi işlem alanını araştırmaktadır."
+        },
+        "section2": {
+          "title": "Küresel İşbirliği",
+          "content": "Araştırmalarımız, akıllı multimedya platformları, sürükleyici akıllı alanlar ve Her Şeyin İnterneti (IoE) ekosistemini kapsamaktadır. Küresel ortaklar ve akademik kurumlarla işbirliği yaparak, geleceğin dijital yaşam tarzlarını şekillendirmeye katkıda bulunuyoruz—zeka her etkileşim ve deneyime yerleştirilmiş olarak."
+        },
+        "section3": {
+          "title": "Misyonumuz",
+          "content": "Bu platform bu misyonu yansıtmaktadır: öğrencileri gerçek zamanlı akademik araçlar, staj fırsatları ve araştırma duyurularıyla buluşturmak için tasarlanmıştır."
+        }
+      },
+      "controls": {
+        "prev": "Önceki",
+        "next": "Sonraki"
+      }
+    },
+    "footer": {
+      "contactUs": "Bize Ulaşın",
+      "phoneNumbers": {
+        "primary": "+123 456 7890",
+        "secondary": "+987 654 3210"
+      },
+      "socials": "Sosyal Medya",
+      "services": "Hizmetler",
+      "address": {
+        "title": "Adres",
+        "line1": "Yakın Doğu Üniversitesi",
+        "line2": "Yakın Doğu Bulvarı, Posta Kodu: 99138",
+        "line3": "Lefkoşa / KKTC, Mersin 10 - Türkiye"
+      }
+    },
+    "login": {
+      "title": "Hesabınıza giriş yapın",
+      "email": "E-posta",
+      "password": "Şifre",
+      "loginButton": "Giriş Yap",
+      "registerButton": "Yeni misiniz? Kayıt olun"
+    },
+    "signup": {
+      "title": "Yeni bir hesap oluştur",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "email": "E-posta Adresi",
+      "password": "Şifre",
+      "confirmPassword": "Şifreyi Onayla",
+      "signupButton": "Kayıt Ol",
+      "loginButton": "Girişe Dön"
+    },
+    "studentDashboard": {
+      "title": "Öğrenci Paneli",
+      "welcome": "Tekrar Hoş Geldiniz!",
+      "applyInternship": "Staj Başvurusu Yap",
+      "requestAppointment": "Randevu Talep Et",
+      "viewProfile": "Profili Görüntüle",
+      "announcements": "Duyurular",
+      "internshipDeadline": "Staj son başvuru tarihi: 30 Haziran",
+      "advisorMeetings": "Danışman toplantıları şimdi açık",
+      "view": "Görüntüle",
+      "profileId": "Numara",
+      "profileName": "Ad"
+    },
+    "adminDashboard": {
+      "title": "Yönetici Paneli",
+      "welcome": "Hoşgeldiniz, Yönetici",
+      "manageUsers": "Kullanıcıları Yönet",
+      "manageAppointments": "Randevuları Yönet",
+      "manageInternships": "Stajları Yönet",
+      "manageRequests": "İstekleri Yönet",
+      "statistics": "İstatistikler",
+      "settings": "Ayarlar",
+      "notifications": {
+        "appointmentApproved": "Randevu talebi başarıyla onaylandı",
+        "appointmentRejected": "Randevu talebi başarıyla reddedildi",
+        "appointmentDeleted": "Randevu talebi başarıyla silindi",
+        "internshipApproved": "Staj başvurusu başarıyla onaylandı",
+        "internshipRejected": "Staj başvurusu başarıyla reddedildi",
+        "internshipDeleted": "Staj başvurusu başarıyla silindi",
+        "employeeAdded": "Çalışan başarıyla eklendi",
+        "employeeDeleted": "Çalışan başarıyla silindi"
+      },
+      "newUsers": "Yeni Kullanıcılar",
+      "pendingRequests": "Bekleyen İstekler",
+      "upcomingAppointments": "Yaklaşan Randevular",
+      "actions": {
+        "view": "Görüntüle",
+        "edit": "Düzenle",
+        "delete": "Sil",
+        "approve": "Onayla",
+        "reject": "Reddet",
+        "export": "Veriyi Dışa Aktar"
+      },
+      "userManagement": {
+        "addUser": "Kullanıcı Ekle",
+        "editUser": "Kullanıcı Düzenle",
+        "deleteUser": "Kullanıcı Sil",
+        "userId": "Kullanıcı ID",
+        "name": "Ad",
+        "email": "E-posta",
+        "role": "Rol",
+        "status": "Durum",
+        "lastLogin": "Son Giriş",
+        "searchUsers": "Kullanıcı ara...",
+        "addNewEmployee": "Yeni Çalışan Ekle",
+        "cancel": "İptal",
+        "fullName": "Ad Soyad",
+        "password": "Şifre",
+        "professor": "Profesör",
+        "assistant": "Asistan",
+        "secretary": "Sekreter",
+        "admin": "Yönetici",
+        "addEmployee": "Çalışan Ekle",
+        "employeeManagement": "Çalışan Yönetimi",
+        "employees": "Çalışanlar",
+        "delete": "Sil",
+        "actions": "İşlemler"
+      },
+      "appointmentManagement": {
+        "upcoming": "Yaklaşan",
+        "past": "Geçmiş",
+        "cancelled": "İptal Edilmiş",
+        "id": "ID",
+        "student": "Öğrenci",
+        "purpose": "Amaç",
+        "date": "Tarih",
+        "time": "Zaman",
+        "status": "Durum",
+        "actions": "İşlemler"
+      },
+      "internshipManagement": {
+        "pending": "Beklemede",
+        "active": "Aktif",
+        "completed": "Tamamlanmış",
+        "rejected": "Reddedilmiş",
+        "id": "ID",
+        "student": "Öğrenci",
+        "university": "Üniversite",
+        "department": "Bölüm",
+        "duration": "Süre",
+        "startDate": "Başlangıç Tarihi",
+        "endDate": "Bitiş Tarihi",
+        "status": "Durum",
+        "actions": "İşlemler"
+      },
+      "requestsManagement": {
+        "title": "İstek Yönetimi",
+        "type": "Tür",
+        "allTypes": "Tüm Türler",
+        "appointments": "Randevular",
+        "internships": "Stajlar",
+        "status": "Durum",
+        "allStatuses": "Tüm Durumlar",
+        "pending": "Beklemede",
+        "approved": "Onaylandı",
+        "rejected": "Reddedildi",
+        "requests": "İstekler",
+        "name": "İsim",
+        "purposeUniversity": "Amaç/Üniversite",
+        "dateDepartment": "Tarih/Bölüm",
+        "timeDuration": "Saat/Süre",
+        "cv": "CV",
+        "actions": "İşlemler",
+        "appointment": "Randevu",
+        "internship": "Staj"
+      }
+    },
+    "appointment": {
+      "pageTitle": "Randevu Başvurusu Yap",
+      "pageDesc1": "Bu formu kullanarak bölümümüze randevu talebinizi iletebilirsiniz. Lütfen aşağıdaki bilgileri sağlayın:",
+      "purpose": "Ziyaret amacınız – Toplantı ne hakkında?",
+      "dateTime": "Tercih edilen tarih ve saat – Ne zaman planlamak istersiniz?",
+      "notes": "Ek notlar (isteğe bağlı) – Paylaşmak istediğiniz başka bir bilgi?",
+      "pageDesc2": "Başvurunuz gönderildikten sonra ekibimiz tarafından incelenecektir. Talebinizin durumu hakkında bilgilendirileceksiniz.",
+      "formTitle": "Randevu Başvurusu Yap",
+      "purposePlaceholder": "Amaç",
+      "datePlaceholder": "Tercih Edilen Tarih",
+      "timePlaceholder": "Tercih Edilen Saat",
+      "descPlaceholder": "Açıklama (isteğe bağlı)",
+      "submitButton": "Randevuyu Gönder"
+    },
+    "internship": {
+      "pageTitle": "Staj Başvurusu Yap",
+      "pageDesc1": "Bu formu kullanarak bölümümüze staj başvurunuzu iletebilirsiniz.",
+      "pageDesc2": "Lütfen aşağıdaki bilgileri sağlayın:",
+      "university": "Üniversitenizin adı",
+      "department": "Staj yapmak istediğiniz bölüm",
+      "duration": "Tercih ettiğiniz staj süresi",
+      "additional": "Başvurunuzu destekleyecek ek bilgiler",
+      "cv": "CV'nizin bir kopyası",
+      "pageDesc3": "Başvurunuz gönderildikten sonra ekibimiz tarafından incelenecektir. Başvurunuzun durumu hakkında bilgilendirileceksiniz.",
+      "formTitle": "Staj Başvurusu Yap",
+      "universityPlaceholder": "Üniversite *",
+      "departmentPlaceholder": "Bölüm *",
+      "durationPlaceholder": "Süre *",
+      "notesPlaceholder": "Ek notlar (isteğe bağlı)",
+      "uploadCV": "CV'nizi Yükleyin *",
+      "selectedFile": "Seçilen dosya:",
+      "submitButton": "Başvuruyu Gönder"
+    }
+  }
+}

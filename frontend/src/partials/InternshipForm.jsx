@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import logoAI from '../assets/logoAI.png';
 import Button from '../components/Button';
@@ -7,6 +8,7 @@ import Input from '../components/Input';
 import './InternshipForm.css';
 
 export default function InternshipForm() {
+    const { t } = useTranslation();
     const { register, handleSubmit } = useForm();
     const [fileName, setFileName] = useState('');
 
@@ -43,22 +45,40 @@ export default function InternshipForm() {
     return (
         <div className="form-container">
             <img src={logoAI} alt="Department Logo" className="form-logo" />
-            <h2 className="form-title">Apply for an Internship</h2>
+            <h2 className="form-title">{t('internship.formTitle')}</h2>
             <form className="form-content" onSubmit={handleSubmit(onSubmit)}>
-                <Input type="text" placeholder="University *" name="university" register={register} required />
-                <Input type="text" placeholder="Department *" name="department" register={register} required />
-                <Input type="text" placeholder="Duration *" name="period_of_internship" register={register} required />
+                <Input
+                    type="text"
+                    placeholder={t('internship.universityPlaceholder')}
+                    name="university"
+                    register={register}
+                    required
+                />
+                <Input
+                    type="text"
+                    placeholder={t('internship.departmentPlaceholder')}
+                    name="department"
+                    register={register}
+                    required
+                />
+                <Input
+                    type="text"
+                    placeholder={t('internship.durationPlaceholder')}
+                    name="period_of_internship"
+                    register={register}
+                    required
+                />
                 <textarea
                     rows="4"
                     cols="50"
-                    placeholder="Any additional notes (optional)"
+                    placeholder={t('internship.notesPlaceholder')}
                     className="form-textarea"
                     {...register('additional_notes')}
                 />
 
                 <div className="file-upload-container">
                     <label htmlFor="cv-upload" className="file-upload-label">
-                        Upload your CV *
+                        {t('internship.uploadCV')}
                     </label>
                     <input
                         id="cv-upload"
@@ -70,13 +90,13 @@ export default function InternshipForm() {
                     />
                     {fileName && (
                         <div className="file-name">
-                            <span>Selected file:</span> {fileName}
+                            <span>{t('internship.selectedFile')}</span> {fileName}
                         </div>
                     )}
                 </div>
 
                 <div className="button-group">
-                    <Button type="submit">Submit your application</Button>
+                    <Button type="submit">{t('internship.submitButton')}</Button>
                 </div>
             </form>
         </div>

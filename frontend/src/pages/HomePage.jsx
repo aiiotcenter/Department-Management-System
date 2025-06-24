@@ -1,9 +1,7 @@
 import { motion as Motion, useInView } from 'framer-motion';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import aiImage from '../assets/AI.png';
-import AIApplication from '../assets/AIApplication.png';
-import AIBuilding from '../assets/AIBuilding.png';
-import AIMeeting from '../assets/AIMeeting.png';
 import FlipCard from '../components/FlipCard';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -12,21 +10,20 @@ import Projects from '../partials/Projects';
 import './HomePage.css';
 
 export default function HomePage() {
+    const { t } = useTranslation();
+
     const slides = [
         {
-            title: 'About Section 1',
-            content: ``,
-            images: [AIApplication, AIBuilding, AIMeeting],
+            title: t('homepage.aboutSections.section1.title'),
+            content: t('homepage.aboutSections.section1.content'),
         },
         {
-            title: 'About Section 2',
-            content: ``,
-            images: [AIApplication, AIBuilding, AIMeeting],
+            title: t('homepage.aboutSections.section2.title'),
+            content: t('homepage.aboutSections.section2.content'),
         },
         {
-            title: 'About Section 3',
-            content: ``,
-            images: [AIApplication, AIBuilding, AIMeeting],
+            title: t('homepage.aboutSections.section3.title'),
+            content: t('homepage.aboutSections.section3.content'),
         },
     ];
 
@@ -52,12 +49,6 @@ export default function HomePage() {
         }
     };
 
-    const [zoomedImage, setZoomedImage] = useState(null);
-
-    const handleImageClick = (index) => {
-        setZoomedImage((prev) => (prev === index ? null : index));
-    };
-
     const handleNext = () => {
         if (activeSlide < slides.length - 1) {
             scrollToSlide(activeSlide + 1);
@@ -71,9 +62,26 @@ export default function HomePage() {
             <div className="Hero" style={{ backgroundImage: `url(${aiImage})` }}></div>
 
             <div className="BoxesContainer">
-                <FlipCard title="Appointments" content="..." variant="appointments" backContent="To be filled later" />
-                <FlipCard title="Internship" content="..." variant="internship" backContent="To be filled later" />
-                <FlipCard title="Requests" content="..." variant="requests" backContent="To be filled later" />
+                <FlipCard
+                    title={t('homepage.appointments')}
+                    content={t('homepage.flipCardContent.appointments')}
+                    variant="appointments"
+                    backContent={t('homepage.flipCardContent.appointments')}
+                    linkTo="/appointment"
+                />
+                <FlipCard
+                    title={t('homepage.internship')}
+                    content={t('homepage.flipCardContent.internship')}
+                    variant="internship"
+                    backContent={t('homepage.flipCardContent.internship')}
+                    linkTo="/internship"
+                />
+                <FlipCard
+                    title={t('homepage.requests')}
+                    content={t('homepage.flipCardContent.requests')}
+                    variant="requests"
+                    backContent={t('homepage.flipCardContent.requests')}
+                />
             </div>
 
             <Motion.div
@@ -82,23 +90,12 @@ export default function HomePage() {
                 animate={isAboutInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
-                <Box title="About" variant="about">
+                <Box title={t('homepage.about')} variant="about">
                     <div className="AboutContentCarousel" ref={carouselRef}>
                         {slides.map((slide, index) => (
                             <div className="AboutContentSlide" key={index}>
+                                <h3>{slide.title}</h3>
                                 <p>{slide.content}</p>
-                                <div className="AboutImages">
-                                    {slide.images.map((imgSrc, imgIndex) => (
-                                        <img
-                                            src={imgSrc}
-                                            alt={`Slide ${index + 1} img ${imgIndex + 1}`}
-                                            key={imgIndex}
-                                            onClick={() => handleImageClick(`${index}-${imgIndex}`)}
-                                            onMouseLeave={() => setZoomedImage(null)}
-                                            className={zoomedImage === `${index}-${imgIndex}` ? 'zoomed' : ''}
-                                        />
-                                    ))}
-                                </div>
                             </div>
                         ))}
                     </div>
@@ -135,7 +132,7 @@ export default function HomePage() {
                 animate={isProjectsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
             >
-                <Box title="Projects" variant="projects">
+                <Box title={t('homepage.projects')} variant="projects">
                     <div className="ProjectsCarouselContainer">
                         <Projects />
                     </div>

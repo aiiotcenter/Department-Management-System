@@ -1,20 +1,23 @@
+import { useTranslation } from 'react-i18next';
 import FacebookIcon from '../assets/facebook.png';
 import MailIcon from '../assets/mail.png';
 import TwitterIcon from '../assets/twitter.png';
 import './Footer.css';
 
 function Footer() {
+    const { t } = useTranslation();
+
     return (
         <footer className="Footer">
             <div className="FooterColumn">
-                <h4>Contact Us</h4>
+                <h4>{t('footer.contactUs')}</h4>
                 <ul>
-                    <li>📞 +123 456 7890</li>
-                    <li>📞 +987 654 3210</li>
+                    <li>📞 {t('footer.phoneNumbers.primary')}</li>
+                    <li>📞 {t('footer.phoneNumbers.secondary')}</li>
                 </ul>
             </div>
             <div className="FooterColumn">
-                <h4>Socials</h4>
+                <h4>{t('footer.socials')}</h4>
                 <ul>
                     <li style={{ marginTop: '10px' }}>
                         <img
@@ -36,19 +39,19 @@ function Footer() {
                 </ul>
             </div>
             <div className="FooterColumn">
-                <h4>Column 3</h4>
+                <h4>{t('footer.services')}</h4>
                 <ul>
-                    <li>Link 1</li>
+                    <li>{t('homepage.appointments')}</li>
                 </ul>
             </div>
             <div className="FooterColumn">
-                <h4>Address</h4>
+                <h4>{t('footer.address.title')}</h4>
                 <ul>
                     <li>
                         <p>
-                            📍 Near East University <br />
-                            Near East Boulevard, ZIP: 99138 <br />
-                            Nicosia / TRNC, Mersin 10 - Turkey
+                            📍 {t('footer.address.line1')} <br />
+                            {t('footer.address.line2')} <br />
+                            {t('footer.address.line3')}
                         </p>
                     </li>
                 </ul>
