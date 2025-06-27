@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import AdminDashboard from './pages/AdminDashboard';
+import Announcement from './pages/Announcement';
 import AppointmentPage from './pages/AppointmentPage';
 import HomePage from './pages/HomePage';
 import InternshipPage from './pages/InternshipPage';
@@ -19,6 +20,7 @@ function App() {
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/appointment" element={<AppointmentPage />} />
             <Route path="/internship" element={<InternshipPage />} />
+            <Route path="/announcements" element={<Announcement />} />
         </Routes>
     );
 }

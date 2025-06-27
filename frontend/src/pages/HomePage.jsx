@@ -77,10 +77,11 @@ export default function HomePage() {
                     linkTo="/internship"
                 />
                 <FlipCard
-                    title={t('homepage.requests')}
-                    content={t('homepage.flipCardContent.requests')}
+                    title={t('Announcements')}
+                    content={t('Announcements')}
                     variant="requests"
-                    backContent={t('homepage.flipCardContent.requests')}
+                    backContent={t('view the latest announcements')}
+                    linkTo="/announcements"
                 />
             </div>
 
