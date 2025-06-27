@@ -1,0 +1,45 @@
+.user-management-form .button-group {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.user-management-form .button-group button {
+  flex: 0 1 auto;
+  max-width: 150px;
+  margin: 0 10px;
+}
+
+/* Form buttons container */
+.form-buttons-centered {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin-top: 20px !important;
+  gap: 10px !important;
+}
+
+/* Individual form buttons */
+.form-buttons-centered button {
+  flex: 0 0 auto !important;
+  min-width: 120px !important;
+  max-width: 180px !important;
+}
+
+/* Style for select to match Input component */
+.input-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #992e49;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: white;
+  appearance: auto;
+  color: #666;
+}
+
+.user-management-form .input-group {
+  margin-bottom: 15px;
+}

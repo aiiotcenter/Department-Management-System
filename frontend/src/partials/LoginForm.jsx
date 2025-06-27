@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import logoAI from '../assets/logoAI.png';
 import Button from '../components/Button';
@@ -9,6 +10,7 @@ import './LoginForm.css';
 export default function LoginForm() {
     const { t } = useTranslation();
     const { register, handleSubmit } = useForm();
+    const navigate = useNavigate();
     const onSubmit = (data) => console.log(data);
 
     return (
@@ -20,7 +22,9 @@ export default function LoginForm() {
                 <Input type="password" placeholder={t('login.password')} name="password" register={register} />
                 <div className="button-group">
                     <Button type="submit">{t('login.loginButton')}</Button>
-                    <Button type="button">{t('login.registerButton')}</Button>
+                    <Button type="button" onClick={() => navigate('/signup')}>
+                        {t('login.registerButton')}
+                    </Button>
                 </div>
             </form>
         </div>

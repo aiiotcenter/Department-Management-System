@@ -78,7 +78,7 @@
 /* Table Styles */
 .table-responsive {
   width: 100%;
-  overflow-x: auto; /* Enable horizontal scrolling if needed */
+  /* Remove overflow-x to prevent horizontal scrolling */
 }
 
 .admin-table {
@@ -86,6 +86,7 @@
   border-collapse: collapse;
   margin-top: 15px;
   background-color: white;
+  table-layout: fixed; /* Add fixed table layout to prevent column resizing */
 }
 
 .admin-table th, 
@@ -283,6 +284,86 @@
   resize: vertical;
 }
 
+/* Form Styles for Admin */
+.form-container {
+  background-color: #f9f5f6;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  max-width: 100%;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #444;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #992e49;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button-group,
+.form-content .button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center !important;
+}
+
+.button-group button,
+.form-content .button-group button {
+  flex: 0 1 auto;
+}
+
+.form-button {
+  padding: 12px;
+  background-color: #992e49;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: bold;
+}
+
+.form-button:hover {
+  background-color: #7b243a;
+}
+
+/* Small Form Button Styles */
+.form-button-sm {
+  padding: 8px 16px;
+  font-size: 14px;
+  width: auto;
+  min-width: 80px;
+}
+
+/* Compact Button Styles */
+.form-button-compact {
+  padding: 6px 12px;
+  font-size: 13px;
+  min-width: 80px;
+  max-width: 120px;
+}
+
+/* Action Button Styles */
+.form-button-action {
+  min-width: 120px;
+  max-width: 180px;
+}
+
 /* Notification Styles */
 .notification {
   padding: 10px 15px;
@@ -300,6 +381,26 @@
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+/* Override table styles to ensure no horizontal scrolling */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.admin-table th, 
+.admin-table td {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 12px 10px;
+}
+
+/* Make the action column narrower */
+.admin-table th:last-child,
+.admin-table td:last-child {
+  width: 120px;
 }
 
 /* Responsive Adjustments */

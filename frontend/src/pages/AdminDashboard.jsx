@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import EmployeeManagement from '../partials/AdminDashboard/EmployeeManagement';
 import RequestsManagement from '../partials/AdminDashboard/RequestsManagement';
+import UserManagement from '../partials/AdminDashboard/UserManagement';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -14,8 +14,8 @@ export default function AdminDashboard() {
         switch (activeTab) {
             case 'requests':
                 return <RequestsManagement />;
-            case 'employees':
-                return <EmployeeManagement />;
+            case 'users':
+                return <UserManagement />;
             default:
                 return <RequestsManagement />;
         }
@@ -35,10 +35,7 @@ export default function AdminDashboard() {
                             >
                                 {t('adminDashboard.manageRequests')}
                             </li>
-                            <li
-                                className={activeTab === 'employees' ? 'active' : ''}
-                                onClick={() => setActiveTab('employees')}
-                            >
+                            <li className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}>
                                 {t('adminDashboard.manageUsers')}
                             </li>
                         </ul>
