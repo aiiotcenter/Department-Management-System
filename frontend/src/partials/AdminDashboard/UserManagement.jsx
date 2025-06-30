@@ -7,7 +7,7 @@ import './UserManagement.css';
 export default function UserManagement() {
     const [showAddForm, setShowAddForm] = useState(false);
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset } = useForm(); // removed setValue
     const { t } = useTranslation();
 
     // Mock data with state that can be modified
@@ -43,6 +43,10 @@ export default function UserManagement() {
             role: 'admin',
         },
     ]);
+
+    // Edit state
+    const [editUserId, setEditUserId] = useState(null);
+    const [editForm, setEditForm] = useState({ name: '', email: '', role: '' });
 
     // Function to add a new user
     const onSubmit = (data) => {
@@ -82,6 +86,34 @@ export default function UserManagement() {
             type: 'success',
             message: t('adminDashboard.notifications.userDeleted'),
         });
+    };
+
+    // Start editing a user
+    const handleEdit = (user) => {
+        setEditUserId(user._id);
+        setEditForm({ name: user.name, email: user.email, role: user.role });
+    };
+
+    // Handle edit form changes
+    const handleEditChange = (e) => {
+        const { name, value } = e.target;
+        setEditForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Save edited user
+    const handleEditSave = (id) => {
+        setUsers((prev) => prev.map((user) => (user._id === id ? { ...user, ...editForm } : user)));
+        setNotification({
+            show: true,
+            type: 'success',
+            message: t('adminDashboard.notifications.userUpdated') || 'User updated successfully',
+        });
+        setEditUserId(null);
+    };
+
+    // Cancel editing
+    const handleEditCancel = () => {
+        setEditUserId(null);
     };
 
     // Create a simple form without using custom components to avoid blank page issues
@@ -187,17 +219,86 @@ export default function UserManagement() {
                     <tbody>
                         {users.map((user) => (
                             <tr key={user._id}>
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
-                                <td>{t(`adminDashboard.userManagement.${user.role}`)}</td>
-                                <td>
-                                    <button
-                                        className="form-button form-button-sm form-button-compact"
-                                        onClick={() => handleDelete(user._id)}
-                                    >
-                                        {t('adminDashboard.userManagement.delete')}
-                                    </button>
-                                </td>
+                                {editUserId === user._id ? (
+                                    <>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={editForm.name}
+                                                onChange={handleEditChange}
+                                                className="form-input"
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={editForm.email}
+                                                onChange={handleEditChange}
+                                                className="form-input"
+                                            />
+                                        </td>
+                                        <td>
+                                            <select
+                                                name="role"
+                                                value={editForm.role}
+                                                onChange={handleEditChange}
+                                                className="input-select"
+                                            >
+                                                <option value="professor">
+                                                    {t('adminDashboard.userManagement.professor')}
+                                                </option>
+                                                <option value="assistant">
+                                                    {t('adminDashboard.userManagement.assistant')}
+                                                </option>
+                                                <option value="secretary">
+                                                    {t('adminDashboard.userManagement.secretary')}
+                                                </option>
+                                                <option value="admin">
+                                                    {t('adminDashboard.userManagement.admin')}
+                                                </option>
+                                                <option value="student">
+                                                    {t('adminDashboard.userManagement.student')}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="form-button form-button-sm form-button-compact"
+                                                onClick={() => handleEditSave(user._id)}
+                                            >
+                                                {t('adminDashboard.userManagement.save') || 'Save'}
+                                            </button>
+                                            <button
+                                                className="form-button form-button-sm form-button-compact"
+                                                onClick={handleEditCancel}
+                                            >
+                                                {t('adminDashboard.userManagement.cancel') || 'Cancel'}
+                                            </button>
+                                        </td>
+                                    </>
+                                ) : (
+                                    <>
+                                        <td>{user.name}</td>
+                                        <td>{user.email}</td>
+                                        <td>{t(`adminDashboard.userManagement.${user.role}`)}</td>
+                                        <td>
+                                            <button
+                                                className="form-button form-button-sm form-button-compact"
+                                                onClick={() => handleEdit(user)}
+                                            >
+                                                {t('adminDashboard.userManagement.edit') || 'Edit'}
+                                            </button>
+                                            <button
+                                                className="form-button form-button-sm form-button-compact"
+                                                onClick={() => handleDelete(user._id)}
+                                            >
+                                                {t('adminDashboard.userManagement.delete')}
+                                            </button>
+                                        </td>
+                                    </>
+                                )}
                             </tr>
                         ))}
                     </tbody>

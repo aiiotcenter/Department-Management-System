@@ -404,6 +404,38 @@
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .admin-dashboard-content {
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 3px solid #992e49;
+    padding: 10px 0;
+  }
+  .admin-content {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-table th, .admin-table td {
+    padding: 8px 6px;
+    font-size: 14px;
+  }
+  .admin-table th:last-child,
+  .admin-table td:last-child {
+    width: 80px;
+  }
+  .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-dashboard-content {
     flex-direction: column;
@@ -435,5 +467,77 @@
   
   .admin-content {
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-dashboard-main {
+    padding: 5px;
+  }
+  .admin-dashboard-content {
+    flex-direction: column;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .admin-sidebar {
+    width: 100%;
+    padding: 5px 0;
+    font-size: 16px;
+  }
+  .admin-content {
+    padding: 5px;
+  }
+  .admin-sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .admin-nav li {
+    padding: 10px 8px;
+    font-size: 15px;
+  }
+  
+  .admin-table, .admin-table thead, .admin-table tbody, .admin-table th, .admin-table td, .admin-table tr {
+    display: block;
+    width: 100%;
+  }
+  .admin-table thead {
+    display: none;
+  }
+  .admin-table tr {
+    margin-bottom: 18px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 8px 0;
+  }
+  .admin-table td {
+    padding: 8px 12px;
+    text-align: left;
+    position: relative;
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px solid #f0e6e8;
+  }
+  .admin-table td:last-child {
+    border-bottom: none;
+  }
+  .admin-table td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #992e49;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .icon-actions {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 6px;
   }
 }

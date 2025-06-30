@@ -52,3 +52,39 @@
     margin: 0;
     width: 100%;
 }
+
+@media (max-width: 900px) {
+    .internship-content {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 98vw;
+    }
+    .left-content, .right-content {
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 600px) {
+    .internship-main {
+        padding: 5px;
+    }
+    .internship-content {
+        flex-direction: column;
+        max-width: 100vw;
+    }
+    .left-content {
+        padding: 0 2vw;
+        font-size: 15px;
+    }
+    .left-content h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .right-content {
+        padding: 0 2vw;
+    }
+    .right-content .form-container {
+        padding: 10px 2vw;
+        margin: 10px 0;
+    }
+}

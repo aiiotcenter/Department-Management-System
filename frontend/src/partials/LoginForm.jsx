@@ -11,7 +11,25 @@ export default function LoginForm() {
     const { t } = useTranslation();
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
-    const onSubmit = (data) => console.log(data);
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch('http://localhost:3000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ email: data.email, password: data.password }),
+            });
+            const result = await response.json();
+            if (response.ok) {
+                // Redirect to dashboard or homepage
+                navigate('/student-dashboard');
+            } else {
+                alert(result.message || 'Login failed');
+            }
+        } catch (error) {
+            alert('An unexpected error occurred: ' + error.message);
+        }
+    };
 
     return (
         <div className="form-container">

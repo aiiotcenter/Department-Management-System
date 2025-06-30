@@ -33,7 +33,10 @@ const cookieParser = require('cookie-parser'); //middleware for parsing cookies 
 //? Enable CORS middleware
 //===========================================================================================
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Change this if your frontend runs on a different port
+    credentials: true
+}));
 
 //===========================================================================================
 //? set up for the middleware( handle json reqestes & url & cookies)

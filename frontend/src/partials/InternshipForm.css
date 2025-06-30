@@ -98,3 +98,40 @@
     font-weight: bold;
     color: #992e49;
 }
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 30px 10px;
+        max-width: 95vw;
+    }
+    .form-logo {
+        width: 220px;
+    }
+    .form-title {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 15px 2vw;
+        margin: 30px auto 20px;
+    }
+    .form-logo {
+        width: 120px;
+        margin-bottom: 10px;
+    }
+    .form-title {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    .form-content {
+        gap: 8px;
+    }
+    .button-group {
+        gap: 8px;
+    }
+    .form-textarea {
+        font-size: 13px;
+    }
+}

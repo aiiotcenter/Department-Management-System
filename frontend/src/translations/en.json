@@ -135,7 +135,8 @@
         "internshipRejected": "Internship application rejected successfully",
         "internshipDeleted": "Internship application deleted successfully",
         "userAdded": "User added successfully",
-        "userDeleted": "User deleted successfully"
+        "userDeleted": "User deleted successfully",
+        "userUpdated": "User updated successfully"
       },
       "newUsers": "New Users",
       "pendingRequests": "Pending Requests",
@@ -175,7 +176,9 @@
         "userManagement": "User Management",
         "users": "Users",
         "delete": "Delete",
-        "actions": "Actions"
+        "edit": "Edit",
+        "actions": "Actions",
+        "save": "Save"
       },
       "appointmentManagement": {
         "upcoming": "Upcoming",

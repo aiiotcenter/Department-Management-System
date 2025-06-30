@@ -89,3 +89,55 @@
 .menu-options button:hover {
     background-color: #f4c0c7;
 }
+
+@media (max-width: 900px) {
+    .navbar {
+        padding: 8px 4vw;
+    }
+    .navbar-logo {
+        height: 32px;
+    }
+    .navbar-icons {
+        gap: 12px;
+    }
+    .navbar-icon {
+        font-size: 22px;
+        width: 36px;
+        height: 36px;
+    }
+    .icon-image {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 6px 2vw;
+    }
+    .navbar-logo {
+        height: 24px;
+        margin-bottom: 6px;
+    }
+    .navbar-icons {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+    .navbar-icon {
+        font-size: 18px;
+        width: 30px;
+        height: 30px;
+        padding: 4px;
+    }
+    .icon-image {
+        width: 16px;
+        height: 16px;
+    }
+    .menu-options {
+        min-width: 120px;
+        font-size: 14px;
+    }
+}

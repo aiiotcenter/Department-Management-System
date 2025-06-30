@@ -18,3 +18,22 @@
     max-width: 500px;
     width: 100%;
 }
+
+@media (max-width: 768px) {
+    .signup-main {
+        padding: 60px 5vw 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .signup-page-container {
+        min-height: 100vh;
+        width: 100vw;
+    }
+    .signup-main {
+        padding: 30px 2vw 10px;
+    }
+    .signup-main > * {
+        max-width: 98vw;
+    }
+}

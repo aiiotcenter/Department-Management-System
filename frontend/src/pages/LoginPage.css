@@ -13,3 +13,22 @@
     align-items: flex-start;
     padding: 100px 20px 40px;
 }
+
+@media (max-width: 768px) {
+    .login-main {
+        padding: 60px 5vw 20px;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-page-container {
+        min-height: 100vh;
+        width: 100vw;
+    }
+    .login-main {
+        padding: 30px 2vw 10px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
