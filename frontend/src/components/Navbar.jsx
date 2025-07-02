@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LanguageIcon from '../assets/Language.png';
 import ListIcon from '../assets/List.png';
 import logoAI from '../assets/logoAI.png';
 import UserIcon from '../assets/user.png';
+import { logout } from '../services/auth';
 import './Navbar.css';
 
 export default function Navbar() {
     const [openMenu, setOpenMenu] = useState(null);
     const navRef = useRef(null);
     const { t, i18n } = useTranslation();
+    const navigate = useNavigate();
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
@@ -29,6 +31,16 @@ export default function Navbar() {
 
     const toggleMenu = (menu) => {
         setOpenMenu((prev) => (prev === menu ? null : menu));
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setOpenMenu(null);
+            navigate('/login');
+        } catch {
+            alert('Logout failed.');
+        }
     };
 
     return (
@@ -81,7 +93,7 @@ export default function Navbar() {
                             <Link to="/profile" onClick={() => setOpenMenu(null)}>
                                 {t('navbar.profile')}
                             </Link>
-                            <button onClick={() => setOpenMenu(null)}>{t('navbar.signout')}</button>
+                            <button onClick={handleLogout}>{t('navbar.signout')}</button>
                         </div>
                     )}
                 </div>

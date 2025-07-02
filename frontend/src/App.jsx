@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import Announcement from './pages/Announcement';
 import AppointmentPage from './pages/AppointmentPage';
@@ -15,11 +16,39 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/profile" element={<StudentProfile />} />
-            <Route path="/student-dashboard" element={<StudentDashboard />} />
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute>
+                        <StudentProfile />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/student-dashboard"
+                element={
+                    <ProtectedRoute>
+                        <StudentDashboard />
+                    </ProtectedRoute>
+                }
+            />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            <Route path="/appointment" element={<AppointmentPage />} />
-            <Route path="/internship" element={<InternshipPage />} />
+            <Route
+                path="/appointment"
+                element={
+                    <ProtectedRoute>
+                        <AppointmentPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/internship"
+                element={
+                    <ProtectedRoute>
+                        <InternshipPage />
+                    </ProtectedRoute>
+                }
+            />
             <Route path="/announcements" element={<Announcement />} />
         </Routes>
     );

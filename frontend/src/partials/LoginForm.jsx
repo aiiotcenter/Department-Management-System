@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import logoAI from '../assets/logoAI.png';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { login } from '../services/auth';
 import './LoginForm.css';
 
 export default function LoginForm() {
@@ -13,21 +14,10 @@ export default function LoginForm() {
     const navigate = useNavigate();
     const onSubmit = async (data) => {
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ email: data.email, password: data.password }),
-            });
-            const result = await response.json();
-            if (response.ok) {
-                // Redirect to dashboard or homepage
-                navigate('/student-dashboard');
-            } else {
-                alert(result.message || 'Login failed');
-            }
+            await login(data.email, data.password);
+            navigate('/student-dashboard');
         } catch (error) {
-            alert('An unexpected error occurred: ' + error.message);
+            alert(error.message || 'Login failed');
         }
     };
 

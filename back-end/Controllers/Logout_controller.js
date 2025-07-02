@@ -1,7 +1,6 @@
-
 const Logout_logic = async (req, res) => {
     try {
-        res.clearCookie('token');
+        res.clearCookie('token', { httpOnly: true, maxAge: 7200000 }); // Use same options as when setting
         const id = req.user.id;
 
         console.log(`User with this id : "${id}" logged out\n`); // test, can delete later

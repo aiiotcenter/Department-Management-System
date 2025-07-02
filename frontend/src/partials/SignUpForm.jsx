@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import logoAI from '../assets/logoAI.png';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { register as registerUser } from '../services/auth';
 import './SignUpForm.css';
 
 export default function SignUpForm() {
@@ -16,32 +17,18 @@ export default function SignUpForm() {
             alert('Passwords do not match');
             return;
         }
-        let photo_path = '';
-        if (data.photo && data.photo.length > 0) {
-            // Only uses file name and doesn't store picture.
-            photo_path = data.photo[0].name;
-        }
         try {
-            const response = await fetch('http://localhost:3000/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    name: `${data.firstName} ${data.lastName}`,
-                    email: data.email,
-                    password: data.password,
-                    photo_path,
-                }),
+            await registerUser({
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                password: data.password,
+                photo: data.photo,
             });
-            const result = await response.json();
-            if (response.ok) {
-                alert('Registration successful! Please log in.');
-                navigate('/login');
-            } else {
-                alert(result.message || 'Registration failed');
-            }
+            alert('Registration successful! Please log in.');
+            navigate('/login');
         } catch (error) {
-            alert('An unexpected error occurred: ' + error.message);
+            alert(error.message || 'Registration failed');
         }
     };
 
