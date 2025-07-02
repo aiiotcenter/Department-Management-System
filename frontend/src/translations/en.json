@@ -227,6 +227,28 @@
         "actions": "Actions",
         "appointment": "Appointment",
         "internship": "Internship"
+      },
+      "internshipAssignments": {
+        "title": "Internship Management",
+        "approvedInternships": "Approved Internships",
+        "staffTeams": "Staff Teams",
+        "internshipTitle": "Internship Title",
+        "description": "Description",
+        "approvedStudents": "Approved Students",
+        "staffAssignment": "Staff Assignment",
+        "actions": "Actions",
+        "selectStaff": "Select Staff",
+        "assign": "Assign",
+        "staffMember": "Staff Member",
+        "teamMembers": "Team Members",
+        "teamSize": "Team Size",
+        "noStudentsAssigned": "No students assigned yet",
+        "students": "students",
+        "student": "student",
+        "assignmentSuccess": "Successfully assigned {{count}} student(s) to {{staffName}}'s team",
+        "notifications": {
+          "assignmentSuccess": "Students assigned successfully to team"
+        }
       }
     },
     "appointment": {

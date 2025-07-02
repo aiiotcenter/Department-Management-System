@@ -227,6 +227,28 @@
         "actions": "İşlemler",
         "appointment": "Randevu",
         "internship": "Staj"
+      },
+      "internshipAssignments": {
+        "title": "Staj Yönetimi",
+        "approvedInternships": "Onaylanmış Stajlar",
+        "staffTeams": "Personel Takımları",
+        "internshipTitle": "Staj Başlığı",
+        "description": "Açıklama",
+        "approvedStudents": "Onaylanmış Öğrenciler",
+        "staffAssignment": "Personel Ataması",
+        "actions": "İşlemler",
+        "selectStaff": "Personel Seç",
+        "assign": "Ata",
+        "staffMember": "Personel Üyesi",
+        "teamMembers": "Takım Üyeleri",
+        "teamSize": "Takım Boyutu",
+        "noStudentsAssigned": "Henüz öğrenci atanmadı",
+        "students": "öğrenci",
+        "student": "öğrenci",
+        "assignmentSuccess": "{{count}} öğrenci {{staffName}}'ın takımına başarıyla atandı",
+        "notifications": {
+          "assignmentSuccess": "Öğrenciler takıma başarıyla atandı"
+        }
       }
     },
     "appointment": {
