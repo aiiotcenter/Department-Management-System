@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import AdminInternships from '../pages/AdminInternships';
 import RequestsManagement from '../partials/AdminDashboard/RequestsManagement';
 import UserManagement from '../partials/AdminDashboard/UserManagement';
 import './AdminDashboard.css';
@@ -16,6 +17,8 @@ export default function AdminDashboard() {
                 return <RequestsManagement />;
             case 'users':
                 return <UserManagement />;
+            case 'internships':
+                return <AdminInternships />;
             default:
                 return <RequestsManagement />;
         }
@@ -37,6 +40,14 @@ export default function AdminDashboard() {
                             </li>
                             <li className={activeTab === 'users' ? 'active' : ''} onClick={() => setActiveTab('users')}>
                                 {t('adminDashboard.manageUsers')}
+                            </li>
+                            <li
+                                className={activeTab === 'internships' ? 'active' : ''}
+                                onClick={() => {
+                                    setActiveTab('internships');
+                                }}
+                            >
+                                {t('adminDashboard.manageInternships') || 'Manage Internships'}
                             </li>
                         </ul>
                     </div>

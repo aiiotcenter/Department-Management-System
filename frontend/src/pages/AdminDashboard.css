@@ -54,6 +54,25 @@
   font-weight: bold;
 }
 
+.admin-nav .admin-nav-btn {
+  display: block;
+  padding: 15px 20px;
+  color: #992e49;
+  text-decoration: none;
+  font-weight: bold;
+  border-left: 4px solid transparent;
+  transition: background-color 0.3s;
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.admin-nav .admin-nav-btn:hover,
+.admin-nav .admin-nav-btn.active {
+  background-color: #f0e6e8;
+  border-left: 4px solid #992e49;
+}
+
 /* Content Area Styles */
 .admin-content {
   flex: 1;

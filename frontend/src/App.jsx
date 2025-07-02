@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminInternships from './pages/AdminInternships';
 import Announcement from './pages/Announcement';
 import AppointmentPage from './pages/AppointmentPage';
 import HomePage from './pages/HomePage';
@@ -50,6 +51,7 @@ function App() {
                 }
             />
             <Route path="/announcements" element={<Announcement />} />
+            <Route path="/admin-dashboard/internships" element={<AdminInternships />} />
         </Routes>
     );
 }

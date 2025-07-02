@@ -1,0 +1,91 @@
+.admin-internships-container {
+  background: #f9f5f6;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(153, 46, 73, 0.05);
+}
+
+.admin-internships-container h2 {
+  color: #992e49;
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.admin-internship-card {
+  border: 2px solid #992e49;
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 4px rgba(153, 46, 73, 0.04);
+}
+
+.admin-internship-card h3 {
+  color: #992e49;
+  margin-bottom: 8px;
+}
+
+.admin-internship-card ul {
+  padding-left: 20px;
+}
+
+.admin-internship-card label {
+  font-size: 16px;
+  color: #333;
+}
+
+.admin-internship-card select {
+  width: 220px;
+  padding: 8px 10px;
+  border: 2px solid #992e49;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: white;
+  color: #666;
+  margin-right: 10px;
+}
+
+.admin-internship-card button {
+  background: #992e49;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-internship-card button:disabled {
+  background: #e0bfc9;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.admin-internship-card button:hover:not(:disabled) {
+  background: #7a2238;
+}
+
+.admin-internships-teams {
+  margin-top: 32px;
+}
+
+.admin-internships-teams h2 {
+  color: #992e49;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.admin-internships-teams .team-card {
+  background: #fff;
+  border: 1px solid #e0bfc9;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+
+.admin-internships-teams .team-card strong {
+  color: #992e49;
+}
