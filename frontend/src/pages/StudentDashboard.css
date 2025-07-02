@@ -182,3 +182,82 @@ p {
 .view-button:hover {
   background-color: #ebc2c8;
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .SideBySide {
+    flex-direction: column;
+  }
+
+  .dashboard-cards {
+    flex-direction: column;
+  }
+
+  .dashboard-card {
+    width: 100%;
+  }
+
+  .announcement-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .student-dashboard-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #992e49;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sidebar h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .summary-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  .profile-info p {
+    font-size: 14px;
+  }
+
+  .dashboard-main {
+    padding: 20px;
+  }
+
+  .info-section {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  .view-button {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+}
+

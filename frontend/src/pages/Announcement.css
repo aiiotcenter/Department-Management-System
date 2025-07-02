@@ -127,3 +127,64 @@
   font-size: 18px;
   font-weight: bold;
 }
+
+@media (max-width: 1024px) {
+  .announcement-page {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .announcement-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #992e49;
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .announcement-sidebar h1 {
+    padding: 20px 0;
+    font-size: 22px;
+    height: auto;
+  }
+
+  .announcement-content {
+    padding: 20px;
+  }
+
+  .announcement-cards-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .announcement-card {
+    width: 90%;
+  }
+
+  .announcement-section {
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .announcement-sidebar h1 {
+    font-size: 18px;
+  }
+
+  .overlay-text {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .announcement-section h2 {
+    font-size: 22px;
+  }
+
+  .announcement-title {
+    font-size: 18px;
+  }
+
+  .announcement-details {
+    font-size: 14px;
+  }
+}

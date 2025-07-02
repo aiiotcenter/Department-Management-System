@@ -280,3 +280,101 @@ h3{
 }
 
 
+@media (max-width: 1024px) {
+  .profile-content {
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+  }
+
+  .profile-left,
+  .profile-right {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  .profile-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-attributes p {
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 20px;
+    width: 95%;
+  }
+
+  .settings-wrapper {
+    right: 15px;
+    top: 15px;
+  }
+
+  .info-card {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .info-title,
+  .info-date,
+  .info-status {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .download-icon {
+    width: 24px;
+  }
+
+  .tooltip-text {
+    font-size: 10px;
+    bottom: 140%;
+  }
+
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-attributes {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-title {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  .profile-attributes{
+    margin-bottom: 2rem;
+  }
+
+  .profile-attributes p {
+    font-size: 14px;
+  }
+
+  .qr-popup {
+    width: 90%;
+  }
+
+  .download-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .settings-menu {
+    right: 0;
+    left: auto;
+  }
+}
