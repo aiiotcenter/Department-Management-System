@@ -192,21 +192,6 @@
         "status": "Durum",
         "actions": "İşlemler"
       },
-      "internshipManagement": {
-        "pending": "Beklemede",
-        "active": "Aktif",
-        "completed": "Tamamlanmış",
-        "rejected": "Reddedilmiş",
-        "id": "ID",
-        "student": "Öğrenci",
-        "university": "Üniversite",
-        "department": "Bölüm",
-        "duration": "Süre",
-        "startDate": "Başlangıç Tarihi",
-        "endDate": "Bitiş Tarihi",
-        "status": "Durum",
-        "actions": "İşlemler"
-      },
       "requestsManagement": {
         "title": "İstek Yönetimi",
         "type": "Tür",
@@ -218,6 +203,7 @@
         "pending": "Beklemede",
         "approved": "Onaylandı",
         "rejected": "Reddedildi",
+        "waiting": "Bekliyor",
         "requests": "İstekler",
         "name": "İsim",
         "purposeUniversity": "Amaç/Üniversite",

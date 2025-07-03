@@ -18,28 +18,36 @@ export default function InternshipForm() {
         }
     };
 
-    const onSubmit = (data) => {
-        // Create a FormData object to handle file upload
+    const onSubmit = async (data) => {
         const formData = new FormData();
+        formData.append('university', data.university);
+        formData.append('department', data.department);
+        formData.append('period_of_internship', data.period_of_internship);
+        formData.append('additional_notes', data.additional_notes || '');
 
-        // Add all form fields to the FormData
-        Object.keys(data).forEach((key) => {
-            if (key === 'cv' && data[key][0]) {
-                formData.append(key, data[key][0]);
+        if (data.cv && data.cv.length > 0) {
+            const file = data.cv[0];
+            formData.append('cv', file);
+        }
+
+        try {
+            const response = await fetch('http://localhost:3001/api/internship_application', {
+                method: 'POST',
+                credentials: 'include',
+                body: formData,
+                // Don't set Content-Type header, let the browser set it with the boundary
+            });
+
+            const responseData = await response.json();
+
+            if (response.ok) {
+                alert('Internship application submitted!');
             } else {
-                formData.append(key, data[key]);
+                alert(`Submission failed: ${responseData.message || 'Unknown error'}`);
             }
-        });
-
-        console.log('Form submitted with:', {
-            university: data.university,
-            department: data.department,
-            period_of_internship: data.period_of_internship,
-            additional_notes: data.additional_notes,
-            cv_filename: fileName,
-        });
-
-        // Here you would typically send the formData to your backend
+        } catch (error) {
+            alert(`Error: ${error.message || 'Unknown error occurred'}`);
+        }
     };
 
     return (

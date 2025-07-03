@@ -14,8 +14,6 @@ app.get('/test-db', async (req, res) => {
   }
 });
 
-// Start the server
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// This file should not start its own server as server.js handles that
+// Export the app for use in server.js
+module.exports = app;

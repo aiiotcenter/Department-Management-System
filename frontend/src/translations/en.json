@@ -192,21 +192,6 @@
         "status": "Status",
         "actions": "Actions"
       },
-      "internshipManagement": {
-        "pending": "Pending",
-        "active": "Active",
-        "completed": "Completed",
-        "rejected": "Rejected",
-        "id": "ID",
-        "student": "Student",
-        "university": "University",
-        "department": "Department",
-        "duration": "Duration",
-        "startDate": "Start Date",
-        "endDate": "End Date",
-        "status": "Status",
-        "actions": "Actions"
-      },
       "requestsManagement": {
         "title": "Requests Management",
         "type": "Type",
@@ -218,6 +203,7 @@
         "pending": "Pending",
         "approved": "Approved",
         "rejected": "Rejected",
+        "waiting": "Waiting",
         "requests": "Requests",
         "name": "Name",
         "purposeUniversity": "Purpose/University",

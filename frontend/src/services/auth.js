@@ -1,7 +1,7 @@
 // src/services/auth.js
 
 export async function logout() {
-    const response = await fetch('http://localhost:3000/api/logout', {
+    const response = await fetch('http://localhost:3001/api/logout', {
         method: 'POST',
         credentials: 'include', // Important: send cookies
     });
@@ -12,7 +12,7 @@ export async function logout() {
 }
 
 export async function login(email, password) {
-    const response = await fetch('http://localhost:3000/api/login', {
+    const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -30,7 +30,7 @@ export async function register({ firstName, lastName, email, password, photo }) 
     if (photo && photo.length > 0) {
         photo_path = photo[0].name;
     }
-    const response = await fetch('http://localhost:3000/api/register', {
+    const response = await fetch('http://localhost:3001/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

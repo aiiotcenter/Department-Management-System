@@ -54,61 +54,87 @@ export default function RequestsManagement() {
     ]);
 
     // Mock internship data
-    const [internships, setInternships] = useState([
-        {
-            _id: '1',
-            type: 'internship',
-            User_ID: '101',
-            username: 'Alex Thompson',
-            university: 'MIT',
-            department: 'Computer Science',
-            period_of_internship: '3 months',
-            cv: 'alex_cv.pdf',
-            status: 'pending',
-            additional_notes: 'Interested in web development',
-        },
-        {
-            _id: '2',
-            type: 'internship',
-            User_ID: '102',
-            username: 'Emma Wilson',
-            university: 'Stanford',
-            department: 'Electrical Engineering',
-            period_of_internship: '6 months',
-            cv: 'emma_cv.pdf',
-            status: 'approved',
-            additional_notes: 'Experience with circuit design',
-        },
-        {
-            _id: '3',
-            type: 'internship',
-            User_ID: '103',
-            username: 'Daniel Brown',
-            university: 'Harvard',
-            department: 'Mechanical Engineering',
-            period_of_internship: '4 months',
-            cv: 'daniel_cv.pdf',
-            status: 'pending',
-            additional_notes: 'Keen to learn about automotive systems',
-        },
-        {
-            _id: '4',
-            type: 'internship',
-            User_ID: '104',
-            username: 'Sophia Lee',
-            university: 'Berkeley',
-            department: 'Information Technology',
-            period_of_internship: '2 months',
-            cv: 'sophia_cv.pdf',
-            status: 'rejected',
-            additional_notes: 'Interested in cybersecurity',
-        },
-    ]);
+    const [internships, setInternships] = useState([]);
 
     // Combine both types of requests and update when either changes
     useEffect(() => {
-        setAllRequests([...appointments, ...internships]);
+        // Create a unique identifier for each request to prevent duplicates
+        const allRequestsMap = new Map();
+
+        // Add appointments
+        appointments.forEach((appointment) => {
+            const key = `appointment-${appointment._id}`;
+            allRequestsMap.set(key, appointment);
+        });
+
+        // Add internships
+        internships.forEach((internship) => {
+            const key = `internship-${internship._id}`;
+            allRequestsMap.set(key, internship);
+        });
+
+        // Convert map values to array
+        setAllRequests(Array.from(allRequestsMap.values()));
     }, [appointments, internships]);
+
+    // Fetch real internship applications from backend
+    useEffect(() => {
+        setNotification({ show: false, type: '', message: '' });
+        fetch('http://localhost:3001/api/internship_application', {
+            credentials: 'include',
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        throw new Error('You are not authorized. Please login first.');
+                    }
+                    return res.json().then((data) => {
+                        throw new Error(data.message || `Server error: ${res.status}`);
+                    });
+                }
+                return res.json();
+            })
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    // Add the type field to each internship record for filtering
+                    const formattedData = data.map((item) => ({
+                        ...item,
+                        type: 'internship',
+                        username: item.User_name || 'Unknown', // Map User_name to username for consistency
+                        // Make sure status is standardized (convert "waiting" to "pending" for consistency)
+                        status:
+                            (item.status || '').toLowerCase() === 'waiting'
+                                ? 'pending'
+                                : (item.status || '').toLowerCase(),
+                    }));
+                    setInternships(formattedData);
+                } else if (data.message) {
+                    // Handle message response (like "No internship applications exist")
+                    setInternships([]);
+                    // Show notification for no applications
+                    setNotification({
+                        show: true,
+                        type: 'info',
+                        message: data.message,
+                    });
+                    setTimeout(() => {
+                        setNotification({ show: false, type: '', message: '' });
+                    }, 3000);
+                } else {
+                    setInternships([]);
+                }
+            })
+            .catch((error) => {
+                setNotification({
+                    show: true,
+                    type: 'error',
+                    message: error.message || 'Failed to fetch internship applications',
+                });
+                setTimeout(() => {
+                    setNotification({ show: false, type: '', message: '' });
+                }, 3000);
+            });
+    }, []);
 
     // Handle approve action
     const handleApprove = (id, type) => {
@@ -124,16 +150,69 @@ export default function RequestsManagement() {
                 message: t('adminDashboard.notifications.appointmentApproved'),
             });
         } else if (type === 'internship') {
-            setInternships(
-                internships.map((internship) =>
-                    internship._id === id ? { ...internship, status: 'approved' } : internship
-                )
-            );
-            setNotification({
-                show: true,
-                type: 'success',
-                message: t('adminDashboard.notifications.internshipApproved'),
-            });
+            // Send update request to backend
+            fetch(`http://localhost:3001/api/internship_application`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ id, status: 'approved' }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            throw new Error('You are not authorized to perform this action');
+                        }
+                        return res.json().then((data) => {
+                            throw new Error(data.message || `Server error: ${res.status}`);
+                        });
+                    }
+                    return res.json();
+                })
+                .then(() => {
+                    // Update local state only after successful backend update
+                    setInternships(
+                        internships.map((internship) =>
+                            internship._id === parseInt(id) ? { ...internship, status: 'approved' } : internship
+                        )
+                    );
+                    setNotification({
+                        show: true,
+                        type: 'success',
+                        message: t('adminDashboard.notifications.internshipApproved'),
+                    });
+
+                    // Refresh internship applications after 1 second
+                    setTimeout(() => {
+                        fetch('http://localhost:3001/api/internship_application', {
+                            credentials: 'include',
+                        })
+                            .then((res) => (res.ok ? res.json() : []))
+                            .then((data) => {
+                                if (Array.isArray(data)) {
+                                    const formattedData = data.map((item) => ({
+                                        ...item,
+                                        type: 'internship',
+                                        username: item.User_name || 'Unknown',
+                                        status:
+                                            (item.status || '').toLowerCase() === 'waiting'
+                                                ? 'pending'
+                                                : (item.status || '').toLowerCase(),
+                                    }));
+                                    setInternships(formattedData);
+                                }
+                            })
+                            .catch(() => {});
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setNotification({
+                        show: true,
+                        type: 'error',
+                        message: error.message || 'Error approving internship application',
+                    });
+                });
         }
 
         // Hide notification after 3 seconds
@@ -156,16 +235,69 @@ export default function RequestsManagement() {
                 message: t('adminDashboard.notifications.appointmentRejected'),
             });
         } else if (type === 'internship') {
-            setInternships(
-                internships.map((internship) =>
-                    internship._id === id ? { ...internship, status: 'rejected' } : internship
-                )
-            );
-            setNotification({
-                show: true,
-                type: 'success',
-                message: t('adminDashboard.notifications.internshipRejected'),
-            });
+            // Send update request to backend
+            fetch(`http://localhost:3001/api/internship_application`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({ id, status: 'rejected' }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            throw new Error('You are not authorized to perform this action');
+                        }
+                        return res.json().then((data) => {
+                            throw new Error(data.message || `Server error: ${res.status}`);
+                        });
+                    }
+                    return res.json();
+                })
+                .then(() => {
+                    // Update local state only after successful backend update
+                    setInternships(
+                        internships.map((internship) =>
+                            internship._id === parseInt(id) ? { ...internship, status: 'rejected' } : internship
+                        )
+                    );
+                    setNotification({
+                        show: true,
+                        type: 'success',
+                        message: t('adminDashboard.notifications.internshipRejected'),
+                    });
+
+                    // Refresh internship applications after 1 second
+                    setTimeout(() => {
+                        fetch('http://localhost:3001/api/internship_application', {
+                            credentials: 'include',
+                        })
+                            .then((res) => (res.ok ? res.json() : []))
+                            .then((data) => {
+                                if (Array.isArray(data)) {
+                                    const formattedData = data.map((item) => ({
+                                        ...item,
+                                        type: 'internship',
+                                        username: item.User_name || 'Unknown',
+                                        status:
+                                            (item.status || '').toLowerCase() === 'waiting'
+                                                ? 'pending'
+                                                : (item.status || '').toLowerCase(),
+                                    }));
+                                    setInternships(formattedData);
+                                }
+                            })
+                            .catch(() => {});
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setNotification({
+                        show: true,
+                        type: 'error',
+                        message: error.message || 'Error rejecting internship application',
+                    });
+                });
         }
 
         // Hide notification after 3 seconds
@@ -184,12 +316,66 @@ export default function RequestsManagement() {
                 message: t('adminDashboard.notifications.appointmentDeleted'),
             });
         } else if (type === 'internship') {
-            setInternships(internships.filter((internship) => internship._id !== id));
-            setNotification({
-                show: true,
-                type: 'success',
-                message: t('adminDashboard.notifications.internshipDeleted'),
-            });
+            // Send delete request to backend
+            fetch(`http://localhost:3001/api/internship_application/${id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            throw new Error('You are not authorized to perform this action');
+                        }
+                        return res.json().then((data) => {
+                            throw new Error(data.message || `Server error: ${res.status}`);
+                        });
+                    }
+                    return res.ok ? { success: true, id } : res.json();
+                })
+                .then((data) => {
+                    if (data.success || data.id) {
+                        // Update local state after successful deletion
+                        setInternships(internships.filter((internship) => internship._id !== parseInt(id)));
+
+                        setNotification({
+                            show: true,
+                            type: 'success',
+                            message: t('adminDashboard.notifications.internshipDeleted'),
+                        });
+
+                        // Refresh internship applications after 1 second
+                        setTimeout(() => {
+                            fetch('http://localhost:3001/api/internship_application', {
+                                credentials: 'include',
+                            })
+                                .then((res) => (res.ok ? res.json() : []))
+                                .then((data) => {
+                                    if (Array.isArray(data)) {
+                                        const formattedData = data.map((item) => ({
+                                            ...item,
+                                            type: 'internship',
+                                            username: item.User_name || 'Unknown',
+                                            status:
+                                                (item.status || '').toLowerCase() === 'waiting'
+                                                    ? 'pending'
+                                                    : (item.status || '').toLowerCase(),
+                                        }));
+                                        setInternships(formattedData);
+                                    }
+                                })
+                                .catch(() => {});
+                        }, 1000);
+                    } else {
+                        throw new Error(data.message || 'Failed to delete internship application');
+                    }
+                })
+                .catch((error) => {
+                    setNotification({
+                        show: true,
+                        type: 'error',
+                        message: error.message || 'Error deleting internship application',
+                    });
+                });
         }
 
         // Hide notification after 3 seconds
@@ -285,17 +471,42 @@ export default function RequestsManagement() {
                                             : request.period_of_internship}
                                     </td>
                                     <td>
-                                        {request.type === 'internship' ? (
-                                            <a href="#" className="cv-link">
-                                                {request.cv}
+                                        {request.type === 'internship' && request.cv ? (
+                                            <a
+                                                href={`http://localhost:3001/uploads/cvs/${request.cv}`}
+                                                target="_blank"
+                                                className="cv-link"
+                                                rel="noreferrer"
+                                                onClick={(e) => {
+                                                    // Check if the CV file exists
+                                                    fetch(`http://localhost:3001/uploads/cvs/${request.cv}`, {
+                                                        method: 'HEAD',
+                                                    })
+                                                        .then((response) => {
+                                                            if (!response.ok) {
+                                                                e.preventDefault();
+                                                                alert(
+                                                                    'CV file not found. The file may have been deleted or not uploaded correctly.'
+                                                                );
+                                                            }
+                                                        })
+                                                        .catch(() => {
+                                                            e.preventDefault();
+                                                            alert('Cannot access CV file. Please try again later.');
+                                                        });
+                                                }}
+                                            >
+                                                View CV
                                             </a>
                                         ) : (
-                                            '-'
+                                            'No CV uploaded'
                                         )}
                                     </td>
                                     <td>
-                                        <span className={`status-badge status-${request.status}`}>
-                                            {t(`adminDashboard.requestsManagement.${request.status}`)}
+                                        <span className={`status-badge status-${request.status || 'pending'}`}>
+                                            {t(
+                                                `adminDashboard.requestsManagement.${(request.status || '').toLowerCase()}`
+                                            ) || request.status}
                                         </span>
                                     </td>
                                     <td>

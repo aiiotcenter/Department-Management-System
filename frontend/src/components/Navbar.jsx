@@ -5,6 +5,7 @@ import LanguageIcon from '../assets/Language.png';
 import ListIcon from '../assets/List.png';
 import logoAI from '../assets/logoAI.png';
 import UserIcon from '../assets/user.png';
+import { useAuth } from '../hooks/useAuth';
 import { logout } from '../services/auth';
 import './Navbar.css';
 
@@ -13,6 +14,7 @@ export default function Navbar() {
     const navRef = useRef(null);
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
+    const { isAuthenticated, updateAuthStatus } = useAuth();
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
@@ -36,6 +38,7 @@ export default function Navbar() {
     const handleLogout = async () => {
         try {
             await logout();
+            updateAuthStatus(false);
             setOpenMenu(null);
             navigate('/login');
         } catch {
@@ -84,16 +87,23 @@ export default function Navbar() {
                     <img src={UserIcon} alt="User" className="icon-image" />
                     {openMenu === 'user' && (
                         <div className="menu-options user-menu">
-                            <Link to="/login" onClick={() => setOpenMenu(null)}>
-                                {t('navbar.login')}
-                            </Link>
-                            <Link to="/signup" onClick={() => setOpenMenu(null)}>
-                                {t('navbar.signup')}
-                            </Link>
-                            <Link to="/profile" onClick={() => setOpenMenu(null)}>
-                                {t('navbar.profile')}
-                            </Link>
-                            <button onClick={handleLogout}>{t('navbar.signout')}</button>
+                            {!isAuthenticated ? (
+                                <>
+                                    <Link to="/login" onClick={() => setOpenMenu(null)}>
+                                        {t('navbar.login')}
+                                    </Link>
+                                    <Link to="/signup" onClick={() => setOpenMenu(null)}>
+                                        {t('navbar.signup')}
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/profile" onClick={() => setOpenMenu(null)}>
+                                        {t('navbar.profile')}
+                                    </Link>
+                                    <button onClick={handleLogout}>{t('navbar.signout')}</button>
+                                </>
+                            )}
                         </div>
                     )}
                 </div>

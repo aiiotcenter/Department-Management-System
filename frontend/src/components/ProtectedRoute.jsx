@@ -6,7 +6,7 @@ export default function ProtectedRoute({ children }) {
 
     useEffect(() => {
         // Check authentication status from backend
-        fetch('http://localhost:3000/api/check-auth', {
+        fetch('http://localhost:3001/api/check-auth', {
             credentials: 'include',
         })
             .then((res) => res.json())

@@ -5,6 +5,7 @@
 
 const express = require('express');
 const app = express();
+const path = require('path');
 
 const cors = require('cors');
 
@@ -47,6 +48,9 @@ app.use(express.json()); // parse(analyse) incoming requestes with json type
 app.use(express.urlencoded({ extended: true }));// parse(analyse) incoming body requests
 app.use(cookieParser());// allow reading cookies
 
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 //===========================================================================================
 //? set up routes handler for the API endpoints
 //===========================================================================================
@@ -60,7 +64,7 @@ app.use('/api/appointment', Appointment_route);
 
 app.use('/api/admin', Admin_route);
 
-app.use('/api/apply_for_internship', Internship_applicatin);
+app.use('/api/internship_application', Internship_applicatin);
 app.use('/api/check-auth', CheckAuth_route);
 
 //===========================================================================================

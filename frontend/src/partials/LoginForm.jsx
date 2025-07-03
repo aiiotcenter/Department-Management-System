@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import logoAI from '../assets/logoAI.png';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { useAuth } from '../hooks/useAuth';
 import { login } from '../services/auth';
 import './LoginForm.css';
 
@@ -12,9 +13,12 @@ export default function LoginForm() {
     const { t } = useTranslation();
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
+    const { updateAuthStatus } = useAuth();
+
     const onSubmit = async (data) => {
         try {
             await login(data.email, data.password);
+            updateAuthStatus(true); // Set auth status to true after login
             navigate('/student-dashboard');
         } catch (error) {
             alert(error.message || 'Login failed');

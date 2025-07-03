@@ -12,19 +12,26 @@ const {fetch_admins_and_send_emails} = require('./emails_sender');
 
 const view_internship_applications = async (req, res) =>{
     try{
-        const [applications] = await database.query(
-            'SELECT * FROM internship_applications WHERE status = ?', ["waiting"])
+        let query = 'SELECT * FROM internship_applications';
+        let params = [];
+        
+        // If not an admin, only show own applications
+        if (req.user && req.user.role !== 'admin') {
+            query = 'SELECT * FROM internship_applications WHERE User_ID = ?';
+            params = [req.user.id];
+        }
+        
+        const [applications] = await database.query(query, params);
         
         if(applications.length == 0){
-            return res.json({ message: 'No waiting internship applications exists' });
-        } 
-        return res.json(applications)
+            return res.status(200).json({ message: 'No internship applications found' });
+        }
+        
+        return res.status(200).json(applications);
 
     } catch (error) {
-        console.log('Database Error:', error);
         return res.status(500).json({ message: 'Database error', error: error.message });
     }
-
 };
 
 //================================================================================================================================================================
@@ -33,7 +40,18 @@ const view_internship_applications = async (req, res) =>{
  
 
 const create_internship_application = async (req, res) => {
-    const {department , period_of_internship, additional_notes} = req.body;
+    const { department, period_of_internship, additional_notes, university } = req.body;
+    const cv = req.file ? req.file.filename : null;
+    
+    // Check if uploads directory exists
+    const fs = require('fs');
+    const path = require('path');
+    const uploadsDir = path.join(__dirname, '../uploads/cvs');
+    
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    
     const connection = await database.getConnection(); // Get a connection from the pool   
         
     try {
@@ -41,7 +59,7 @@ const create_internship_application = async (req, res) => {
         await connection.beginTransaction();
 
         // check if any required data is missing 
-        if ( !department || !period_of_internship ){
+        if ( !department || !period_of_internship || !university ){
             return res.status(400).json({message: 'Required data is Missing, Fill all information please'});
         };
 
@@ -53,14 +71,13 @@ const create_internship_application = async (req, res) => {
             'SELECT User_ID FROM internship_applications WHERE User_id = ? ', [req.user.id]);
 
         if(check_previous_application.length !== 0){
-            console.log("Sorry, you can't apply for two internship at the same time!");
             return res.status(403).json({message :"Sorry, you can't apply for two internship at the same time!"});
         };
         
         // if he is not in database , then add him
         await connection.query(
-            'INSERT INTO internship_applications (User_name, User_ID, department, period_of_internship, status, additional_notes)  VALUES (?, ?, ?, ?, ?, ?)',
-            [req.user.name, req.user.id, department, period_of_internship, "waiting", notes]
+            'INSERT INTO internship_applications (User_name, User_ID, department, period_of_internship, status, additional_notes, university, cv)  VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [req.user.name, req.user.id, department, period_of_internship, "waiting", notes, university, cv]
         );
 
         console.log('Internship application was received from : ', req.user.name);
@@ -72,20 +89,17 @@ const create_internship_application = async (req, res) => {
             
         } catch(error){
             await connection.rollback();
-            console.log("Something went wrong while sending emails to the admins: ", error);
-            return res.json({message: `Something went wrong while sending emails to the admins: ${error}`});
+            return res.status(500).json({message: `Something went wrong while sending emails to the admins: ${error}`});
         }
 
         // use 'commit' that will commit the transaction only if all operations succeed
         await connection.commit();
-        console.log('Internship submitted and admins was notified');
-        return res.json({message: 'Internship submitted and admins was notified'});
+        return res.status(200).json({message: 'Internship submitted and admins was notified'});
 
         //-------------------------------------------------------------------------------------------------------------
     } catch(error){
         await connection.rollback();
-        console.log('Database Error:', error);
-        return res.json({ message: 'Database error', error: error.message });
+        return res.status(500).json({ message: 'Database error', error: error.message });
         
     } finally {
         connection.release();// Release the connection back to the pool(so it can be reused)
@@ -99,55 +113,121 @@ const create_internship_application = async (req, res) => {
 //================================================================================================================================================================
  
 const update_internship_application = async (req, res) =>{
-    const {student_id, status} = req.body;
+    const {id, status} = req.body;
 
-    if ( !student_id || !status){
-        return res.status(400).json({message: 'Required data is Missing, Fill all information please'});
+    if (!id || !status){
+        return res.status(400).json({message: 'Required data is Missing. Both ID and status are required.'});
     };
- 
-    //check if the internship application already exists in the database or it does not exists ------------------------
-    const [check_existence] = await database.query(
-        'SELECT * FROM internship_applications WHERE User_ID = ?',
-        [student_id]
-    );
 
-    if (check_existence[0] == undefined){
-        console.log(`Sorry! no internship applications found with this student id : ${student_id}`);
-        return res.status(404).json({message: `Sorry! no internship applications found with this student id : ${student_id}`})
-    };
-    //--------------------------------------------------------------------------------------------------------
+    // Validate the status value
+    const validStatuses = ['waiting', 'pending', 'approved', 'rejected'];
+    if (!validStatuses.includes(status.toLowerCase())) {
+        return res.status(400).json({
+            message: 'Invalid status value. Must be one of: waiting, pending, approved, rejected'
+        });
+    }
 
-    try{
-        await database.query('UPDATE internship_applications SET status = ? WHERE User_ID = ?', [status, student_id]);
+    try {
+        //check if the internship application already exists in the database
+        const [check_existence] = await database.query(
+            'SELECT * FROM internship_applications WHERE _id = ?',
+            [id]
+        );
 
-        console.log("The Internship application status was updated" );
-        // -----------------------------------------------------------------
-        // notify the student about new status updated
-        try{
-            
-            const [student] = await database.query('SELECT Email_address FROM users WHERE User_ID = ?',[student_id]);
-            const studnet_email = student[0].Email_address;
-
-            notify_student("Internship Application", status, studnet_email);
-
-            console.log('studnet was notified');
-            return res.json({message: 'studnet was notified and status was updated'});
-
-
-        } catch(error){
-            console.log("Something went wrong while sending email to the student: ", error);
-            return res.json({message: `Something went wrong while sending email to the student: ${error}`});
+        if (check_existence.length === 0){
+            console.log(`Sorry! No internship application found with ID: ${id}`);
+            return res.status(404).json({message: `No internship application found with ID: ${id}`});
         }
 
+        // Normalize status to lowercase for consistency
+        const normalizedStatus = status.toLowerCase();
+        
+        await database.query('UPDATE internship_applications SET status = ? WHERE _id = ?', 
+                             [normalizedStatus, id]);
 
-
-    }catch(error) {
-            console.log('Database Error:', error);
-            return res.status(500).json({ message: 'Database error', error: error.message });
-        };
-
+        console.log(`Internship application status updated for ID: ${id} to: ${normalizedStatus}`);
+        
+        // Get the user ID for email notification
+        const [application] = await database.query('SELECT User_ID FROM internship_applications WHERE _id = ?', [id]);
+        
+        if (application.length === 0) {
+            return res.status(404).json({ message: 'Application not found after update' });
+        }
+        
+        const studentId = application[0].User_ID;
+        
+        // Notify the student about new status update
+        try{
+            const [student] = await database.query('SELECT Email_address FROM users WHERE User_ID = ?', [studentId]);
+            
+            if (student && student[0]) {
+                const student_email = student[0].Email_address;
+                notify_student("Internship Application", normalizedStatus, student_email);
+            }
+            
+            return res.status(200).json({
+                message: 'Status updated successfully',
+                status: normalizedStatus,
+                id: id
+            });
+        } catch(error){
+            // Still return success since the status was updated
+            return res.status(200).json({
+                message: 'Status updated but email notification failed',
+                status: normalizedStatus,
+                id: id
+            });
+        }
+    } catch(error) {
+        return res.status(500).json({ message: 'Database error', error: error.message });
+    }
 };
+//===========================================================================================================
+//? DELETE, function to delete an internship application
+//===========================================================================================================
+
+const delete_internship_application = async (req, res) => {
+    const { id } = req.params;
+    
+    if (!id) {
+        return res.status(400).json({message: 'Required data is Missing. ID is required.'});
+    }
+
+    try {
+        // First check if the record exists
+        const [check] = await database.query(
+            'SELECT * FROM internship_applications WHERE _id = ?',
+            [id]
+        );
+        
+        if (check.length === 0) {
+            return res.status(404).json({ message: 'Internship application not found' });
+        }
+        
+        // If exists, delete it
+        const [result] = await database.query(
+            'DELETE FROM internship_applications WHERE _id = ?',
+            [id]
+        );
+        
+        if (result.affectedRows > 0) {
+            return res.status(200).json({ 
+                message: 'Internship application deleted successfully',
+                id: id
+            });
+        } else {
+            return res.status(404).json({ message: 'Internship application not found' });
+        }
+    } catch (error) {
+        return res.status(500).json({ 
+            message: 'Database error', 
+            error: error.message 
+        });
+    }
+};
+
 //================================================================================================================================================================
 module.exports.create_internship_application = create_internship_application;
 module.exports.view_internship_applications = view_internship_applications;
 module.exports.update_internship_application = update_internship_application;
+module.exports.delete_internship_application = delete_internship_application;
