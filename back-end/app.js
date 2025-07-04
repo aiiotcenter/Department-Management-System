@@ -19,6 +19,7 @@ const Logout_route = require('./API/routes/logout');
 const Homepage_route = require('./API/routes/homepage');
 const Request_route = require('./API/routes/request');
 const Appointment_route = require('./API/routes/appointment');
+const Announcement_route = require('./API/routes/announcement');
 
 const Admin_route = require('./API/routes/admin');
 

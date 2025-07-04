@@ -172,6 +172,20 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES ('07603612','admin','Sondos Deeb','sondos.deeb21@gmail.com','sally.png','$2b$10$G.N5iSx22iBW93u6mHhGG.M5S9jkhzMuCrtNHOKrrpN056WcUwqhu'),('17777550','student','zain','zain@gmail.com','zain.png','$2b$10$Js5p6s.vx1sKA2yoekYeRObqAjOtLoSK/1q4eKZmf4.KYmtU6rusS'),('20250391','admin','Amber Norman','AmberNorman@gmail.com',NULL,'$2b$08$FBXQUscl0PxjMxg.3ZcbM.g74X0Q1Is7S9/sU2T5T2DiqCLBZ2wYa'),('20250422','student','Elizabeth Dickerson','ElizabethDickersond35@gmail.com',NULL,'$2b$10$vTbwh40Mq9oRJuELGN6go.gP/F/4xkm4Sx10U99hqTdXTHEW1m75K'),('20251228','student','rema','rema34@gmail.com',NULL,'$2b$08$5oFuvn/P5objmt5JmTUd.Onx8pp5O5fNGOp4Bu73frkm.rGyxiIoO'),('20251399','admin','Tiana Velez','tiana@gmail.com',NULL,'$2b$10$ka78qDZMSIkJtN1y5ivzOen8Iz5BVN0vwJXgBgrCKc.h/DFKXrSWm'),('20251772','student','Jo Brown','JoBrown56@gmail.com',NULL,'$2b$10$rN/mlzDG83JWve9eJHptSu87yAx9lV443oMeswkKieJhARQIw/aym'),('20252138','admin','Emma Frank','Emma@gmail.com',NULL,'$2b$10$LvwD013wqL9lMNmo.Nc9EeBdrh4Qo2SXtDd1sC6IcG3kL4AuQjWzW'),('20253603','student','Sydney Raymond','SydneyRaymond44@gmail.com',NULL,'$2b$10$OSciLbGe7WuJV8deiBS9T.URbRE1BS2Kkx16oWp8BrhocFdE0GCTa'),('20253710','student','Truett Williams','TruettWilliams45@gmail.com',NULL,'$2b$08$CcmQg7ZrhsOFFkMnvpIo6u.mSsubTom2dReoQrkGROkqMfvN1S.Bu'),('20253933','student','Lane Sellers','LaneSellers22@gmail.com',NULL,'$2b$10$mGQnKEftb75UoanYlj.o2O38ALT.nLQzluXd8fEVT/z6uRd9SOB5u'),('20254404','student','Kody Vincent','KodyVincent11@gmail.com',NULL,'$2b$10$eHOmR9sopNTMR/v7Okswq.3Dh3FeE7Ej0FyjOESrwZ9RDMuMaCkG.'),('20256386','student','Aries Fisher','AriesFisher36@gmail.com',NULL,'$2b$08$XhRxwWtrepeIsy1MKNH6b.R.DJUNV4fCLcFazjzEaedWCVzrv5BDC'),('20257381','student','Mila Jobar','MilaJobar55@gmail.com',NULL,'$2b$10$mVyf6YuIf5AcwJTjX7BRoudo8tsDLuW2eAs5ghYrQK4bLxShoLUvW'),('20257397','student','Jaylah Welch','JaylahWelch99@gmail.com',NULL,'$2b$10$GO.5b0H8pQA272UaW51ME.AJsWeJYwP5NFaAgXp/6rCi71F2t5sSa'),('21766180','student','Bruno Bruce','Bruno@gmail.com',NULL,'$2b$10$rvhu8v/pMLYYVw1T6zat1O.XSkD3t2uaJ1cbJmd5hs0Qr4AYTd64G'),('34536715','student','Saul Hunt','SaulHunt44@gmail.com','Saul.png','$2b$10$iYOv7klqleGRsj7ZExJaGORZCYxjTmNQCUMBCbQEGEp4muLw8xvYK'),('36723337','student','mona','mona2@gmail.com','mona.png','$2b$10$OI.Hfi9Nv9pe0vuGIb/YM.DWZhDE3k4jlhn/YfBddS4JYzqcwEti6'),('49091381','student','jana','jana@gmail.com','jana.png','$2b$10$dJ61/K1yOSmgXkH8Q1teDuoYtr1uP4Ix0F8FbF4zriXqwWTkhNqvq'),('53759861','student','Lena','Lena25@gmail.com',NULL,'$2b$10$BxgNcgC1l8cnq0bGQr4dBewNiJTVcn.sG7CaxwOukUSJ3r895yV4i'),('60077243','employee','sally','sally@gmail.com','sally.png','$2b$10$.gamY/wMNBBF81VJuQ3VVOtzIytHCa/blx3klW5J9Z86Qk1UTgft2'),('62904090','student','Maximo Murphy','Maximo Murphy33@gmail.com','Maximo.png','$2b$10$.agfx5ZENA3oBj2ucsfSeObVnUEY0nfNBcXHjfY04Q3L2Jq5f0mSq'),('77823765','student','Norma','norma@gmail.com','norma.png','$2b$10$LJfiH/Rqiq7YPcHTGiaqnu3.Z1eoYKywRR/f78MPTMQN.chTInsji'),('81653002','employee','Adam','adam24@gmail.com',NULL,'$2b$10$sz02PxUMLUdFcfNRYahZSujEMtb9MxiRaqUZvwZD5B2sdedubUhNa'),('85526675','student','mona','mona@gmail.com','zain.png','$2b$10$DYVb4wlXSWqKRchEOkQU0uYK46ZWSSpw65GFviet.vznHneeiwsem');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+-- Table structure for table `announcements`
+
+DROP TABLE IF EXISTS `announcements`;
+CREATE TABLE `announcements` (
+  `Announcement_ID` INT NOT NULL AUTO_INCREMENT,
+  `Title` VARCHAR(255) NOT NULL,
+  `Content` TEXT NOT NULL,
+  `Created_At` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `Updated_At` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Announcement_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
