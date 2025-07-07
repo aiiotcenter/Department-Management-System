@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaTimes, FaTrash } from 'react-icons/fa';
+import './RequestsManagement.css';
 
 export default function RequestsManagement() {
     const [notification, setNotification] = useState({ show: false, type: '', message: '' });
@@ -437,7 +438,7 @@ export default function RequestsManagement() {
             <div className="admin-panel">
                 <h3>{t('adminDashboard.requestsManagement.requests')}</h3>
                 <div className="table-responsive">
-                    <table className="admin-table">
+                    <table className="request-management-table">
                         <thead>
                             <tr>
                                 <th>{t('adminDashboard.requestsManagement.name')}</th>
@@ -512,7 +513,7 @@ export default function RequestsManagement() {
                                     <td>
                                         <div className="icon-actions">
                                             <button
-                                                className="icon-button approve-icon"
+                                                className="action-button approve-button"
                                                 onClick={() => handleApprove(request._id, request.type)}
                                                 disabled={request.status === 'approved'}
                                                 title={t('adminDashboard.actions.approve')}
@@ -520,7 +521,7 @@ export default function RequestsManagement() {
                                                 <FaCheck />
                                             </button>
                                             <button
-                                                className="icon-button reject-icon"
+                                                className="action-button reject-button"
                                                 onClick={() => handleReject(request._id, request.type)}
                                                 disabled={request.status === 'rejected'}
                                                 title={t('adminDashboard.actions.reject')}
@@ -528,7 +529,7 @@ export default function RequestsManagement() {
                                                 <FaTimes />
                                             </button>
                                             <button
-                                                className="icon-button delete-icon"
+                                                className="action-button delete-button"
                                                 onClick={() => handleDelete(request._id, request.type)}
                                                 title={t('adminDashboard.actions.delete')}
                                             >

@@ -1,5 +1,15 @@
 {
   "translation": {
+    "common": {
+      "loading": "Loading...",
+      "refresh": "Refresh",
+      "errors": {
+        "required": "This field is required",
+        "invalidEmail": "Please enter a valid email address",
+        "passwordLength": "Password must be at least 6 characters",
+        "generic": "An error occurred, please try again"
+      }
+    },
     "navbar": {
       "login": "Login",
       "signup": "Sign Up",
@@ -136,7 +146,11 @@
         "internshipDeleted": "Internship application deleted successfully",
         "userAdded": "User added successfully",
         "userDeleted": "User deleted successfully",
-        "userUpdated": "User updated successfully"
+        "userUpdated": "User updated successfully",
+        "errorFetchingUsers": "Error fetching users",
+        "errorAddingUser": "Error adding user",
+        "errorDeletingUser": "Error deleting user",
+        "errorUpdatingUser": "Error updating user"
       },
       "newUsers": "New Users",
       "pendingRequests": "Pending Requests",
@@ -178,7 +192,11 @@
         "delete": "Delete",
         "edit": "Edit",
         "actions": "Actions",
-        "save": "Save"
+        "save": "Save",
+        "noUsers": "No users found",
+        "deleteWarning": "This will also delete all related:",
+        "deleteItems": "• Appointments\n• Entry requests\n• QR codes\n• Internship applications",
+        "deleteConfirm": "This action cannot be undone."
       },
       "appointmentManagement": {
         "upcoming": "Upcoming",
@@ -234,7 +252,26 @@
         "assignmentSuccess": "Successfully assigned {{count}} student(s) to {{staffName}}'s team",
         "notifications": {
           "assignmentSuccess": "Students assigned successfully to team"
-        }
+        },
+        "editInternship": "Edit Internship",
+        "clickToEdit": "Click to edit",
+        "enterTitle": "Enter internship title",
+        "assignToStaff": "Assign to Staff Member",
+        "studentsToBeAssigned": "Students to be assigned",
+        "save": "Save",
+        "cancel": "Cancel",
+        "titleRequired": "Internship title is required",
+        "updateSuccess": "Updated internship '{{title}}' and assigned to {{staffName}}",
+        "titleUpdateSuccess": "Updated internship title to '{{title}}'",
+        "teamCleared": "Cleared all students from {{staffName}}'s team",
+        "clearTeam": "Clear Team",
+        "loading": "Loading internships...",
+        "error": "Error loading internships. Please try again.",
+        "department": "Department",
+        "duration": "Duration",
+        "university": "University",
+        "noApprovedInternships": "No approved internships found",
+        "refresh": "Refresh"
       }
     },
     "appointment": {

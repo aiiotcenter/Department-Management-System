@@ -9,12 +9,13 @@ const database = require('../Database_connection');
 //? (this function is for admin route)
 //===================================================================================================================
 
-const innerRegisterLogic = async ({ name, email, password, photo_path }, res) => {
+const innerRegisterLogic = async ({ name, email, password, photo_path, role }, res) => {
     try {
         if (!name || !email || !password) {
             return res.status(400).json({ message: 'Please fill all fields' });
         }
-        const role = 'student';
+        // Use provided role or default to 'student'
+        const userRole = role || 'student';
         // Generating Users_ID
         const generated_id = Array.from({ length: 8 }, () => Math.floor(Math.random() * 10)).join("");
         // Hashing the password
@@ -27,7 +28,7 @@ const innerRegisterLogic = async ({ name, email, password, photo_path }, res) =>
         }
         const [new_user] = await database.query(
             'INSERT INTO users (User_ID, User_Name, User_Role, Email_address, Photo_path, Hashed_password) VALUES (?, ?, ?, ?, ?, ?)',
-            [generated_id, name, role, email, photo_path || '', hashedPassword]
+            [generated_id, name, userRole, email, photo_path || '', hashedPassword]
         );
         if (new_user.affectedRows === 0) {
             console.log('Databaes Error, User was not registered!')

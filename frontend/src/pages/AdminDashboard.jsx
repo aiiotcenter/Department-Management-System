@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import AdminInternships from '../pages/AdminInternships';
+import AdminInternships from '../partials/AdminDashboard/AdminInternships';
 import RequestsManagement from '../partials/AdminDashboard/RequestsManagement';
 import UserManagement from '../partials/AdminDashboard/UserManagement';
 import './AdminDashboard.css';

@@ -12,7 +12,7 @@ const {protect, authRole, ExtractJWTData}= require('../../Authentication_Middlew
 // authRole : ensures only admins can access certain pages.
 // ExtractJWTData : function to extract user data from the token(jwt)
 
-const {admin_page, add_employee, remove_employee} = require('../../Controllers/admin_handler');
+const {admin_page, add_employee, remove_employee, get_all_users, get_staff_users, update_employee} = require('../../Controllers/admin_handler');
 
 
 //===========================================================================================================
@@ -20,7 +20,13 @@ const {admin_page, add_employee, remove_employee} = require('../../Controllers/a
 //===========================================================================================================
 router.get('/',protect, ExtractJWTData, authRole, admin_page );
 
+router.get('/users', protect, ExtractJWTData, authRole, get_all_users);
+
+router.get('/staff', protect, ExtractJWTData, authRole, get_staff_users);
+
 router.post('/add_employee', protect, ExtractJWTData, authRole, add_employee);
+
+router.patch('/update_employee/:id', protect, ExtractJWTData, authRole, update_employee);
 
 router.delete('/delete_employee/:id', protect, ExtractJWTData, authRole, remove_employee )
 

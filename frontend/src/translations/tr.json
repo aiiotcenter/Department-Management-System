@@ -1,5 +1,15 @@
 {
   "translation": {
+    "common": {
+      "loading": "Yükleniyor...",
+      "refresh": "Yenile",
+      "errors": {
+        "required": "Bu alan zorunludur",
+        "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+        "passwordLength": "Şifre en az 6 karakter olmalıdır",
+        "generic": "Bir hata oluştu, lütfen tekrar deneyin"
+      }
+    },
     "navbar": {
       "login": "Giriş",
       "signup": "Kayıt Ol",
@@ -136,7 +146,11 @@
         "internshipDeleted": "Staj başvurusu başarıyla silindi",
         "userAdded": "Kullanıcı başarıyla eklendi",
         "userDeleted": "Kullanıcı başarıyla silindi",
-        "userUpdated": "Kullanıcı başarıyla güncellendi"
+        "userUpdated": "Kullanıcı başarıyla güncellendi",
+        "errorFetchingUsers": "Kullanıcılar getirilirken hata oluştu",
+        "errorAddingUser": "Kullanıcı eklenirken hata oluştu",
+        "errorDeletingUser": "Kullanıcı silinirken hata oluştu",
+        "errorUpdatingUser": "Kullanıcı güncellenirken hata oluştu"
       },
       "newUsers": "Yeni Kullanıcılar",
       "pendingRequests": "Bekleyen İstekler",
@@ -178,7 +192,11 @@
         "edit": "Düzenle",
         "delete": "Sil",
         "actions": "İşlemler",
-        "save": "Kaydet"
+        "save": "Kaydet",
+        "noUsers": "Kullanıcı bulunamadı",
+        "deleteWarning": "Bu işlem ayrıca ilgili tüm kayıtları da silecek:",
+        "deleteItems": "• Randevular\n• Giriş istekleri\n• QR kodları\n• Staj başvuruları",
+        "deleteConfirm": "Bu işlem geri alınamaz."
       },
       "appointmentManagement": {
         "upcoming": "Yaklaşan",
@@ -234,7 +252,26 @@
         "assignmentSuccess": "{{count}} öğrenci {{staffName}}'ın takımına başarıyla atandı",
         "notifications": {
           "assignmentSuccess": "Öğrenciler takıma başarıyla atandı"
-        }
+        },
+        "editInternship": "Stajı Düzenle",
+        "clickToEdit": "Düzenlemek için tıklayın",
+        "enterTitle": "Staj başlığını girin",
+        "assignToStaff": "Personel Üyesine Ata",
+        "studentsToBeAssigned": "Atanacak öğrenciler",
+        "save": "Kaydet",
+        "cancel": "İptal",
+        "titleRequired": "Staj başlığı gereklidir",
+        "updateSuccess": "'{{title}}' stajı güncellendi ve {{staffName}}'a atandı",
+        "titleUpdateSuccess": "Staj başlığı '{{title}}' olarak güncellendi",
+        "teamCleared": "{{staffName}}'nin ekibindeki tüm öğrenciler temizlendi",
+        "clearTeam": "Ekibi Temizle",
+        "loading": "Stajlar yükleniyor...",
+        "error": "Stajlar yüklenirken hata oluştu. Lütfen tekrar deneyin.",
+        "department": "Bölüm",
+        "duration": "Süre",
+        "university": "Üniversite",
+        "noApprovedInternships": "Onaylanmış staj bulunamadı",
+        "refresh": "Yenile"
       }
     },
     "appointment": {

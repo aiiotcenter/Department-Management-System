@@ -1,0 +1,152 @@
+/* RequestsManagement.css */
+
+/* Table responsive container */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+/* Sticky header with maroon theme */
+.request-management-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #992e49; /* Maroon color to match the system theme */
+}
+
+/* Filter container */
+.filter-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+    border-color: #992e49;
+    outline: none;
+}
+
+/* Request management table styles */
+.request-management-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.request-management-table th,
+.request-management-table td {
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+.request-management-table th {
+    background-color: #992e49; /* Maroon color for header background */
+    font-weight: 600;
+    color: white; /* White text for better contrast */
+}
+
+.request-management-table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.request-management-table tr:hover {
+    background-color: #f9e8ec; /* Light maroon tint for hover effect that matches #992e49 */
+}
+
+/* Request type styling */
+.request-type {
+    text-transform: capitalize;
+}
+
+/* Action buttons */
+.action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.approve-button {
+    color: #38a169;
+}
+
+.reject-button {
+    color: #e53e3e;
+}
+
+.delete-button {
+    color: #718096;
+}
+
+/* Custom hover effects for each button type */
+.action-button.approve-button:hover {
+    background-color: rgba(56, 161, 105, 0.1);
+}
+
+.action-button.reject-button:hover {
+    background-color: rgba(229, 62, 62, 0.1);
+}
+
+.action-button.delete-button:hover {
+    background-color: rgba(113, 128, 150, 0.1);
+}
+
+/* Primary action button for RequestsManagement */
+.primary-action-button {
+    background-color: #992e49;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.primary-action-button:hover {
+    background-color: #7d2539;
+}
+
+/* CV link styling */
+.cv-link {
+    color: #3182ce;
+    text-decoration: none;
+}
+
+.cv-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .filter-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-container label {
+        margin-bottom: 5px;
+    }
+
+    .filter-select {
+        width: 100%;
+        max-width: 300px;
+    }
+}

@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminInternships from './pages/AdminInternships';
 import Announcement from './pages/Announcement';
 import AppointmentPage from './pages/AppointmentPage';
 import HomePage from './pages/HomePage';
@@ -10,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentProfile from './pages/StudentProfile';
+import AdminInternships from './partials/AdminDashboard/AdminInternships';
 
 function App() {
     return (
