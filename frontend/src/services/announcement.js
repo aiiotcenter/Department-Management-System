@@ -37,3 +37,15 @@ export async function editAnnouncement(id, { title, content }) {
     }
     return result;
 }
+
+export async function deleteAnnouncement(id) {
+    const response = await fetch(`${API_URL}/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+    });
+    const result = await response.json();
+    if (!response.ok) {
+        throw new Error(result.message || 'Failed to delete announcement');
+    }
+    return result;
+}

@@ -5,15 +5,25 @@ import Internship from '../assets/internship.png';
 import Meeting from '../assets/meeting.png';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import { fetchAnnouncements } from '../services/announcement';
+import { useAuth } from '../hooks/useAuth';
+import { createAnnouncement, deleteAnnouncement, fetchAnnouncements } from '../services/announcement';
 import './Announcement.css';
 
 function Announcement() {
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showCreate, setShowCreate] = useState(false);
+    const [createTitle, setCreateTitle] = useState('');
+    const [createContent, setCreateContent] = useState('');
+    const [createError, setCreateError] = useState(null);
+    const [createLoading, setCreateLoading] = useState(false);
+    const [deleteError, setDeleteError] = useState(null);
+    const { user } = useAuth(); // Get user info including role
 
-    useEffect(() => {
+    const loadAnnouncements = () => {
+        setLoading(true);
+        setError(null);
         fetchAnnouncements()
             .then((data) => {
                 setAnnouncements(data);
@@ -23,7 +33,39 @@ function Announcement() {
                 setError(err.message);
                 setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        loadAnnouncements();
     }, []);
+
+    const handleCreate = async (e) => {
+        e.preventDefault();
+        setCreateLoading(true);
+        setCreateError(null);
+        try {
+            await createAnnouncement({ title: createTitle, content: createContent });
+            setCreateTitle('');
+            setCreateContent('');
+            setShowCreate(false);
+            loadAnnouncements();
+        } catch (err) {
+            setCreateError(err.message);
+        } finally {
+            setCreateLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        setDeleteError(null);
+        try {
+            await deleteAnnouncement(id);
+            loadAnnouncements();
+        } catch (err) {
+            setDeleteError(err.message);
+        }
+    };
+
     return (
         <>
             <Navbar />
@@ -56,16 +98,71 @@ function Announcement() {
 
                     <div className="announcement-section">
                         <h2>Latest Announcements</h2>
+                        {/* Show Create Announcement button for staff only */}
+                        {user &&
+                            (user.role === 'staff' || user.role === 'employee')(
+                                <>
+                                    <button
+                                        className="create-announcement-button"
+                                        style={{ marginBottom: '1rem', marginRight: '1rem' }}
+                                        onClick={() => setShowCreate((v) => !v)}
+                                    >
+                                        {showCreate ? 'Cancel' : 'Create Announcement'}
+                                    </button>
+                                    {showCreate && (
+                                        <form
+                                            onSubmit={handleCreate}
+                                            className="create-announcement-form"
+                                            style={{ marginBottom: '1rem' }}
+                                        >
+                                            <input
+                                                type="text"
+                                                placeholder="Title"
+                                                value={createTitle}
+                                                onChange={(e) => setCreateTitle(e.target.value)}
+                                                required
+                                                style={{ marginRight: '0.5rem' }}
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Content"
+                                                value={createContent}
+                                                onChange={(e) => setCreateContent(e.target.value)}
+                                                required
+                                                style={{ marginRight: '0.5rem' }}
+                                            />
+                                            <button type="submit" disabled={createLoading}>
+                                                {createLoading ? 'Creating...' : 'Submit'}
+                                            </button>
+                                            {createError && (
+                                                <span style={{ color: 'red', marginLeft: '1rem' }}>{createError}</span>
+                                            )}
+                                        </form>
+                                    )}
+                                </>
+                            )}
                         {loading && <p>Loading...</p>}
                         {error && <p style={{ color: 'red' }}>{error}</p>}
+                        {deleteError && <p style={{ color: 'red' }}>{deleteError}</p>}
                         {announcements.map((note, index) => (
                             <div key={note.Announcement_ID || index} className="announcement-item">
-                                <h3>{note.title}</h3>
+                                <h3>{note.Title}</h3>
                                 <p>
                                     <strong>Date:</strong> {note.Created_At ? note.Created_At.split('T')[0] : ''}
                                 </p>
-                                <p>{note.content}</p>
+                                <p>{note.Content}</p>
                                 <button className="view-button">View</button>
+                                {/* Show Delete button for staff only, next to View */}
+                                {user &&
+                                    (user.role === 'staff' || user.role === 'employee')(
+                                        <button
+                                            className="delete-announcement-button"
+                                            style={{ marginLeft: '0.5rem' }}
+                                            onClick={() => handleDelete(note.Announcement_ID)}
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
                             </div>
                         ))}
                     </div>
