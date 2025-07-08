@@ -11,4 +11,6 @@ router.post('/', announcementController.createAnnouncement);
 // PATCH (edit) an announcement
 router.patch('/:id', announcementController.editAnnouncement);
 
+router.delete('/:id', announcementController.deleteAnnouncement);
+
 module.exports = router; 

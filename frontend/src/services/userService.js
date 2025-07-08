@@ -125,3 +125,30 @@ export const deleteUser = async (id) => {
         throw error;
     }
 };
+
+/**
+ * Fetches the current logged-in user's profile
+ * @returns {Promise<Object>} User profile data
+ */
+export const fetchCurrentUserProfile = async () => {
+    try {
+        const response = await fetch('http://localhost:3001/api/homepage', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('You are not authorized to access this resource');
+            }
+            const errorData = await response.json();
+            throw new Error(errorData.message || `Server error: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching current user profile:', error);
+        throw error;
+    }
+};

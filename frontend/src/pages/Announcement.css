@@ -128,6 +128,95 @@
   font-weight: bold;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  justify-content: center;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content p {
+  white-space: pre-wrap; /* Keeps line breaks and spacing */
+  overflow-wrap: break-word; /* Ensures long words break */
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.create-announcement-button{
+  color: #992e49;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.create-announcement-button:hover {
+  background-color: #e6c1cd;
+}
+
+.delete-announcement-button{
+  color: #992e49;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.delete-announcement-button:hover {
+  background-color: #e6c1cd;
+}
+
+.submit-butten{
+  color: #992e49;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.submit-butten:hover {
+  background-color: #e6c1cd;
+}
+ 
+.close-button{
+  color: #992e49;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.close-button:hover {
+  background-color: #e6c1cd;
+}
+
+
+
 @media (max-width: 1024px) {
   .announcement-page {
     flex-direction: column;
@@ -164,27 +253,36 @@
   .announcement-section {
     margin-top: 40px;
   }
-}
 
-@media (max-width: 600px) {
-  .announcement-sidebar h1 {
-    font-size: 18px;
+  .announcement-item {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  .overlay-text {
+  .announcement-item h3,
+  .announcement-item p {
+    width: 100%;
     font-size: 16px;
-    padding: 8px;
+    margin-bottom: 0.5rem;
+    word-wrap: break-word;
+    text-align: left;
   }
 
-  .announcement-section h2 {
-    font-size: 22px;
+  .announcement-item .view-button,
+  .announcement-item .delete-announcement-button,
+  .announcement-item .close-button,
+  .announcement-item .create-announcement-button,
+  .announcement-item .submit-butten {
+    width: 100%;
+    margin-top: 0.3rem;
+    text-align: center;
   }
 
-  .announcement-title {
-    font-size: 18px;
-  }
-
-  .announcement-details {
-    font-size: 14px;
+  .announcement-buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
   }
 }

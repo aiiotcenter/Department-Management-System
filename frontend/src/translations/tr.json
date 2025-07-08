@@ -306,6 +306,23 @@
       "uploadCV": "CV'nizi Yükleyin *",
       "selectedFile": "Seçilen dosya:",
       "submitButton": "Başvuruyu Gönder"
+    },
+    "announcement": {
+      "pageTitle": "Duyurular",
+      "aiEvents": "YZ Etkinlikleri",
+      "internships": "Stajlar",
+      "appointments": "Randevular",
+      "meetings": "Toplantılar",
+      "latest": "Son Duyurular",
+      "create": "Duyuru Oluştur",
+      "cancel": "İptal",
+      "title": "Başlık",
+      "content": "İçerik",
+      "submit": "Gönder",
+      "creating": "Oluşturuluyor...",
+      "delete": "Sil",
+      "view": "Görüntüle",
+      "close": "Kapat"
     }
   }
 }

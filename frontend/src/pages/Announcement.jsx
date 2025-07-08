@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Appointment from '../assets/appointment.png';
 import Event from '../assets/Event.png';
 import Internship from '../assets/internship.png';
@@ -10,6 +11,7 @@ import { createAnnouncement, deleteAnnouncement, fetchAnnouncements } from '../s
 import './Announcement.css';
 
 function Announcement() {
+    const { t } = useTranslation();
     const [announcements, setAnnouncements] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -20,6 +22,8 @@ function Announcement() {
     const [createLoading, setCreateLoading] = useState(false);
     const [deleteError, setDeleteError] = useState(null);
     const { user } = useAuth(); // Get user info including role
+    const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
+    const closeModal = () => setSelectedAnnouncement(null);
 
     const loadAnnouncements = () => {
         setLoading(true);
@@ -72,7 +76,7 @@ function Announcement() {
             <div className="announcement-page">
                 <div className="announcement-sidebar">
                     <div className="announcement-label">
-                        <h1>Announcements →</h1>
+                        <h1>{t('announcement.pageTitle')} →</h1>
                     </div>
                 </div>
 
@@ -80,68 +84,67 @@ function Announcement() {
                     <div className="announcement-cards-container">
                         <div className="announcement-card">
                             <img src={Event} alt="event" />
-                            <div className="overlay-text">AI Events</div>
+                            <div className="overlay-text">{t('announcement.aiEvents')}</div>
                         </div>
                         <div className="announcement-card">
                             <img src={Internship} alt="Internship" />
-                            <div className="overlay-text">Internships</div>
+                            <div className="overlay-text">{t('announcement.internships')}</div>
                         </div>
                         <div className="announcement-card">
                             <img src={Appointment} alt="Appointment" />
-                            <div className="overlay-text">Appointments</div>
+                            <div className="overlay-text">{t('announcement.appointments')}</div>
                         </div>
                         <div className="announcement-card">
                             <img src={Meeting} alt="Meeting" />
-                            <div className="overlay-text">Meetings</div>
+                            <div className="overlay-text">{t('announcement.meetings')}</div>
                         </div>
                     </div>
 
                     <div className="announcement-section">
-                        <h2>Latest Announcements</h2>
+                        <h2>{t('announcement.latest')}</h2>
                         {/* Show Create Announcement button for staff only */}
-                        {user &&
-                            (user.role === 'staff' || user.role === 'employee')(
-                                <>
-                                    <button
-                                        className="create-announcement-button"
-                                        style={{ marginBottom: '1rem', marginRight: '1rem' }}
-                                        onClick={() => setShowCreate((v) => !v)}
+                        {user && user?.role != 'student' && (
+                            <>
+                                <button
+                                    className="create-announcement-button"
+                                    style={{ marginBottom: '1rem', marginRight: '1rem' }}
+                                    onClick={() => setShowCreate((v) => !v)}
+                                >
+                                    {showCreate ? t('announcement.cancel') : t('announcement.create')}
+                                </button>
+                                {showCreate && (
+                                    <form
+                                        onSubmit={handleCreate}
+                                        className="create-announcement-form"
+                                        style={{ marginBottom: '1rem' }}
                                     >
-                                        {showCreate ? 'Cancel' : 'Create Announcement'}
-                                    </button>
-                                    {showCreate && (
-                                        <form
-                                            onSubmit={handleCreate}
-                                            className="create-announcement-form"
-                                            style={{ marginBottom: '1rem' }}
-                                        >
-                                            <input
-                                                type="text"
-                                                placeholder="Title"
-                                                value={createTitle}
-                                                onChange={(e) => setCreateTitle(e.target.value)}
-                                                required
-                                                style={{ marginRight: '0.5rem' }}
-                                            />
-                                            <input
-                                                type="text"
-                                                placeholder="Content"
-                                                value={createContent}
-                                                onChange={(e) => setCreateContent(e.target.value)}
-                                                required
-                                                style={{ marginRight: '0.5rem' }}
-                                            />
-                                            <button type="submit" disabled={createLoading}>
-                                                {createLoading ? 'Creating...' : 'Submit'}
-                                            </button>
-                                            {createError && (
-                                                <span style={{ color: 'red', marginLeft: '1rem' }}>{createError}</span>
-                                            )}
-                                        </form>
-                                    )}
-                                </>
-                            )}
-                        {loading && <p>Loading...</p>}
+                                        <input
+                                            type="text"
+                                            placeholder={t('announcement.title')}
+                                            value={createTitle}
+                                            onChange={(e) => setCreateTitle(e.target.value)}
+                                            required
+                                            style={{ marginRight: '0.5rem' }}
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder={t('announcement.content')}
+                                            value={createContent}
+                                            onChange={(e) => setCreateContent(e.target.value)}
+                                            required
+                                            style={{ marginRight: '0.5rem' }}
+                                        />
+                                        <button className="submit-butten" type="submit" disabled={createLoading}>
+                                            {createLoading ? t('announcement.creating') : t('announcement.submit')}
+                                        </button>
+                                        {createError && (
+                                            <span style={{ color: 'red', marginLeft: '1rem' }}>{createError}</span>
+                                        )}
+                                    </form>
+                                )}
+                            </>
+                        )}
+                        {loading && <p>{t('common.loading')}</p>}
                         {error && <p style={{ color: 'red' }}>{error}</p>}
                         {deleteError && <p style={{ color: 'red' }}>{deleteError}</p>}
                         {announcements.map((note, index) => (
@@ -150,19 +153,32 @@ function Announcement() {
                                 <p>
                                     <strong>Date:</strong> {note.Created_At ? note.Created_At.split('T')[0] : ''}
                                 </p>
-                                <p>{note.Content}</p>
-                                <button className="view-button">View</button>
+                                <p>{note.Content.length > 50 ? `${note.Content.slice(0, 50)}...` : note.Content}</p>
+
+                                <button className="view-button" onClick={() => setSelectedAnnouncement(note)}>
+                                    {t('announcement.view')}
+                                </button>
                                 {/* Show Delete button for staff only, next to View */}
-                                {user &&
-                                    (user.role === 'staff' || user.role === 'employee')(
-                                        <button
-                                            className="delete-announcement-button"
-                                            style={{ marginLeft: '0.5rem' }}
-                                            onClick={() => handleDelete(note.Announcement_ID)}
-                                        >
-                                            Delete
-                                        </button>
-                                    )}
+                                {user && user?.role != 'student' && (
+                                    <button
+                                        className="delete-announcement-button"
+                                        style={{ marginLeft: '0.5rem' }}
+                                        onClick={() => handleDelete(note.Announcement_ID)}
+                                    >
+                                        {t('announcement.delete')}
+                                    </button>
+                                )}
+                                {selectedAnnouncement && (
+                                    <div className="modal-overlay">
+                                        <div className="modal-content">
+                                            <h2>{selectedAnnouncement.Title}</h2>
+                                            <p>{selectedAnnouncement.Content}</p>
+                                            <button className="close-button" onClick={closeModal}>
+                                                {t('announcement.close')}
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

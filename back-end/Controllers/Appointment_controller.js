@@ -103,6 +103,25 @@ const view_appointment = async (req, res) => {
 };
 
 //================================================================================================================================================================
+//? GET, function to review appointments for the logged-in student
+//================================================================================================================================================================
+const view_student_appointments = async (req, res) => {
+    try {
+        const [results] = await database.query(
+            'SELECT * FROM appointments WHERE Appointment_Requester_id = ?',
+            [req.user.id]
+        );
+        if (results.length === 0) {
+            return res.json([]); // Return empty array if no appointments
+        }
+        return res.json(results);
+    } catch (error) {
+        console.log('Database Error:', error);
+        return res.status(500).json({ message: 'Database error', error: error.message });
+    }
+};
+
+//================================================================================================================================================================
 //? PATCH, function to update appointments status 
 //================================================================================================================================================================
 
@@ -281,3 +300,4 @@ const update_appointment = async (req, res) => {
 module.exports.create_appointment = create_appointment;
 module.exports.view_appointment = view_appointment;
 module.exports.update_appointment = update_appointment;
+module.exports.view_student_appointments = view_student_appointments;

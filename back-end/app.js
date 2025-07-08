@@ -51,6 +51,8 @@ app.use(cookieParser());// allow reading cookies
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve static files from the QRcodes directory
+app.use('/qrcodes', express.static(path.join(__dirname, 'QRcodes')));
 
 //===========================================================================================
 //? set up routes handler for the API endpoints
@@ -62,11 +64,14 @@ app.use('/api/logout', Logout_route);
 app.use('/api/homepage', Homepage_route);
 app.use('/api/request',Request_route);
 app.use('/api/appointment', Appointment_route);
+app.use('/api/announcement', Announcement_route);
 
 app.use('/api/admin', Admin_route);
 
 app.use('/api/internship_application', Internship_applicatin);
 app.use('/api/check-auth', CheckAuth_route);
+
+
 
 //===========================================================================================
 module.exports = app;

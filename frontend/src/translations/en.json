@@ -306,6 +306,23 @@
       "uploadCV": "Upload your CV *",
       "selectedFile": "Selected file:",
       "submitButton": "Submit your application"
+    },
+    "announcement": {
+      "pageTitle": "Announcements",
+      "aiEvents": "AI Events",
+      "internships": "Internships",
+      "appointments": "Appointments",
+      "meetings": "Meetings",
+      "latest": "Latest Announcements",
+      "create": "Create Announcement",
+      "cancel": "Cancel",
+      "title": "Title",
+      "content": "Content",
+      "submit": "Submit",
+      "creating": "Creating...",
+      "delete": "Delete",
+      "view": "View",
+      "close": "Close"
     }
   }
 }
