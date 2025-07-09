@@ -1,14 +1,15 @@
 import html2canvas from 'html2canvas';
-import { QRCodeCanvas } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import DownloadIcon from '../assets/download.png';
+import QRCodeIcon from '../assets/QRCode.png';
 import SettingIcon from '../assets/setting.png';
 import UserIcon from '../assets/user.png';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import StudentCard from '../components/StudentCard';
-import { fetchStudentAppointments } from '../services/appointment';
-import { fetchInternships } from '../services/internship';
+import { fetchStudentAppointments, getAppointmentQrCodeUrl } from '../services/appointment';
+import { fetchInternships, getInternshipQrCodeUrl } from '../services/internship';
 import { fetchCurrentUserProfile } from '../services/userService';
 import './StudentProfile.css';
 
@@ -119,6 +120,28 @@ export default function StudentProfile() {
         }, 0);
     };
 
+    // Add a handler for downloading the student card
+    const handleDownloadCard = (type, data) => {
+        setCardType(type);
+        setCardData(data);
+        setTimeout(() => {
+            if (cardRef.current) {
+                html2canvas(cardRef.current, {
+                    scale: 2,
+                    useCORS: true,
+                }).then((canvas) => {
+                    const url = canvas.toDataURL('image/png');
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'student_card.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+        }, 100);
+    };
+
     return (
         <div className="student-profile">
             <Navbar />
@@ -202,7 +225,50 @@ export default function StudentProfile() {
                                                     )}
                                                 </strong>
                                             </p>
-                                            {/* QR code and download logic can be added here if available */}
+                                            {/* QR code icon for approved appointments */}
+                                            {(app.Status || app.status) &&
+                                                (app.Status || app.status).toLowerCase() === 'approved' &&
+                                                app.QRcode_ID && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                        <img
+                                                            src={QRCodeIcon}
+                                                            alt="QR Code"
+                                                            className="qr-code-icon"
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                width: 32,
+                                                                height: 32,
+                                                                marginTop: 8,
+                                                            }}
+                                                            onClick={() =>
+                                                                setPopupQR(getAppointmentQrCodeUrl(app.QRcode_ID))
+                                                            }
+                                                        />
+                                                        <img
+                                                            src={DownloadIcon}
+                                                            alt="Download Card"
+                                                            className="download-card-icon"
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                width: 28,
+                                                                height: 28,
+                                                                marginTop: 8,
+                                                            }}
+                                                            onClick={() =>
+                                                                handleDownloadCard('appointment', {
+                                                                    id: app.Appointment_Requester_ID,
+                                                                    name: student.name,
+                                                                    qrData: app.QRcode_ID,
+                                                                    department: student.department,
+                                                                    date: app.Visit_date,
+                                                                    period: undefined,
+                                                                    purpose: app.Visit_purpose,
+                                                                    profileImage: student.profileImage,
+                                                                })
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
                                         </div>
                                     ))}
                                 </div>
@@ -233,7 +299,50 @@ export default function StudentProfile() {
                                                     )}
                                                 </strong>
                                             </p>
-                                            {/* QR code and download logic can be added here if available */}
+                                            {/* QR code icon for approved internships */}
+                                            {(intern.status || intern.Status) &&
+                                                (intern.status || intern.Status).toLowerCase() === 'approved' &&
+                                                intern.QRcode_ID && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                        <img
+                                                            src={QRCodeIcon}
+                                                            alt="QR Code"
+                                                            className="qr-code-icon"
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                width: 32,
+                                                                height: 32,
+                                                                marginTop: 8,
+                                                            }}
+                                                            onClick={() =>
+                                                                setPopupQR(getInternshipQrCodeUrl(intern.QRcode_ID))
+                                                            }
+                                                        />
+                                                        <img
+                                                            src={DownloadIcon}
+                                                            alt="Download Card"
+                                                            className="download-card-icon"
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                                width: 28,
+                                                                height: 28,
+                                                                marginTop: 8,
+                                                            }}
+                                                            onClick={() =>
+                                                                handleDownloadCard('internship', {
+                                                                    id: intern.User_ID,
+                                                                    name: intern.User_name,
+                                                                    qrData: intern.QRcode_ID,
+                                                                    department: intern.department,
+                                                                    date: undefined,
+                                                                    period: intern.period_of_internship,
+                                                                    purpose: undefined,
+                                                                    profileImage: student.profileImage,
+                                                                })
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
                                         </div>
                                     ))}
                                 </div>
@@ -246,7 +355,7 @@ export default function StudentProfile() {
             {popupQR && (
                 <div className="qr-popup-overlay" onClick={() => setPopupQR(null)}>
                     <div className="qr-popup">
-                        <QRCodeCanvas value={popupQR} size={256} />
+                        <img src={popupQR} alt="QR Code" style={{ width: 256, height: 256 }} />
                         <p>{t('profile.qrHelp')}</p>
                     </div>
                 </div>

@@ -6,29 +6,28 @@ const database = require('../Database_connection');
 
 const {notify_student} = require('./emails_sender');
 const {fetch_admins_and_send_emails} = require('./emails_sender');
+const GenerateQrCode = require('./GenerateQrCode'); // Import at the top if not already
+const path = require('path'); // Import at the top if not already
 //================================================================================================================================================================
 //? GET, function to review waiting internship applications
 //================================================================================================================================================================
 
 const view_internship_applications = async (req, res) =>{
     try{
-        let query = 'SELECT * FROM internship_applications';
+        let query = `SELECT i.*, q.QRcode_ID FROM internship_applications i 
+                     LEFT JOIN qr_codes q ON i.User_ID = q.User_ID 
+                     AND i.status = 'Approved' 
+                     WHERE 1=1`;
         let params = [];
-        
-        // If not an admin, only show own applications
         if (req.user && req.user.role !== 'admin') {
-            query = 'SELECT * FROM internship_applications WHERE User_ID = ?';
-            params = [req.user.id];
+            query += ' AND i.User_ID = ?';
+            params.push(req.user.id);
         }
-        
         const [applications] = await database.query(query, params);
-        
         if(applications.length == 0){
-            return res.status(200).json({ message: 'No internship applications found' });
+            return res.status(200).json([]);
         }
-        
         return res.status(200).json(applications);
-
     } catch (error) {
         return res.status(500).json({ message: 'Database error', error: error.message });
     }
@@ -156,6 +155,25 @@ const update_internship_application = async (req, res) =>{
         
         const studentId = application[0].User_ID;
         
+        // === QR code generation for approved internships ===
+        if (normalizedStatus === 'approved') {
+            // Generate a unique QR code ID
+            const QRcode_ID = (Array.from({ length: 10 }, () => Math.floor(Math.random() * 10))).join("");
+            const QRcode_path = path.join(__dirname, '../QRcodes', `${QRcode_ID}.png`);
+            // Prepare QR code data
+            const qrData = {
+                user_id: studentId,
+                internship_id: id
+            };
+            // Generate and save the QR code image
+            await GenerateQrCode(qrData, QRcode_ID);
+            // Insert QR code info into the database
+            await database.query(
+                'INSERT INTO qr_codes (QRcode_ID, User_ID, Visit_purpose, QRcode_path) VALUES (?, ?, ?, ?)',
+                [QRcode_ID, studentId, 'Internship', QRcode_path]
+            );
+        }
+
         // Notify the student about new status update
         try{
             const [student] = await database.query('SELECT Email_address FROM users WHERE User_ID = ?', [studentId]);

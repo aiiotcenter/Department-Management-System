@@ -108,7 +108,10 @@ const view_appointment = async (req, res) => {
 const view_student_appointments = async (req, res) => {
     try {
         const [results] = await database.query(
-            'SELECT * FROM appointments WHERE Appointment_Requester_id = ?',
+            `SELECT a.*, q.QRcode_ID FROM appointments a 
+             LEFT JOIN qr_codes q ON a.Appointment_ID = q.Appointment_ID 
+             AND a.Status = 'Approved' 
+             WHERE a.Appointment_Requester_id = ?`,
             [req.user.id]
         );
         if (results.length === 0) {

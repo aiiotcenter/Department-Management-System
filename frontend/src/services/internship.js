@@ -112,3 +112,8 @@ export async function updateInternshipTitle(internshipData) {
         message: 'Internship title updated successfully',
     };
 }
+
+export function getInternshipQrCodeUrl(QRcode_ID) {
+    if (!QRcode_ID) return null;
+    return `http://localhost:3001/qrcodes/${QRcode_ID}.png`;
+}
