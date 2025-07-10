@@ -50,7 +50,18 @@
       "qrHelp": "Kapatmak için tıklayın",
       "id": "Numara",
       "name": "Ad",
-      "downloadCard": "Öğrenci kartını indir"
+      "downloadCard": "Öğrenci kartını indir",
+      "noAppointments": "Hiç randevunuz yok.",
+      "currentPassword": "Mevcut Şifre",
+      "newPassword": "Yeni Şifre",
+      "confirmNewPassword": "Yeni Şifreyi Onayla",
+      "editProfileTitle": "Profili Düzenle",
+      "nameLabel": "Ad",
+      "emailLabel": "E-posta Adresi",
+      "editProfileButton": "Profili Düzenle",
+      "cancelButton": "İptal",
+      "changePasswordTitle": "Şifre Değiştir",
+      "changePasswordButton": "Şifre Değiştir"
     },
     "homepage": {
       "hero": "Bölüm Yönetim Sistemi",
@@ -322,7 +333,8 @@
       "creating": "Oluşturuluyor...",
       "delete": "Sil",
       "view": "Görüntüle",
-      "close": "Kapat"
+      "close": "Kapat",
+      "failedToFetchAnnouncements": "Duyurular alınamadı."
     }
   }
 }

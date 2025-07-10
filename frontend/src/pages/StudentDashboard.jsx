@@ -103,7 +103,7 @@ function StudentDashboard() {
                             {announcementsLoading ? (
                                 <p>{t('common.loading')}</p>
                             ) : announcementsError ? (
-                                <p style={{ color: 'red' }}>{announcementsError}</p>
+                                <p style={{ color: 'red' }}>{t('announcement.failedToFetchAnnouncements')}</p>
                             ) : (
                                 <ul>
                                     {announcements.length === 0 ? (

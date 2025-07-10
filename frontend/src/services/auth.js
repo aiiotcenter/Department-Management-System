@@ -47,3 +47,17 @@ export async function register({ firstName, lastName, email, password, photo }) 
     }
     return result;
 }
+
+export async function changePassword(currentPassword, newPassword) {
+    const response = await fetch('http://localhost:3001/api/homepage/change_password', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ currentPassword, newPassword }),
+    });
+    const result = await response.json();
+    if (!response.ok) {
+        throw new Error(result.message || 'Failed to change password');
+    }
+    return result;
+}

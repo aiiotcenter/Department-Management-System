@@ -46,5 +46,37 @@ const login_logic = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+
+const change_password = async (req, res) => {
+    const userId = req.user?.id; // assuming user info is attached by protect middleware
+    const { currentPassword, newPassword } = req.body;
+
+    if (!userId || !currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try {
+        // Fetch user from the database
+        const [results] = await database.query('SELECT * FROM users WHERE User_ID = ?', [userId]);
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        const user = results[0];
+        // Check current password
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.Hashed_password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Current password is incorrect.' });
+        }
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // Update password in DB
+        await database.query('UPDATE users SET Hashed_password = ? WHERE User_ID = ?', [hashedPassword, userId]);
+        return res.status(200).json({ message: 'Password updated successfully.' });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+};
 //===========================================================================================================
 module.exports = login_logic;
+module.exports.change_password = change_password;

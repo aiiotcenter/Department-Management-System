@@ -50,7 +50,8 @@
       "qrHelp": "Click to close",
       "id": "ID",
       "name": "Name",
-      "downloadCard": "Download student card"
+      "downloadCard": "Download student card",
+      "noAppointments": "No appointments."
     },
     "homepage": {
       "hero": "Department Management System",
@@ -322,7 +323,8 @@
       "creating": "Creating...",
       "delete": "Delete",
       "view": "View",
-      "close": "Close"
+      "close": "Close",
+      "failedToFetchAnnouncements": "Failed to fetch announcements."
     }
   }
 }

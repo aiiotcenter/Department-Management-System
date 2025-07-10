@@ -378,3 +378,132 @@ h3{
     left: auto;
   }
 }
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(153, 46, 73, 0.15); /* subtle overlay with main color tint */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  border: 2px solid #992e49;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(153, 46, 73, 0.18), 0 1.5px 8px rgba(0,0,0,0.08);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  min-width: 340px;
+  max-width: 95vw;
+  color: #992e49;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-content h2 {
+  color: #992e49;
+  font-size: 1.7rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  align-items: center;
+}
+
+.modal-content .modal-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.modal-content button,
+.modal-content button[type="button"] {
+  flex: 1 1 0;
+  min-width: 120px;
+  max-width: 200px;
+  padding: 0.5rem 1.5rem;
+  background: #992e49;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+
+.modal-content button[type="button"] {
+  background: #f9e7eb;
+  color: #992e49;
+  border: 1.5px solid #992e49;
+}
+
+.modal-content button:hover {
+  background: #7a2340;
+}
+
+.modal-content button[type="button"]:hover {
+  background: #fff0f5;
+}
+
+.modal-content label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  color: #992e49;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+  padding: 0.5rem 0.8rem;
+  border: 1.5px solid #992e49;
+  border-radius: 6px;
+  margin-top: 0.3rem;
+  font-size: 1rem;
+  background: #f9f5f6;
+  color: #992e49;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus {
+  border: 2px solid #992e49;
+  background: #fff0f5;
+}
+
+.modal-content p {
+  margin-top: 0.7rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.modal-content p[style*="color: green"] {
+  color: #2e9949 !important;
+  font-weight: 500;
+}
+
+.modal-content p[style*="color: red"] {
+  color: #d32f2f !important;
+  font-weight: 500;
+}
