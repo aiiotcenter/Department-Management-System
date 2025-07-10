@@ -10,49 +10,8 @@ export default function RequestsManagement() {
     const [allRequests, setAllRequests] = useState([]);
     const { t } = useTranslation();
 
-    // Mock appointment data
-    const [appointments, setAppointments] = useState([
-        {
-            _id: '1',
-            type: 'appointment',
-            username: 'John Doe',
-            visit_purpose: 'Academic Advising',
-            visit_date: '2023-06-20',
-            visit_time: '14:00',
-            status: 'pending',
-            comments: 'Need to discuss course selection',
-        },
-        {
-            _id: '2',
-            type: 'appointment',
-            username: 'Jane Smith',
-            visit_purpose: 'Career Guidance',
-            visit_date: '2023-06-21',
-            visit_time: '10:30',
-            status: 'approved',
-            comments: 'Seeking advice on internship opportunities',
-        },
-        {
-            _id: '3',
-            type: 'appointment',
-            username: 'Mike Johnson',
-            visit_purpose: 'Research Project',
-            visit_date: '2023-06-22',
-            visit_time: '15:45',
-            status: 'pending',
-            comments: 'Want to discuss potential research topics',
-        },
-        {
-            _id: '4',
-            type: 'appointment',
-            username: 'Sarah Williams',
-            visit_purpose: 'Graduation Requirements',
-            visit_date: '2023-06-23',
-            visit_time: '11:15',
-            status: 'rejected',
-            comments: 'Need to check remaining courses for graduation',
-        },
-    ]);
+    // Mock appointment data - will be replaced with real data from backend
+    const [appointments, setAppointments] = useState([]);
 
     // Mock internship data
     const [internships, setInternships] = useState([]);
@@ -77,6 +36,70 @@ export default function RequestsManagement() {
         // Convert map values to array
         setAllRequests(Array.from(allRequestsMap.values()));
     }, [appointments, internships]);
+
+    // Fetch real appointment data from backend
+    useEffect(() => {
+        fetch('http://localhost:3001/api/appointment/all', {
+            credentials: 'include',
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    if (res.status === 401) {
+                        throw new Error('You are not authorized. Please login first.');
+                    }
+                    return res.json().then((data) => {
+                        throw new Error(data.message || `Server error: ${res.status}`);
+                    });
+                }
+                return res.json();
+            })
+            .then((data) => {
+                if (Array.isArray(data)) {
+                    // Add the type field and format data for consistency
+                    const formattedData = data.map((item) => ({
+                        ...item,
+                        _id: item.Appointment_ID,
+                        type: 'appointment',
+                        username: item.username || 'Unknown',
+                        visit_purpose: item.Visit_purpose,
+                        visit_date: item.Visit_date,
+                        visit_time: item.Visit_time,
+                        comments: item.Comments,
+                        // Convert status to lowercase and map "waiting" to "pending"
+                        status:
+                            (item.Status || '').toLowerCase() === 'waiting'
+                                ? 'pending'
+                                : (item.Status || '').toLowerCase(),
+                    }));
+                    setAppointments(formattedData);
+                } else if (data.message) {
+                    // Handle message response (like "No appointments exist")
+                    setAppointments([]);
+                    if (!data.message.includes('No appointments exist')) {
+                        setNotification({
+                            show: true,
+                            type: 'info',
+                            message: data.message,
+                        });
+                        setTimeout(() => {
+                            setNotification({ show: false, type: '', message: '' });
+                        }, 3000);
+                    }
+                } else {
+                    setAppointments([]);
+                }
+            })
+            .catch((error) => {
+                setNotification({
+                    show: true,
+                    type: 'error',
+                    message: error.message || 'Failed to fetch appointments',
+                });
+                setTimeout(() => {
+                    setNotification({ show: false, type: '', message: '' });
+                }, 3000);
+            });
+    }, []);
 
     // Fetch real internship applications from backend
     useEffect(() => {
@@ -140,16 +163,78 @@ export default function RequestsManagement() {
     // Handle approve action
     const handleApprove = (id, type) => {
         if (type === 'appointment') {
-            setAppointments(
-                appointments.map((appointment) =>
-                    appointment._id === id ? { ...appointment, status: 'approved' } : appointment
-                )
-            );
-            setNotification({
-                show: true,
-                type: 'success',
-                message: t('adminDashboard.notifications.appointmentApproved'),
-            });
+            // Send update request to backend for appointments
+            fetch(`http://localhost:3001/api/appointment`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    Appointment_ID: id,
+                    status: 'Approved',
+                    QRcode_Expiry_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+                }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            throw new Error('You are not authorized to perform this action');
+                        }
+                        return res.json().then((data) => {
+                            throw new Error(data.message || `Server error: ${res.status}`);
+                        });
+                    }
+                    return res.json();
+                })
+                .then(() => {
+                    // Update local state only after successful backend update
+                    setAppointments(
+                        appointments.map((appointment) =>
+                            appointment._id === id ? { ...appointment, status: 'approved' } : appointment
+                        )
+                    );
+                    setNotification({
+                        show: true,
+                        type: 'success',
+                        message: t('adminDashboard.notifications.appointmentApproved'),
+                    });
+
+                    // Refresh appointments after 1 second
+                    setTimeout(() => {
+                        fetch('http://localhost:3001/api/appointment/all', {
+                            credentials: 'include',
+                        })
+                            .then((res) => (res.ok ? res.json() : []))
+                            .then((data) => {
+                                if (Array.isArray(data)) {
+                                    const formattedData = data.map((item) => ({
+                                        ...item,
+                                        _id: item.Appointment_ID,
+                                        type: 'appointment',
+                                        username: item.username || 'Unknown',
+                                        visit_purpose: item.Visit_purpose,
+                                        visit_date: item.Visit_date,
+                                        visit_time: item.Visit_time,
+                                        comments: item.Comments,
+                                        status:
+                                            (item.Status || '').toLowerCase() === 'waiting'
+                                                ? 'pending'
+                                                : (item.Status || '').toLowerCase(),
+                                    }));
+                                    setAppointments(formattedData);
+                                }
+                            })
+                            .catch(() => {});
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setNotification({
+                        show: true,
+                        type: 'error',
+                        message: error.message || 'Error approving appointment',
+                    });
+                });
         } else if (type === 'internship') {
             // Send update request to backend
             fetch(`http://localhost:3001/api/internship_application`, {
@@ -225,16 +310,77 @@ export default function RequestsManagement() {
     // Handle reject action
     const handleReject = (id, type) => {
         if (type === 'appointment') {
-            setAppointments(
-                appointments.map((appointment) =>
-                    appointment._id === id ? { ...appointment, status: 'rejected' } : appointment
-                )
-            );
-            setNotification({
-                show: true,
-                type: 'success',
-                message: t('adminDashboard.notifications.appointmentRejected'),
-            });
+            // Send update request to backend for appointments
+            fetch(`http://localhost:3001/api/appointment`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    Appointment_ID: id,
+                    status: 'Declined',
+                }),
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            throw new Error('You are not authorized to perform this action');
+                        }
+                        return res.json().then((data) => {
+                            throw new Error(data.message || `Server error: ${res.status}`);
+                        });
+                    }
+                    return res.json();
+                })
+                .then(() => {
+                    // Update local state only after successful backend update
+                    setAppointments(
+                        appointments.map((appointment) =>
+                            appointment._id === id ? { ...appointment, status: 'rejected' } : appointment
+                        )
+                    );
+                    setNotification({
+                        show: true,
+                        type: 'success',
+                        message: t('adminDashboard.notifications.appointmentRejected'),
+                    });
+
+                    // Refresh appointments after 1 second
+                    setTimeout(() => {
+                        fetch('http://localhost:3001/api/appointment/all', {
+                            credentials: 'include',
+                        })
+                            .then((res) => (res.ok ? res.json() : []))
+                            .then((data) => {
+                                if (Array.isArray(data)) {
+                                    const formattedData = data.map((item) => ({
+                                        ...item,
+                                        _id: item.Appointment_ID,
+                                        type: 'appointment',
+                                        username: item.username || 'Unknown',
+                                        visit_purpose: item.Visit_purpose,
+                                        visit_date: item.Visit_date,
+                                        visit_time: item.Visit_time,
+                                        comments: item.Comments,
+                                        status:
+                                            (item.Status || '').toLowerCase() === 'waiting'
+                                                ? 'pending'
+                                                : (item.Status || '').toLowerCase(),
+                                    }));
+                                    setAppointments(formattedData);
+                                }
+                            })
+                            .catch(() => {});
+                    }, 1000);
+                })
+                .catch((error) => {
+                    setNotification({
+                        show: true,
+                        type: 'error',
+                        message: error.message || 'Error rejecting appointment',
+                    });
+                });
         } else if (type === 'internship') {
             // Send update request to backend
             fetch(`http://localhost:3001/api/internship_application`, {
@@ -310,12 +456,71 @@ export default function RequestsManagement() {
     // Handle delete action
     const handleDelete = (id, type) => {
         if (type === 'appointment') {
-            setAppointments(appointments.filter((appointment) => appointment._id !== id));
-            setNotification({
-                show: true,
-                type: 'success',
-                message: t('adminDashboard.notifications.appointmentDeleted'),
-            });
+            // Send delete request to backend for appointments
+            fetch(`http://localhost:3001/api/appointment/${id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            })
+                .then((res) => {
+                    if (!res.ok) {
+                        if (res.status === 401) {
+                            throw new Error('You are not authorized to perform this action');
+                        }
+                        return res.json().then((data) => {
+                            throw new Error(data.message || `Server error: ${res.status}`);
+                        });
+                    }
+                    return res.ok ? { success: true, id } : res.json();
+                })
+                .then((data) => {
+                    if (data.success || data.id) {
+                        // Update local state after successful deletion
+                        setAppointments(appointments.filter((appointment) => appointment._id !== id));
+
+                        setNotification({
+                            show: true,
+                            type: 'success',
+                            message: t('adminDashboard.notifications.appointmentDeleted'),
+                        });
+
+                        // Refresh appointments after 1 second
+                        setTimeout(() => {
+                            fetch('http://localhost:3001/api/appointment/all', {
+                                credentials: 'include',
+                            })
+                                .then((res) => (res.ok ? res.json() : []))
+                                .then((data) => {
+                                    if (Array.isArray(data)) {
+                                        const formattedData = data.map((item) => ({
+                                            ...item,
+                                            _id: item.Appointment_ID,
+                                            type: 'appointment',
+                                            username: item.username || 'Unknown',
+                                            visit_purpose: item.Visit_purpose,
+                                            visit_date: item.Visit_date,
+                                            visit_time: item.Visit_time,
+                                            comments: item.Comments,
+                                            status:
+                                                (item.Status || '').toLowerCase() === 'waiting'
+                                                    ? 'pending'
+                                                    : (item.Status || '').toLowerCase(),
+                                        }));
+                                        setAppointments(formattedData);
+                                    }
+                                })
+                                .catch(() => {});
+                        }, 1000);
+                    } else {
+                        throw new Error(data.message || 'Failed to delete appointment');
+                    }
+                })
+                .catch((error) => {
+                    setNotification({
+                        show: true,
+                        type: 'error',
+                        message: error.message || 'Error deleting appointment',
+                    });
+                });
         } else if (type === 'internship') {
             // Send delete request to backend
             fetch(`http://localhost:3001/api/internship_application/${id}`, {

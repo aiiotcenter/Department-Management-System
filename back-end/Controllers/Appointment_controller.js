@@ -125,6 +125,29 @@ const view_student_appointments = async (req, res) => {
 };
 
 //================================================================================================================================================================
+//? GET, function to review all appointments for admin dashboard
+//================================================================================================================================================================
+const view_all_appointments = async (req, res) => {
+    try {
+        const [results] = await database.query(
+            `SELECT a.*, u.User_name as username 
+             FROM appointments a 
+             JOIN users u ON a.Appointment_Requester_id = u.User_ID 
+             ORDER BY a.Visit_date DESC, a.Visit_time DESC`
+        );
+
+        if (results.length === 0) {
+            return res.json({ message: 'No appointments exist' });
+        }
+
+        return res.json(results);
+    } catch (error) {
+        console.log('Database Error:', error);
+        return res.status(500).json({ message: 'Database error', error: error.message });
+    }
+};
+
+//================================================================================================================================================================
 //? PATCH, function to update appointments status 
 //================================================================================================================================================================
 
@@ -300,7 +323,60 @@ const update_appointment = async (req, res) => {
 
 
 //================================================================================================================================================================
+//? DELETE, function to delete appointments
+//================================================================================================================================================================
+const delete_appointment = async (req, res) => {
+    const { id } = req.params;
+    const connection = await database.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        // Check if appointment exists
+        const [appointmentCheck] = await connection.query(
+            'SELECT * FROM appointments WHERE Appointment_ID = ?',
+            [id]
+        );
+
+        if (appointmentCheck.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        // Delete related QR codes first (if any)
+        await connection.query(
+            'DELETE FROM qr_codes WHERE Appointment_ID = ?',
+            [id]
+        );
+
+        // Delete the appointment
+        const [result] = await connection.query(
+            'DELETE FROM appointments WHERE Appointment_ID = ?',
+            [id]
+        );
+
+        if (result.affectedRows === 0) {
+            await connection.rollback();
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        await connection.commit();
+        return res.json({ message: 'Appointment deleted successfully', id });
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error deleting appointment:', error);
+        return res.status(500).json({ message: 'Database error', error: error.message });
+    } finally {
+        connection.release();
+    }
+};
+
+//================================================================================================================================================================
 module.exports.create_appointment = create_appointment;
 module.exports.view_appointment = view_appointment;
 module.exports.update_appointment = update_appointment;
 module.exports.view_student_appointments = view_student_appointments;
+module.exports.view_all_appointments = view_all_appointments;
+module.exports.delete_appointment = delete_appointment;
+module.exports.view_all_appointments = view_all_appointments;
+module.exports.delete_appointment = delete_appointment;
