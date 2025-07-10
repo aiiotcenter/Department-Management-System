@@ -48,12 +48,47 @@ h1{
   margin-bottom: 20px;
 }
 
+/* Restore and enhance sidebar profile card styling */
+.summary-card {
+  background: #fff;
+  border: 2px solid #992e49;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(153,46,73,0.08);
+  padding: 24px 18px 18px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
 .profile-img {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #992e49;
+  border: 2.5px solid #992e49;
+  margin-bottom: 10px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.profile-info p {
+  color: #992e49;
+  font-size: 16px;
+  margin: 2px 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.profile-info p strong {
+  font-weight: bold;
 }
 
 /* Main Content */
@@ -61,8 +96,8 @@ h1{
   flex-grow: 1;
   flex-direction: column;
   display: flex;
-  padding: 30px;
-  gap: 30px;
+  padding: 40px 40px 40px 40px;
+  gap: 40px;
   background-color: #fff;
   overflow: auto;
   width: 100%;
@@ -71,80 +106,74 @@ h1{
 .SideBySide {
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 40px;
   width: 100%;
   height: 100%;
   margin: 0;
 }
 
-
-
-.summary-card {
-  background: #f9f5f6;
-  padding: 20px;
-  display: flex;
-  margin-bottom: 20px;
-  align-items: center;
-  gap: 8px;
+.info-section {
   width: 100%;
-  flex-direction: row;
-  border-radius: 10px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  padding: 0 0 0 0;
+  margin-top: 0;
+}
+
+.summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .dashboard-cards {
   display: flex;
-  gap: 20px;
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
-.dashboard-card {
-  flex: 1;
-  padding: 20px;
-  background-color: #f9f5f6;
-  color: #992e49;
-  margin-top: 20px;
+.appointments, .internships {
+  margin-bottom: 32px;
+  background: #f9f5f6;
   border-radius: 10px;
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
+  padding: 24px 24px 16px 24px;
+  box-shadow: 0 2px 8px rgba(153,46,73,0.04);
+  border: 1.5px solid #eee;
 }
 
-.dashboard-card:hover {
-  background-color: #ebc2c8;
-}
-
-.academic-summary {
-  background-color: #f9f5f6;
-  padding: 40px;
-  flex: 1;;
-  border-radius: 12px;
-  border: 2px solid #eee;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  min-width: 280px;
-}
-
-h3 {
+.appointments h3, .internships h3 {
+  margin-bottom: 18px;
   color: #992e49;
   font-size: 20px;
-  margin-bottom: 20px;
 }
 
-p {
-  color: #000;
-  font-size: 16px;
-  margin: 5px 0;
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-card {
+  background: #fff;
+  border: 1.5px dashed #992e49;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 0;
+  color: #992e49;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .announcement-box {
   flex: 1;
   background-color: #f9f5f6;
-  padding: 20px;
+  padding: 28px;
   width: 100%;
   border-radius: 12px;
   border: 2px solid #eee;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   min-width: 280px;
+  margin-left: 0;
 }
 
 .announcement-box h3 {
@@ -183,14 +212,42 @@ p {
   background-color: #ebc2c8;
 }
 
+/* Restore original card styling for dashboard-card */
+.dashboard-card {
+  flex: 1;
+  padding: 24px 0;
+  background-color: #f9f5f6;
+  color: #992e49;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 8px rgba(153,46,73,0.08);
+  border: 2px solid #992e49;
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  outline: none;
+  user-select: none;
+}
+.dashboard-card:hover {
+  background-color: #ebc2c8;
+  box-shadow: 0 4px 16px rgba(153,46,73,0.15);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .SideBySide {
     flex-direction: column;
+    gap: 24px;
   }
-
   .dashboard-cards {
     flex-direction: column;
+    gap: 16px;
+  }
+  .announcement-box {
+    margin-top: 24px;
   }
 
   .dashboard-card {

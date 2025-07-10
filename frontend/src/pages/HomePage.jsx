@@ -63,10 +63,10 @@ export default function HomePage() {
 
             <div className="BoxesContainer">
                 <FlipCard
-                    title={t('homepage.appointments')}
-                    content={t('homepage.flipCardContent.appointments')}
-                    variant="appointments"
-                    backContent={t('homepage.flipCardContent.appointments')}
+                    title={t('Appointments')}
+                    content={t('flipCardContent.appointments')}
+                    variant="requests"
+                    backContent={t('flipCardContent.appointments')}
                     linkTo="/appointment"
                 />
                 <FlipCard

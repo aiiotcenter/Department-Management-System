@@ -60,10 +60,12 @@
       "requests": "Requests",
       "about": "About",
       "projects": "Projects",
+      "announcements": "Announcements",
       "flipCardContent": {
         "appointments": "Schedule appointments with professors and staff members.",
         "internship": "Apply for and manage internship opportunities.",
-        "requests": "Submit and track requests for documents and services."
+        "requests": "Submit and track requests for documents and services.",
+        "announcements": "View the latest announcements and stay updated with department news."
       },
       "aboutSections": {
         "section1": {
@@ -82,7 +84,8 @@
       "controls": {
         "prev": "Previous",
         "next": "Next"
-      }
+      },
+      "viewLatestAnnouncements": "View the latest announcements"
     },
     "footer": {
       "contactUs": "Contact Us",
@@ -325,6 +328,19 @@
       "view": "View",
       "close": "Close",
       "failedToFetchAnnouncements": "Failed to fetch announcements."
-    }
+    },
+    "editProfile": {
+      "title": "Edit Profile",
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "name": "Name",
+      "email": "Email",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password"
+    },
+    "flipCardContent.appointments": "Apply for an appointment",
+    "flipCardContent.announcements": "View the latest announcements"
   }
 }

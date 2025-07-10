@@ -54,15 +54,15 @@
       "noAppointments": "Hiç randevunuz yok.",
       "currentPassword": "Mevcut Şifre",
       "newPassword": "Yeni Şifre",
-      "confirmNewPassword": "Yeni Şifreyi Onayla",
-      "editProfileTitle": "Profili Düzenle",
-      "nameLabel": "Ad",
-      "emailLabel": "E-posta Adresi",
-      "editProfileButton": "Profili Düzenle",
-      "cancelButton": "İptal",
-      "changePasswordTitle": "Şifre Değiştir",
-      "changePasswordButton": "Şifre Değiştir"
+      "confirmNewPassword": "Yeni Şifreyi Onayla"
     },
+    "editProfileTitle": "Profili Düzenle",
+    "nameLabel": "Ad",
+    "emailLabel": "E-posta Adresi",
+    "editProfileButton": "Profili Düzenle",
+    "cancelButton": "İptal",
+    "changePasswordTitle": "Şifre Değiştir",
+    "changePasswordButton": "Şifre Değiştir",
     "homepage": {
       "hero": "Bölüm Yönetim Sistemi",
       "appointments": "Randevular",
@@ -70,10 +70,12 @@
       "requests": "İstekler",
       "about": "Hakkında",
       "projects": "Projeler",
+      "announcements": "Duyurular",
       "flipCardContent": {
         "appointments": "Profesörler ve personel üyeleriyle randevu planlayın.",
         "internship": "Staj fırsatlarına başvurun ve yönetin.",
-        "requests": "Belgeler ve hizmetler için istekleri gönderin ve takip edin."
+        "requests": "Belgeler ve hizmetler için istekleri gönderin ve takip edin.",
+        "announcements": "En son duyuruları görüntüleyin ve bölüm haberlerinden haberdar olun."
       },
       "aboutSections": {
         "section1": {
@@ -92,7 +94,8 @@
       "controls": {
         "prev": "Önceki",
         "next": "Sonraki"
-      }
+      },
+      "viewLatestAnnouncements": "En son duyuruları görüntüle"
     },
     "footer": {
       "contactUs": "Bize Ulaşın",
@@ -335,6 +338,19 @@
       "view": "Görüntüle",
       "close": "Kapat",
       "failedToFetchAnnouncements": "Duyurular alınamadı."
-    }
+    },
+    "edit": "Düzenle",
+    "cancel": "İptal",
+    "name": "Ad",
+    "email": "E-posta",
+    "changePassword": "Şifre Değiştir",
+    "currentPassword": "Mevcut Şifre",
+    "newPassword": "Yeni Şifre",
+    "confirmNewPassword": "Yeni Şifreyi Onayla",
+    "Appointments": "Randevular",
+    "Announcements": "Duyurular",
+    "flipCardContent.appointments": "Profesörler ve personel üyeleriyle randevu planlayın.",
+    "flipCardContent.announcements": "En son duyuruları görüntüleyin ve bölüm haberlerinden haberdar olun.",
+    "view the latest announcements": "En son duyuruları görüntüle"
   }
 }

@@ -282,152 +282,7 @@ export default function StudentProfile() {
                         </div>
                     </div>
                     <div className="profile-right">
-                        <div className="appointments">
-                            <h3>{t('profile.appointments')}</h3>
-                            {appointmentsLoading ? (
-                                <p>{t('common.loading')}</p>
-                            ) : appointmentsError ? (
-                                <p style={{ color: 'red' }}>{appointmentsError}</p>
-                            ) : appointments.length === 0 ? (
-                                <p>{t('profile.noAppointments')}</p>
-                            ) : (
-                                <div className="card-list">
-                                    {appointments.map((app, i) => (
-                                        <div key={i} className="info-card">
-                                            <h4 className="info-title">{app.Visit_purpose || app.title}</h4>
-                                            <p className="info-date">{app.Visit_date || app.date}</p>
-                                            <p className={`info-status ${app.Status || app.status}`}>
-                                                {t('profile.statusLabel')}
-                                                {': '}
-                                                <strong>
-                                                    {t(
-                                                        `profile.status.${(app.Status || app.status || '').toLowerCase()}`
-                                                    )}
-                                                </strong>
-                                            </p>
-                                            {/* QR code icon for approved appointments */}
-                                            {(app.Status || app.status) &&
-                                                (app.Status || app.status).toLowerCase() === 'approved' &&
-                                                app.QRcode_ID && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                        <img
-                                                            src={QRCodeIcon}
-                                                            alt="QR Code"
-                                                            className="qr-code-icon"
-                                                            style={{
-                                                                cursor: 'pointer',
-                                                                width: 32,
-                                                                height: 32,
-                                                                marginTop: 8,
-                                                            }}
-                                                            onClick={() =>
-                                                                setPopupQR(getAppointmentQrCodeUrl(app.QRcode_ID))
-                                                            }
-                                                        />
-                                                        <img
-                                                            src={DownloadIcon}
-                                                            alt="Download Card"
-                                                            className="download-card-icon"
-                                                            style={{
-                                                                cursor: 'pointer',
-                                                                width: 28,
-                                                                height: 28,
-                                                                marginTop: 8,
-                                                            }}
-                                                            onClick={() =>
-                                                                handleDownloadCard('appointment', {
-                                                                    id: app.Appointment_Requester_ID,
-                                                                    name: student.name,
-                                                                    qrData: app.QRcode_ID,
-                                                                    department: student.department,
-                                                                    date: app.Visit_date,
-                                                                    period: undefined,
-                                                                    purpose: app.Visit_purpose,
-                                                                    profileImage: student.profileImage,
-                                                                })
-                                                            }
-                                                        />
-                                                    </div>
-                                                )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        <div className="internships">
-                            <h3>{t('profile.internships')}</h3>
-                            {internshipsLoading ? (
-                                <p>{t('common.loading')}</p>
-                            ) : internshipsError ? (
-                                <p style={{ color: 'red' }}>{internshipsError}</p>
-                            ) : internships.length === 0 ? (
-                                <p>{t('profile.noInternships') || 'No internships.'}</p>
-                            ) : (
-                                <div className="card-list">
-                                    {internships.map((intern, i) => (
-                                        <div key={i} className="info-card">
-                                            <h4 className="info-title">
-                                                {intern.title || intern.period_of_internship}
-                                            </h4>
-                                            <p className="info-date">{intern.date || intern.period_of_internship}</p>
-                                            <p className={`info-status ${intern.status || intern.Status}`}>
-                                                {t('profile.statusLabel')}
-                                                {': '}
-                                                <strong>
-                                                    {t(
-                                                        `profile.status.${(intern.status || intern.Status || '').toLowerCase()}`
-                                                    )}
-                                                </strong>
-                                            </p>
-                                            {/* QR code icon for approved internships */}
-                                            {(intern.status || intern.Status) &&
-                                                (intern.status || intern.Status).toLowerCase() === 'approved' &&
-                                                intern.QRcode_ID && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                        <img
-                                                            src={QRCodeIcon}
-                                                            alt="QR Code"
-                                                            className="qr-code-icon"
-                                                            style={{
-                                                                cursor: 'pointer',
-                                                                width: 32,
-                                                                height: 32,
-                                                                marginTop: 8,
-                                                            }}
-                                                            onClick={() =>
-                                                                setPopupQR(getInternshipQrCodeUrl(intern.QRcode_ID))
-                                                            }
-                                                        />
-                                                        <img
-                                                            src={DownloadIcon}
-                                                            alt="Download Card"
-                                                            className="download-card-icon"
-                                                            style={{
-                                                                cursor: 'pointer',
-                                                                width: 28,
-                                                                height: 28,
-                                                                marginTop: 8,
-                                                            }}
-                                                            onClick={() =>
-                                                                handleDownloadCard('internship', {
-                                                                    id: intern.User_ID,
-                                                                    name: intern.User_name,
-                                                                    qrData: intern.QRcode_ID,
-                                                                    department: intern.department,
-                                                                    date: undefined,
-                                                                    period: intern.period_of_internship,
-                                                                    purpose: undefined,
-                                                                    profileImage: student.profileImage,
-                                                                })
-                                                            }
-                                                        />
-                                                    </div>
-                                                )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        {/* Only keep profile info and settings. Remove appointments and internships sections. */}
                     </div>
                 </div>
             </div>
@@ -445,20 +300,24 @@ export default function StudentProfile() {
             {editProfileOpen && (
                 <div className="modal-overlay" onClick={() => setEditProfileOpen(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h2>{t('profile.editProfileTitle')}</h2>
+                        <h2>Edit Profile</h2>
                         <form onSubmit={handleEditProfileSubmit}>
                             <label>
-                                {t('profile.nameLabel')}
+                                {t('name')}
                                 <input name="name" value={editProfileData.name} onChange={handleEditProfileChange} />
                             </label>
                             <label>
-                                {t('profile.emailLabel')}
+                                {t('email')}
                                 <input name="email" value={editProfileData.email} onChange={handleEditProfileChange} />
                             </label>
                             {/* Add photo upload if needed */}
                             <div className="modal-buttons">
-                                <button type="submit" disabled={editProfileLoading}>{editProfileLoading ? t('common.loading') : t('profile.editProfileButton')}</button>
-                                <button type="button" onClick={() => setEditProfileOpen(false)}>{t('profile.cancelButton')}</button>
+                                <button type="submit" disabled={editProfileLoading}>
+                                    {editProfileLoading ? t('common.loading') : t('edit')}
+                                </button>
+                                <button type="button" onClick={() => setEditProfileOpen(false)}>
+                                    {t('cancel')}
+                                </button>
                             </div>
                         </form>
                         {editProfileError && <p style={{ color: 'red' }}>{editProfileError}</p>}
@@ -471,10 +330,10 @@ export default function StudentProfile() {
             {changePasswordOpen && (
                 <div className="modal-overlay" onClick={() => setChangePasswordOpen(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h2>{t('profile.changePassword')}</h2>
+                        <h2>{t('changePassword')}</h2>
                         <form onSubmit={handleChangePasswordSubmit}>
                             <label>
-                                {t('profile.currentPassword')}
+                                {t('currentPassword')}
                                 <input
                                     type="password"
                                     name="current"
@@ -483,7 +342,7 @@ export default function StudentProfile() {
                                 />
                             </label>
                             <label>
-                                {t('profile.newPassword')}
+                                {t('newPassword')}
                                 <input
                                     type="password"
                                     name="new"
@@ -492,7 +351,7 @@ export default function StudentProfile() {
                                 />
                             </label>
                             <label>
-                                {t('profile.confirmNewPassword')}
+                                {t('confirmNewPassword')}
                                 <input
                                     type="password"
                                     name="confirm"
@@ -502,10 +361,10 @@ export default function StudentProfile() {
                             </label>
                             <div className="modal-buttons">
                                 <button type="submit" disabled={changePasswordLoading}>
-                                    {changePasswordLoading ? t('common.loading') : t('profile.changePasswordButton')}
+                                    {changePasswordLoading ? t('common.loading') : t('changePassword')}
                                 </button>
                                 <button type="button" onClick={() => setChangePasswordOpen(false)}>
-                                    {t('profile.cancelButton')}
+                                    {t('cancel')}
                                 </button>
                             </div>
                         </form>
