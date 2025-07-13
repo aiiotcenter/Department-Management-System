@@ -1,16 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const announcementController = require('../../Controllers/Announcement_controller');
+const { protect, authRole, ExtractJWTData } = require('../../Authentication_Middleware');
 
-// GET all announcements
-router.get('/', announcementController.getAllAnnouncements);
+// GET all announcements - require authentication
+router.get('/', protect, announcementController.getAllAnnouncements);
 
-// POST a new announcement
-router.post('/', announcementController.createAnnouncement);
+// POST a new announcement - require authentication and admin role
+router.post('/', protect, ExtractJWTData, authRole, announcementController.createAnnouncement);
 
-// PATCH (edit) an announcement
-router.patch('/:id', announcementController.editAnnouncement);
+// PATCH (edit) an announcement - require authentication and admin role
+router.patch('/:id', protect, ExtractJWTData, authRole, announcementController.editAnnouncement);
 
-router.delete('/:id', announcementController.deleteAnnouncement);
+// DELETE an announcement - require authentication and admin role
+router.delete('/:id', protect, ExtractJWTData, authRole, announcementController.deleteAnnouncement);
 
 module.exports = router; 

@@ -12,8 +12,8 @@ const {protect, authRole, ExtractJWTData}= require('../../Authentication_Middlew
 // authRole : ensures only admins can access certain pages.
 // ExtractJWTData : function to extract user data from the token(jwt)
 
+const { validateUserManagement } = require('../../validation_middleware');
 const {admin_page, add_employee, remove_employee, get_all_users, get_staff_users, update_employee} = require('../../Controllers/admin_handler');
-
 
 //===========================================================================================================
 // Routes for adding and removing employees 
@@ -24,11 +24,10 @@ router.get('/users', protect, ExtractJWTData, authRole, get_all_users);
 
 router.get('/staff', protect, ExtractJWTData, authRole, get_staff_users);
 
-router.post('/add_employee', protect, ExtractJWTData, authRole, add_employee);
+router.post('/add_employee', protect, ExtractJWTData, authRole, validateUserManagement, add_employee);
 
-router.patch('/update_employee/:id', protect, ExtractJWTData, authRole, update_employee);
+router.patch('/update_employee/:id', protect, ExtractJWTData, authRole, validateUserManagement, update_employee);
 
-router.delete('/delete_employee/:id', protect, ExtractJWTData, authRole, remove_employee )
+router.delete('/delete_employee/:id', protect, ExtractJWTData, authRole, remove_employee);
 
-//===========================================================================================================
 module.exports = router;

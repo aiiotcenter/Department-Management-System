@@ -14,7 +14,7 @@ export default function Navbar() {
     const navRef = useRef(null);
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
-    const { isAuthenticated, updateAuthStatus } = useAuth();
+    const { isAuthenticated, user, updateAuthStatus } = useAuth();
 
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
@@ -122,12 +122,17 @@ export default function Navbar() {
                     <img src={ListIcon} alt="Menu" className="icon-image" />
                     {openMenu === 'hamburger' && (
                         <div className="menu-options hamburger-menu">
-                            <Link to="/student-dashboard" onClick={() => setOpenMenu(null)}>
-                                {t('navbar.studentDashboard')}
-                            </Link>
-                            <Link to="/admin-dashboard" onClick={() => setOpenMenu(null)}>
-                                {t('navbar.adminDashboard')}
-                            </Link>
+                            {isAuthenticated &&
+                                user &&
+                                (user.role?.toLowerCase() === 'student' ? (
+                                    <Link to="/student-dashboard" onClick={() => setOpenMenu(null)}>
+                                        {t('navbar.studentDashboard')}
+                                    </Link>
+                                ) : (
+                                    <Link to="/admin-dashboard" onClick={() => setOpenMenu(null)}>
+                                        {t('navbar.adminDashboard')}
+                                    </Link>
+                                ))}
                             <button onClick={() => setOpenMenu(null)}>{t('navbar.help')}</button>
                         </div>
                     )}

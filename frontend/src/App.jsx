@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import RoleProtectedRoute from './components/RoleProtectedRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import Announcement from './pages/Announcement';
 import AppointmentPage from './pages/AppointmentPage';
@@ -28,12 +29,19 @@ function App() {
             <Route
                 path="/student-dashboard"
                 element={
-                    <ProtectedRoute>
+                    <RoleProtectedRoute allowedRoles={['student']}>
                         <StudentDashboard />
-                    </ProtectedRoute>
+                    </RoleProtectedRoute>
                 }
             />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route
+                path="/admin-dashboard"
+                element={
+                    <RoleProtectedRoute allowedRoles={['admin', 'professor', 'assistant', 'secretary']}>
+                        <AdminDashboard />
+                    </RoleProtectedRoute>
+                }
+            />
             <Route
                 path="/appointment"
                 element={
@@ -51,7 +59,14 @@ function App() {
                 }
             />
             <Route path="/announcements" element={<Announcement />} />
-            <Route path="/admin-dashboard/internships" element={<AdminInternships />} />
+            <Route
+                path="/admin-dashboard/internships"
+                element={
+                    <RoleProtectedRoute allowedRoles={['admin', 'professor', 'assistant', 'secretary']}>
+                        <AdminInternships />
+                    </RoleProtectedRoute>
+                }
+            />
         </Routes>
     );
 }

@@ -13,13 +13,31 @@ export default function LoginForm() {
     const { t } = useTranslation();
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
-    const { updateAuthStatus } = useAuth();
+    const { updateAuthStatus, checkAuthStatus } = useAuth();
 
     const onSubmit = async (data) => {
         try {
             await login(data.email, data.password);
             updateAuthStatus(true); // Set auth status to true after login
-            navigate('/student-dashboard');
+
+            // Check auth status to get user role and redirect accordingly
+            setTimeout(async () => {
+                await checkAuthStatus();
+                const authResponse = await fetch('http://localhost:3001/api/check-auth', {
+                    credentials: 'include',
+                });
+                const authData = await authResponse.json();
+
+                if (authData.authenticated && authData.role) {
+                    if (authData.role.toLowerCase() === 'student') {
+                        navigate('/student-dashboard');
+                    } else {
+                        navigate('/admin-dashboard');
+                    }
+                } else {
+                    navigate('/student-dashboard'); // fallback
+                }
+            }, 100);
         } catch (error) {
             alert(error.message || 'Login failed');
         }

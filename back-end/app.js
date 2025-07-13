@@ -10,6 +10,11 @@ const path = require('path');
 const cors = require('cors');
 
 //===========================================================================================
+//? Import Security Middleware 
+//===========================================================================================
+const { apiLimiter, securityHeaders, errorHandler, requestSizeLimit } = require('./security_middleware');
+
+//===========================================================================================
 //? Import the Routes 
 //===========================================================================================
 
@@ -31,6 +36,21 @@ const CheckAuth_route = require('./API/routes/check-auth');
 
 const cookieParser = require('cookie-parser'); //middleware for parsing cookies in Express requests
 
+//===========================================================================================
+//? Apply Security Middleware FIRST
+//===========================================================================================
+
+// Trust proxy (important for rate limiting with reverse proxies)
+app.set('trust proxy', 1);
+
+// Apply security headers
+app.use(securityHeaders);
+
+// Apply request size limiting
+app.use(requestSizeLimit);
+
+// Apply general rate limiting to all API routes
+app.use('/api/', apiLimiter);
 
 //===========================================================================================
 //? Enable CORS middleware
@@ -42,17 +62,15 @@ app.use(cors({
 }));
 
 //===========================================================================================
-//? set up for the middleware( handle json reqestes & url & cookies)
+//? Middleware to parse JSON, handle cookies, and serve static files
 //===========================================================================================
 
-app.use(express.json()); // parse(analyse) incoming requestes with json type
-app.use(express.urlencoded({ extended: true }));// parse(analyse) incoming body requests
-app.use(cookieParser());// allow reading cookies
+app.use(express.json({ limit: '10mb' })); // Limit JSON payload size
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Limit URL-encoded payload size
+app.use(cookieParser()); // Parse cookies
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// Serve static files from the QRcodes directory
-app.use('/qrcodes', express.static(path.join(__dirname, 'QRcodes')));
 
 //===========================================================================================
 //? set up routes handler for the API endpoints
@@ -62,7 +80,7 @@ app.use('/api/login', Login_route);
 app.use('/api/register', Register_route);
 app.use('/api/logout', Logout_route);
 app.use('/api/homepage', Homepage_route);
-app.use('/api/request',Request_route);
+app.use('/api/request', Request_route);
 app.use('/api/appointment', Appointment_route);
 app.use('/api/announcement', Announcement_route);
 
@@ -71,7 +89,14 @@ app.use('/api/admin', Admin_route);
 app.use('/api/internship_application', Internship_applicatin);
 app.use('/api/check-auth', CheckAuth_route);
 
+//===========================================================================================
+//? Apply Error Handler Middleware LAST
+//===========================================================================================
 
+app.use(errorHandler);
 
 //===========================================================================================
+//? Export the app
+//===========================================================================================
+
 module.exports = app;
