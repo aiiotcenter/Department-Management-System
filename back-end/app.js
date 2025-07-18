@@ -57,7 +57,7 @@ app.use('/api/', apiLimiter);
 //===========================================================================================
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Change this if your frontend runs on a different port
+    origin: ['http://localhost:5173', 'http://localhost'], // Allow both Vite dev and Docker/Nginx frontend
     credentials: true
 }));
 
@@ -71,6 +71,21 @@ app.use(cookieParser()); // Parse cookies
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+//===========================================================================================
+//? Health check endpoint for Docker
+//===========================================================================================
+
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+//===========================================================================================
+//? Root route for health check or basic info
+//===========================================================================================
+app.get('/', (req, res) => {
+    res.send('Backend is running!');
+});
 
 //===========================================================================================
 //? set up routes handler for the API endpoints

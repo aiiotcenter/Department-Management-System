@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: dms_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: dms
+      MYSQL_USER: dms_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dmspassword}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./back-end/Database/DMS database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dms_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Backend API
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+    container_name: dms_backend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - JWT_SECRET="asdfghjklqwertyuiopzxcvbnmasdfghjkl"
+      - Database_Password=${MYSQL_ROOT_PASSWORD:-rootpassword}
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_NAME=dms
+    ports:
+      - "3001:3001"
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_qrcodes:/app/QRcodes
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - dms_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      timeout: 10s
+      retries: 5
+
+  # Frontend React App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dms_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - dms_network
+
+volumes:
+  mysql_data:
+    driver: local
+  backend_uploads:
+    driver: local
+  backend_qrcodes:
+    driver: local
+
+networks:
+  dms_network:
+    driver: bridge 
