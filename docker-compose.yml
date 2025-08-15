@@ -61,7 +61,7 @@ services:
     container_name: dms_frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "9802:9802"
     depends_on:
       - backend
     networks:
