@@ -57,7 +57,7 @@ app.use('/api/', apiLimiter);
 //===========================================================================================
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost'], // Allow both Vite dev and Docker/Nginx frontend
+    origin: ['http://localhost:9802', 'http://localhost'], // Allow both Vite dev and Docker/Nginx frontend
     credentials: true
 }));
 
