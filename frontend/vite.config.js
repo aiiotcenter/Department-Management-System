@@ -1,10 +1,16 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
-export default {
+export default defineConfig({
+  plugins: [react()],
   server: {
-    allowedHosts: ['aiiot.center', 'www.aiiot.center'], // allow your domain(s)
-    host: true, // optional: allow external access
-    port: 9802
+    host: true, // allow external connections
+    port: 9802,
+    allowedHosts: ['aiiot.center', 'www.aiiot.center'],
+    hmr: {
+      host: 'aiiot.center', // your domain
+      protocol: 'wss',
+      port: 443
+    }
   }
-}
+});
